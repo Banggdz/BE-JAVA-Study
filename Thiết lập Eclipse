@@ -1,5 +1,9 @@
 --download:
 https://www.eclipse.org/downloads/download.php?file=/oomph/epp/2025-06/R/eclipse-inst-jre-win64.exe&mirror_id=1273
+- Group Id: Là tên miền của bạn, viết theo thứ tự ngược lại.
+Ví dụ: Nếu tên miền là javaweb.com, thì Group Id sẽ là com.javaweb.
+- Artifact Id: Là tên của dự án bạn đang tạo.
+Ví dụ: Nếu bạn đang xây dựng một hệ thống quản lý sinh viên, Artifact Id có thể là student-management.
 
 1.paste vào file pom.xml
 
