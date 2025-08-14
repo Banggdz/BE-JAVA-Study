@@ -1,0 +1,83 @@
+--download:
+https://www.eclipse.org/downloads/download.php?file=/oomph/epp/2025-06/R/eclipse-inst-jre-win64.exe&mirror_id=1273
+
+1.paste vào file pom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.javaweb</groupId>
+  <artifactId>spring-boot-non-jwt</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.22.RELEASE</version>
+</parent>
+<properties>
+    <java.version>1.8</java.version>
+</properties>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web-services</artifactId>
+    </dependency>
+</dependencies>
+
+</project>
+
+2.
+chuột phải vào spring-boot-non-jwt - show in - terminal - paste mvn clean install
+lệnh này để xóa file JAR cũ và build file JAR mới để update code mới rồi ấn Enter để build
+
+3.
+: Sau khi hoàn tất quá trình build project, tiếp tục thực hiện các bước sau:
+- Truy cập vào thư mục src/main/java
+- Tạo một package mới với tên: com.javaweb
+- Trong package vừa tạo, thêm một class Java có tên là Application.java
+paste vào file mã:
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+// Đánh dấu đây là ứng dụng Spring Boot
+@SpringBootApplication
+public class Application {
+
+    // Phương thức main để chạy ứng dụng
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+4.
+Tiếp tục trong package com.javaweb, thực hiện như sau:
+- Tạo một sub-package mới có tên là api
+- Trong package api, tạo một file Java mới tên là NewAPI.java
+- Sao chép đoạn mã dưới đây vào file NewAPI.java
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+// Đánh dấu lớp này là một REST controller
+@RestController
+public class NewAPI {
+
+    // Định nghĩa một endpoint GET tại đường dẫn "/test"
+    @GetMapping("/test")
+    public String testAPI() {
+        return "success"; // Trả về chuỗi "success" khi truy cập endpoint
+    }
+}
+5.
+- Truy cập vào thư mục src/main/resources
+- Vào new - other - nhập "file"
+- Tạo một file mới tên là application.properties
+- Thêm dòng cấu hình sau vào file:
+server.port=3081
+
+
+🔎 Lưu ý:
+Mặc định, Spring Boot sử dụng cổng 8080 để chạy ứng dụng. Tuy nhiên, để tránh xung đột với các ứng dụng khác đang dùng cổng này, 
+ta thay đổi sang cổng 3081
+
+6. Run
+Chuột phải Application.java - run as - java application
+
+
