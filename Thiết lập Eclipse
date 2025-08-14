@@ -75,7 +75,7 @@ server.port=3081
 
 🔎 Lưu ý:
 Mặc định, Spring Boot sử dụng cổng 8080 để chạy ứng dụng. Tuy nhiên, để tránh xung đột với các ứng dụng khác đang dùng cổng này, 
-ta thay đổi sang cổng 3081
+ta thay đổi sang cổng 8081
 
 6. Run
 Chuột phải Application.java - run as - java application
