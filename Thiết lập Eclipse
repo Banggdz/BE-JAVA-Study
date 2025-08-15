@@ -28,7 +28,7 @@ Ví dụ: Nếu bạn đang xây dựng một hệ thống quản lý sinh viên
 </dependencies>
 
 </project>
-
+// Dung ban spring boot 2.09 RL
 2.
 chuột phải vào spring-boot-non-jwt - show in - terminal - paste mvn clean install
 lệnh này để xóa file JAR cũ và build file JAR mới để update code mới rồi ấn Enter để build
