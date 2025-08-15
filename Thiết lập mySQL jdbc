@@ -5,6 +5,8 @@ Các phương pháp xây dựng Web Service phổ biến hiện nay:
 2. Có phí (CMS - Hệ thống quản lý nội dung):
 - Một số nền tảng như AEM, MULE,...
 
+JDBC: Kết nối và tương tác với cơ sở dữ liệu từ ứng dụng Java
+Phụ thuộc: Driver của cơ sở dữ liệu (MySQL, Oracle, PostgreSQL...)
 🔄 Phiên bản tương ứng giữa Spring Boot và Spring Framework: | Phiên bản Spring Boot | Tương ứng với Spring Framework | |------------------------|-------------------------------| | 1.x.x                  | Spring Framework 4            | | 2.x.x                  | Spring Framework 5            | | 3.x.x                  | Spring Framework 6            |
 
 ---🌐 Thiết lập môi trường JDBC với MySQL  (Với app netbeans)
