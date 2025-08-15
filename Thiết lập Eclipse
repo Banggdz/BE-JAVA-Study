@@ -105,3 +105,5 @@ giống khóa học :
     <version>8.0.30</version>
 </dependency>
 
+khi thêm version <version>8.0.30</version> bị warning, nếu ko thêm thì sẽ ăn theo version của <parent>
+-> khi thêm sẽ viết đè version (mysql-connector-java) -> có thể dùng được version cao hơn
