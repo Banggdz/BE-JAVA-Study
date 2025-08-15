@@ -1,0 +1,55 @@
+Các phương pháp xây dựng Web Service phổ biến hiện nay:
+1. Miễn phí:
+- Java EE (J2EE, Jakarta EE): Bao gồm các công nghệ như JPA, Servlet, JDBC, JSP, EJB, JAX-RS,...
+- Spring Framework (ra đời năm 2004): Gồm các module như Spring Boot, Spring Data JPA, Spring MVC,... (được sử dụng khoảng 70%)
+2. Có phí (CMS - Hệ thống quản lý nội dung):
+- Một số nền tảng như AEM, MULE,...
+
+🔄 Phiên bản tương ứng giữa Spring Boot và Spring Framework: | Phiên bản Spring Boot | Tương ứng với Spring Framework | |------------------------|-------------------------------| | 1.x.x                  | Spring Framework 4            | | 2.x.x                  | Spring Framework 5            | | 3.x.x                  | Spring Framework 6            |
+
+---🌐 Thiết lập môi trường JDBC với MySQL  (Với app netbeans)
+🔹 Bước 1: Cài đặt NetBeans IDE
+- Bạn có thể sử dụng bất kỳ IDE Java nào như Eclipse hoặc IntelliJ. Tuy nhiên, NetBeans IDE được khuyến nghị vì dễ cài đặt và sử dụng.
+- Phiên bản sử dụng: NetBeans IDE 8.2
+- Oracle cung cấp gói cài đặt tích hợp giữa NetBeans IDE và JDK, giúp bạn chỉ cần tải một tệp duy nhất để cài đặt cả hai.
+🔹 Bước 2: Cài đặt MySQL Connector/J
+- Truy cập trang tải về chính thức: MySQL Connector/J Download
+- Chọn phiên bản phù hợp và tiến hành tải xuống.
+sau đó sẽ có được file : mysql-connector-java-8.0.13.jar
+
+----Kết nối MySQL bằng JDBC Driver trong NetBeans IDE
+Bước 1: Mở hộp thoại thuộc tính dự án
+- Trong NetBeans IDE, tại phần tên dự án, hãy nhấp chuột phải.
+- Chọn mục "Properties" (Thuộc tính) từ menu hiện ra.
+- Hộp thoại Project Properties sẽ xuất hiện, cho phép bạn cấu hình các thiết lập cần thiết để kết nối với MySQL thông qua JDBC.
+ 
+Bước 2: 
+Ở phía bên trái của hộp thoại thuộc tính dự án, từ phần Danh mục, chọn mục Thư viện (Library).
+Nhấp vào nút ADD JAR/Folder, duyệt đến vị trí bạn đã cài đặt Trình kết nối MySQL/J 
+và chọn tệp JAR  sau đó nhấp vào nút OK là được.
+(mysql-connector-java-8.0.13.jar)
+
+Bước 3:
+🔹  1: Import 3 lớp sau vào
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+
+🔹  2: Thêm đoạn mã sau vào trong class của bạn
+static final String DB_URL = "jdbc:mysql://localhost:3306/mysqljdbc";
+static final String USER = "root";
+static final String PASS = "vanmanh172709";
+
+public static void main(String[] args) {
+    System.out.println("Connecting to a selected database...");
+    try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
+        System.out.println("Connected database successfully...");
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println("Connected database failed...");
+    }
+}
+
+
+
