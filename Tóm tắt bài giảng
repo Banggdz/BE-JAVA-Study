@@ -1,3 +1,4 @@
+Buổi 1:
 Các phương pháp xây dựng Web Service phổ biến hiện nay:
 1. Miễn phí:
 - Java EE (J2EE, Jakarta EE): Bao gồm các công nghệ như JPA, Servlet, JDBC, JSP, EJB, JAX-RS,...
@@ -10,5 +11,15 @@ war : có sẵn tomcat(Embed tomcat)
 
 <properties> : Liên quan đến cấu hình, môi trường
 <dependencies> : Liên quan đến thư viện(download)
-
 starter : là 1 cum library + có sẵn 1 số cấu hình luôn
+
+Buổi 2: Controller
+
+có 2 loại annotation:
+Annotation của người khác viết    vd:@RestController
+Annotation tự viết
+
+GET: lấy dữ liệu
+POST: thêm dữ liệu
+PUT: sửa dữ liệu
+DELETE: xóa dữ liệu
