@@ -15,6 +15,7 @@ starter : là 1 cum library + có sẵn 1 số cấu hình luôn
 
 Buổi 2: Controller
 
+Controller: Chuyển từ 1 java class qua 1 web restfull Api web service 
 có 2 loại annotation:
 Annotation của người khác viết    vd:@RestController
 Annotation tự viết
