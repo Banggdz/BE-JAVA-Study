@@ -1,3 +1,11 @@
+Các phần mềm bạn sẽ sử dụng trong Project spring boot api dùng eclipse:
+- Apache maven 3.8.5
+- Eclipse JEE 2018 hoặc có thể bản cao hơn
+- JDK 1.8
+- Spring boot 2.0.9.RELEASE (Trong lúc bạn cứ add Spring boot 1.5.22.RELEASE trước đã, khi nào học mình sẽ update)
+Các bước tạo project trong series tạo project spring boot api sử dụng eclipse
+ 
+
 --download:
 https://www.eclipse.org/downloads/download.php?file=/oomph/epp/2025-06/R/eclipse-inst-jre-win64.exe&mirror_id=1273
 - Group Id: Là tên miền của bạn, viết theo thứ tự ngược lại.
@@ -6,7 +14,7 @@ Ví dụ: Nếu tên miền là javaweb.com, thì Group Id sẽ là com.javaweb.
 Ví dụ: Nếu bạn đang xây dựng một hệ thống quản lý sinh viên, Artifact Id có thể là student-management.
 
 
-1.Tạo file mới,
+1.Mở Eclipse EE, sau đó File -> New -> other
 
 paste vào file pom.xml
 
@@ -36,6 +44,9 @@ paste vào file pom.xml
 chuột phải vào spring-boot-non-jwt - show in - terminal - paste mvn clean install
 lệnh này để xóa file JAR cũ và build file JAR mới để update code mới rồi ấn Enter để build
 
+vào window -> preferences 
+- Tìm jre -> ấn Installed JREs -> add file jdk 1.8 đã tải
+- Vào maven - user Setting - browse file apache-maven đã tải - confi - setting
 3.
 : Sau khi hoàn tất quá trình build project, tiếp tục thực hiện các bước sau:
 - Truy cập vào thư mục src/main/java
