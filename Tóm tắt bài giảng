@@ -23,3 +23,5 @@ GET: lấy dữ liệu
 POST: thêm dữ liệu
 PUT: sửa dữ liệu
 DELETE: xóa dữ liệu
+
+ctrl+shift+o : xóa các code (như import) ko dùng đến
