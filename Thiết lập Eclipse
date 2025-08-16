@@ -88,7 +88,7 @@ public class NewAPI {
 - Vào new - other - nhập "file"
 - Tạo một file mới tên là application.properties
 - Thêm dòng cấu hình sau vào file:
-server.port=3081
+server.port=8081
 
 
 🔎 Lưu ý:
