@@ -44,7 +44,6 @@ public class User {
     public void setName(String name) { this.name = name; }
 }
 
-
-
+Chuyển đổi data từ BE trả ra cho clien thành JSON
 
 ctrl+shift+o : xóa các code (như import) ko dùng đến
