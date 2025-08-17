@@ -20,9 +20,31 @@ có 2 loại annotation:
 Annotation của người khác viết    vd:@RestController
 Annotation tự viết
 
-GET: lấy dữ liệu
-POST: thêm dữ liệu
-PUT: sửa dữ liệu
-DELETE: xóa dữ liệu
+Các phương thức HTTP:
+- GET: Lấy dữ liệu
+- POST: Thêm dữ liệu
+- PUT: Sửa dữ liệu
+- DELETE: Xóa dữ liệu
+Ghi chú thêm:
+- Trong thực tế, nếu có nhiều cặp key-value thì cần tạo nhiều requestParam chi tiết.
+Hai đối tượng có cấu trúc giống JSON:
+- Map<>: ví dụ như HashMap
+- Java Bean
+Map vs Java Bean:
+- Map (ví dụ HashMap<String, Object>):
+- Dùng khi bạn muốn lưu trữ dữ liệu linh hoạt, không cần định nghĩa trước.
+- Ví dụ: map.put("name", "Nguyễn");
+- Java Bean:
+- Là class có các thuộc tính (fields), có getter/setter.
+- Dùng khi bạn muốn làm việc với dữ liệu có cấu trúc rõ ràng.
+- Ví dụ:
+public class User {
+    private String name;
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+}
+
+
+
 
 ctrl+shift+o : xóa các code (như import) ko dùng đến
