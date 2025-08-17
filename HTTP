@@ -37,6 +37,10 @@ Dùng data transfer object
     public void getBuilding2(@RequestBody BuildingDTO buildingDTO) {
     		System.out.print("ok");
     }
+@RequestMapping(value="/api/building/",method=RequestMethod.POST)
+    public BuildingDTO getBuilding2(@RequestBody BuildingDTO buildingDTO) {
+    		return buildingDTO;
+    }
 --
 package com.javaweb.Beans;
 
