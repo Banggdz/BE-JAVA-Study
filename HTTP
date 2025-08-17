@@ -1,0 +1,52 @@
+BuildingAPI.java
+
+package com.javaweb.api;
+
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class BuildingAPI {
+
+    @RequestMapping(value="/api/building/",method = RequestMethod.GET)
+    public void getBuilding(@RequestParam(value="name",required=false) String nameBuilding,
+    						   @RequestParam(value="numberOfBasement",required=false) Integer numberOfBasement,
+    						   @RequestParam(value="ward",required=false) String ward
+    		) {
+        System.out.print(nameBuilding+" "+numberOfBasement);
+    }
+
+  Tìm kiếm trên param
+//    @RequestMapping(value="/api/building/",method=RequestMethod.POST)
+//    public void getBuilding2(@RequestParam Map<String,String>params) {
+//    		System.out.print("ok");
+//    }
+Lấy object JSON từ client (body)
+    @RequestMapping(value="/api/building/",method=RequestMethod.POST)
+    public void getBuilding2(@RequestBody Map<String,String>params) {
+    		System.out.print("ok");
+    }
+}
+Dùng data transfer object
+@RequestMapping(value="/api/building/",method=RequestMethod.POST)
+    public void getBuilding2(@RequestBody BuildingDTO buildingDTO) {
+    		System.out.print("ok");
+    }
+--
+package com.javaweb.Beans;
+
+public class BuildingDTO {
+	private String name;
+	private Integer numberOfBasement;
+	private String ward;
+	private String street;
+	public String getName() {
+		return name;
+	}
+	...
+}
