@@ -81,6 +81,19 @@ public class BuildingAPI {
         result.setNumberOfBasement(numberOfBasement);
         result.setWard(ward);
         return result;
+
+List<BuildingDTO> listBuildings = new ArrayList<>();
+        BuildingDTO buildingDTO1 = new BuildingDTO();
+        buildingDTO1.setName("ABC Building");
+        buildingDTO1.setNumberOfBasement(3);
+        buildingDTO1.setWard("Tan Mai");
+        BuildingDTO buildingDTO2 = new BuildingDTO();
+        buildingDTO2.setName("ACM Tower");
+        buildingDTO2.setNumberOfBasement(2);
+        buildingDTO2.setWard("Da Cao");
+        listBuildings.add(buildingDTO1);
+        listBuildings.add(buildingDTO2);
+        return listBuildings;
     }
     
     @PostMapping(value="/api/building/")
