@@ -69,3 +69,78 @@ return{
         "Không chia được cho 0"
     ]
 }
+----- Customer exception -----
+
+@PostMapping(value="/api/building/")
+    public Object getBuilding(@RequestBody BuildingDTO building) {
+    	try {
+    		valiDate(building);
+    	}
+    	catch(Exception e) {
+    		ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO();
+    		errorResponseDTO.setError(e.getMessage());
+    		List<String>details=new ArrayList<>();
+    		details.add("Check again name or numberOfBasement becauseof NULL");
+    		errorResponseDTO.setDetail(details);
+    		return errorResponseDTO;
+    	}
+	return null;
+
+    }
+public void valiDate(BuildingDTO buildingDTO)throws FieldRequiredException {
+	if(buildingDTO.getName()==null||buildingDTO.getName().equals("")||buildingDTO.getNumberOfBasement()==null) {
+		throw new FieldRequiredException("name or numberOfBasement is null");
+	}
+}
+
+-- FieldRequiredException.java
+package com.javaweb.customerexception;
+
+public class FieldRequiredException extends Exception{
+	public FieldRequiredException(String s) {
+		super(s);
+		// TODO Auto-generated constructor stub
+	}
+
+	public FieldRequiredException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+		// TODO Auto-generated constructor stub
+	}
+
+	public FieldRequiredException(String message, Throwable cause) {
+		super(message, cause);
+		// TODO Auto-generated constructor stub
+	}
+
+	public FieldRequiredException(Throwable cause) {
+		super(cause);
+		// TODO Auto-generated constructor stub
+	}
+}
+
+-- ErrorResponseDTO.java
+package com.javaweb.Beans;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ErrorResponseDTO {
+	private String error;
+	private List<String>detail=new ArrayList<String>();
+	public String getError() {
+		return error;
+	}
+	public void setError(String error) {
+		this.error = error;
+	}
+	public List<String> getDetail() {
+		return detail;
+	}
+	public void setDetail(List<String> detail) {
+		this.detail = detail;
+	}
+	
+}
+
+
