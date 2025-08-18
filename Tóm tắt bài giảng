@@ -72,3 +72,20 @@ vd:
 /api/users/?role=manager → lấy toàn bộ user có role là quản lý
 /api/users/?buildingId=10 → lấy toàn bộ user quản lý cái building có id bằng 10
 HTTP Response status code:
+✅ Các ví dụ về API hợp lệ:
+- /api/users?buildingId=10&role=staff
+- /api/users
+- /api/users?role=manager
+❌ Không hợp lệ:
+- /api/staff/user
+
+📡 Mã trạng thái HTTP:
+- 2XX: Thành công (OK)
+- 4XX: Lỗi thường do phía Frontend (FE)
+- 5XX: Lỗi chắc chắn từ phía Backend (BE)
+
+🔍 Xử lý dữ liệu từ param khi kiểu dữ liệu là String:
+- Nếu không có key → giá trị nhận được là null
+- Nếu có key nhưng không có value → giá trị nhận được là chuỗi rỗng ""
+
+
