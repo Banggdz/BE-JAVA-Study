@@ -44,8 +44,21 @@ public class User {
     public void setName(String name) { this.name = name; }
 }
 @ResponseBody
-Chuyển đổi data từ server (BE) trả ra cho clien thành JSON để java hiểu
-
+Chuyển đổi data (JAVA bean,list<bean>,map..) từ server (BE) trả ra cho clien thành JSON để java hiểu
+[
+    {
+        "name": "ABC Building",
+        "numberOfBasement": 3,
+        "ward": "Tan Mai",
+        "street": null
+    },
+    {
+        "name": "ACM Tower",
+        "numberOfBasement": 2,
+        "ward": "Da Cao",
+        "street": null
+    }
+]
 ctrl+shift+o : xóa các code (như import) ko dùng đến
 
 Buổi 3: Controller(tt) + Http status code
