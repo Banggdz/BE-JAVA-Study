@@ -87,5 +87,5 @@ HTTP Response status code:
 🔍 Xử lý dữ liệu từ param khi kiểu dữ liệu là String:
 - Nếu không có key → giá trị nhận được là null
 - Nếu có key nhưng không có value → giá trị nhận được là chuỗi rỗng ""
-
+Còn Integer trả về null
 
