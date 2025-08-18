@@ -50,7 +50,7 @@ public class BuildingAPI {
     }
    
 }
-vẫn báo request successfull 200 ok dù lỗi -> Dùng try catch để báo lỗi trong return
+vẫn báo request successfull 200 ok dù lỗi -> Dùng try catch hoặc @ControllerAdvice để báo lỗi trong return
 return{
     "error": "/ by zero",
     "detail": [
