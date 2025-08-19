@@ -59,6 +59,12 @@ return{
     ]
 }
 ----- Customer exception -----
+Khi bạn dùng annotation @RequestBody, Spring sẽ tự động dùng HttpMessageConverter, mặc định là MappingJackson2HttpMessageConverter 
+để chuyển JSON thành object Java.
+Jackson sẽ:
+Đọc key "name" → tìm setter setName(String) → gọi với value "Tòa nhà A".
+Đọc key "numberOfBasement" → tìm setter setNumberOfBasement(Integer) → gọi với value 3.
+Quy tắc: key JSON trùng tên với field hoặc getter/setter trong class → tự động map.
 
 @PostMapping(value="/api/building/")
     public Object getBuilding(@RequestBody BuildingDTO building) {
