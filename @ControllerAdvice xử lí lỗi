@@ -1,11 +1,8 @@
 🟢 2xx – Thành công
-
 200 OK → thành công, có dữ liệu trả về
 return ResponseEntity.ok(user);
-
 201 CREATED → tạo mới resource thành công
 return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-
 204 NO_CONTENT → thành công, không có body (thường dùng cho DELETE)
 return ResponseEntity.noContent().build();
 
@@ -22,3 +19,10 @@ return ResponseEntity.noContent().build();
 🟠 5xx – Lỗi phía Server
 500 INTERNAL_SERVER_ERROR → lỗi chung trong server (NullPointerException, bug code…)
 503 SERVICE_UNAVAILABLE → dịch vụ tạm ngừng, quá tải, hoặc bảo trì
+@ControllerAdvice:
+Là một annotation của Spring dùng để định nghĩa một lớp toàn cục chứa các logic xử lý chung cho nhiều @Controller.
+Nó khai báo các phương thức @ExceptionHandler, @InitBinder, hoặc @ModelAttributeđược chia sẻ trên nhiều @Controller class.
+
+Trong @ControllerAdvice, bạn có thể dùng:
+@ExceptionHandler
+Bắt và xử lý các exception xảy ra trong controller.
