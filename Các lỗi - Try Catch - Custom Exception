@@ -82,6 +82,7 @@ Quy tắc: key JSON trùng tên với field hoặc getter/setter trong class →
 	return null;
 
     }
+ném ra exception tự custom
 public void valiDate(BuildingDTO buildingDTO)throws FieldRequiredException {
 	if(buildingDTO.getName()==null||buildingDTO.getName().equals("")||buildingDTO.getNumberOfBasement()==null) {
 		throw new FieldRequiredException("name or numberOfBasement is null");
