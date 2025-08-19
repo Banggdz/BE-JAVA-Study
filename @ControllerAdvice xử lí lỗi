@@ -22,7 +22,29 @@ return ResponseEntity.noContent().build();
 @ControllerAdvice:
 Là một annotation của Spring dùng để định nghĩa một lớp toàn cục chứa các logic xử lý chung cho nhiều @Controller.
 Nó khai báo các phương thức @ExceptionHandler, @InitBinder, hoặc @ModelAttributeđược chia sẻ trên nhiều @Controller class.
+HttpHeaders headers = new HttpHeaders();
+headers.add("Custom-Header", "MyValue");
 
 Trong @ControllerAdvice, bạn có thể dùng:
 @ExceptionHandler
 Bắt và xử lý các exception xảy ra trong controller.
+
+1. Trả về chỉ body
+return ResponseEntity.ok("Hello World");
+body = "Hello World"
+status = 200 OK
+headers = rỗng
+
+2.Trả về body + headers + status
+return new ResponseEntity<>("Data here", headers, HttpStatus.CREATED);
+
+body = "Data here"
+headers = { Custom-Header: MyValue }
+status = 201 CREATED
+
+3. Trả về body + status
+return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
+
+body = "Invalid input"
+status = 400 BAD_REQUEST
+headers = rỗng
