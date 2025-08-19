@@ -1,0 +1,24 @@
+🟢 2xx – Thành công
+
+200 OK → thành công, có dữ liệu trả về
+return ResponseEntity.ok(user);
+
+201 CREATED → tạo mới resource thành công
+return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+
+204 NO_CONTENT → thành công, không có body (thường dùng cho DELETE)
+return ResponseEntity.noContent().build();
+
+🔴 4xx – Lỗi phía Client
+400 BAD_REQUEST → request sai, dữ liệu không hợp lệ (validate fail, thiếu field…)
+401 UNAUTHORIZED → chưa đăng nhập / token sai
+403 FORBIDDEN → có đăng nhập nhưng không đủ quyền
+404 NOT_FOUND → không tìm thấy resource (sai ID, sai URL)
+405 METHOD_NOT_ALLOWED → method không hỗ trợ (gửi POST vào API chỉ cho GET)
+409 CONFLICT → xung đột dữ liệu (ví dụ: đăng ký username đã tồn tại)
+415 UNSUPPORTED_MEDIA_TYPE → Content-Type không đúng (ví dụ client gửi text/plain thay vì application/json)
+422 UNPROCESSABLE_ENTITY → dữ liệu đúng format nhưng vi phạm rule nghiệp vụ
+
+🟠 5xx – Lỗi phía Server
+500 INTERNAL_SERVER_ERROR → lỗi chung trong server (NullPointerException, bug code…)
+503 SERVICE_UNAVAILABLE → dịch vụ tạm ngừng, quá tải, hoặc bảo trì
