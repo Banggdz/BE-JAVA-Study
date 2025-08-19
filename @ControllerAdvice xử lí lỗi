@@ -9,7 +9,7 @@ return ResponseEntity.noContent().build();
 
 🔴 4xx – Lỗi phía Client
 400 BAD_REQUEST → request sai, dữ liệu không hợp lệ (validate fail, thiếu field…)
-401 UNAUTHORIZED → chưa đăng nhập / token sai
+401 UNAUTHORIZED → chưa đăng nhập / token sai / quá thời hạn đăng nhập
 403 FORBIDDEN → có đăng nhập nhưng không đủ quyền
 404 NOT_FOUND → không tìm thấy resource (sai ID, sai URL)
 405 METHOD_NOT_ALLOWED → method không hỗ trợ (gửi POST vào API chỉ cho GET)
