@@ -146,8 +146,14 @@ Xây dựng mô hình MVC, 3-Layer
 Modal:kết quả
 Code quá nhiều (Vi phạm yêu cầu SOLID)
 Người đến sau đọc sẽ không hiểu gì cả, rất lâu debug
+Presentation Layer ⇒ @RestController ⇒ Controller Class
+Business Logic Layer ⇒ @Service ⇒ Service Class xử lý dữ liệu đầu ra theo yêu cầu của client
+
+Data Access Layer ⇒ @Repository ⇒ Repository Class
+(Entity map 1:1 DB) hứng dữ liệu từ ResultSet trả ra
 Lấy dữ liệu lên: JDBC → JPA → Spring Data JPA
 Resultset → (Java Bean) Entity (map 1:1 với DB) → Filter → DTO (model) → View
 
 Update dữ liệu:
 View → DTO (model) → Filter → Entity → DB
+--
