@@ -42,3 +42,28 @@ VD return:
     }
 ]
 }
+-----
+  public List<BuildingDTO> getBuilding(@RequestParam(name="name")String name) {
+    		String sql = "SELECT * FROM building b WHERE name like '%"+name+"%'";
+    		List<BuildingDTO> result = new ArrayList<>();
+    		
+    		try(Connection conn = DriverManager.getConnection(DB_URL,USER,PASS);
+    				Statement stmt = conn.createStatement();
+    				ResultSet rs = stmt.executeQuery(sql);){
+    				while(rs.next()) {
+    					BuildingDTO building = new BuildingDTO();
+    					building.setName(rs.getString("name"));
+    					building.setStreet(rs.getString("street"));
+    					building.setWard(rs.getString("ward"));
+    					building.setNumberOfBasement(rs.getInt("numberofbasement"));
+    					result.add(building);
+    				}
+    		}
+    		catch(SQLException e) {
+    			e.printStackTrace();
+    		}
+    		System.out.print("SQL"); 
+    		System.out.print(result); 
+    		return result;
+
+    }
