@@ -106,3 +106,29 @@ Tổng cộng: 9 table
 1 khách hàng sẽ được nhiều nhân viên cùng quản lý – 1 nhân viên có thể quản lý nhiều khách hàng ⇒ N:N
 - Giữa khách hàng với nhân viên sẽ có nhiều giao dịch với nhau ⇒ Mỗi giao dịch thì sẽ nhiều loại giao dịch
 1 giao dịch thì nó sẽ có nhiều loại giao dịch
+- Quận 
+- Phường
+- Đường
+- Kết cấu
+- Số tầng hầm
+- Diện tích sàn
+- Hướng
+- Hạng
+- Diện tích thuê
+- Giá thuê
+- Mô tả giá
+- Phí dịch vụ
+- Phí ô tô
+- Phí mô tô
+- Phí ngoài giờ
+- Tiền điện
+- Đặt cọc
+- Thanh toán
+- Thời hạn thuê
+- Thời gian trang trí
+- Tên quản lý
+- SDT quản lý
+- Phí môi giới
+- Loại tòa nhà
+- Ghi chú
+
