@@ -4,7 +4,9 @@ public class BuildingAPI {
 	static final String USER = "root";
 	static final String PASS = "a0903298117";
 	
-	
+	//	Nhận request
+//	Xử lí query (thao tác trong DB)
+//	Trả dữ liệu theo yêu cầu của client
 	@GetMapping(value="/api/building/")
     public List<BuildingDTO> getBuilding() {
     		String sql = "SELECT * FROM building";
