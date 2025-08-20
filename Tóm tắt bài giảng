@@ -99,8 +99,12 @@ Phân công nhân viên quản lý:
 • 	Một nhân viên có thể quản lý nhiều tòa nhà → quan hệ N:N
 • 	Một khách hàng có thể do nhiều nhân viên cùng quản lý
 • 	Một nhân viên có thể quản lý nhiều khách hàng
-Hệ thống người dùng:
+Hệ thống người dùng user:
 • 	Một tài khoản chỉ có một vai trò (role) - Một vai trò có thể được gán cho nhiều tài khoản
+user(id,username,pass)
+bảng trung gian
+role(id,code(MANAGER,STAFF..),name)
+
 Tổng cộng: 9 table
 - Giao khách hàng cho nhân viên quản lý
 1 khách hàng sẽ được nhiều nhân viên cùng quản lý – 1 nhân viên có thể quản lý nhiều khách hàng ⇒ N:N
