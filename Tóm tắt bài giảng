@@ -108,6 +108,7 @@ role(id,code(MANAGER,STAFF..),name(Quản lí,Nhân viên ..)
 Tổng cộng: 9 table
 - Giao khách hàng cho nhân viên quản lý
 1 khách hàng sẽ được nhiều nhân viên cùng quản lý – 1 nhân viên có thể quản lý nhiều khách hàng ⇒ N:N
+customer(id,fullname,phone,email)
 - Giữa khách hàng với nhân viên sẽ có nhiều giao dịch với nhau ⇒ Mỗi giao dịch thì sẽ nhiều loại giao dịch
 1 giao dịch thì nó sẽ có nhiều loại giao dịch
 - Quận (lưu dạng id)
