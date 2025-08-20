@@ -143,6 +143,7 @@ Làm để ra đúng yêu cầu → Clean Code:
 
 Design Pattern
 Xây dựng mô hình MVC, 3-Layer
+Modal:kết quả
 Code quá nhiều (Vi phạm yêu cầu SOLID)
 Người đến sau đọc sẽ không hiểu gì cả, rất lâu debug
 Lấy dữ liệu lên: JDBC → JPA → Spring Data JPA
