@@ -103,7 +103,7 @@ Hệ thống người dùng user:
 • 	Một tài khoản chỉ có một vai trò (role) - Một vai trò có thể được gán cho nhiều tài khoản
 user(id,username,pass)
 bảng trung gian
-role(id,code(MANAGER,STAFF..),name)
+role(id,code(MANAGER,STAFF..),name(Quản lí,Nhân viên ..)
 
 Tổng cộng: 9 table
 - Giao khách hàng cho nhân viên quản lý
