@@ -1,0 +1,18 @@
+- git --version
+Kiểm tra phiên bản Git đang sử dụng.
+- git clone <URL>
+Sao chép (clone) một repository từ GitHub về máy tính cá nhân.
+- git status
+Kiểm tra trạng thái hiện tại của repository (các thay đổi, file đã được thêm hay chưa...).
+- git add <tên_file>
+Thêm một file cụ thể vào vùng staging.
+- git add .
+Thêm tất cả các file chưa được thêm vào vùng staging.
+- git commit
+Sau khi gõ lệnh, nhấn i để nhập nội dung commit → nhấn Esc → gõ :wq để lưu và thoát.
+- git push
+Đẩy các thay đổi từ máy tính lên GitHub.
+- git checkout -b <tên_branch>
+Tạo và chuyển sang một nhánh mới.
+- git checkout <tên_branch>
+Chuyển sang một nhánh đã tồn tại.
