@@ -140,13 +140,14 @@ customer(id,fullname,phone,email)
 ------------
 
 Làm để ra đúng yêu cầu → Clean Code:
-https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
 Design Pattern
 Xây dựng mô hình MVC, 3-Layer
 Modal:kết quả
 Code quá nhiều (Vi phạm yêu cầu SOLID)
+https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
+
 Người đến sau đọc sẽ không hiểu gì cả, rất lâu debug
-Presentation Layer ⇒ @RestController ⇒ Controller Class
+Presentation Layer (Chứa MVC)⇒ @RestController ⇒ Controller Class
 Business Logic Layer ⇒ @Service ⇒ Service Class xử lý dữ liệu đầu ra theo yêu cầu của client
 
 Data Access Layer ⇒ @Repository ⇒ Repository Class
