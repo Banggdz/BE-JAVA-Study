@@ -66,7 +66,42 @@ Client → HTTP GET /api/building → BuildingAPI (Controller)
        → Repository trả List<BuildingEntity>
        → Service chuyển thành List<BuildingDTO>
        → Controller trả JSON về Client
+--1. Bean là gì?
 
+Trong Spring Framework:
+Bean = object do Spring quản lý trong container (ApplicationContext)
+Spring tạo bean từ các class được đánh dấu @Component, @Service, @Repository, @Controller, hoặc khai báo bằng @Bean trong @Configuration.
+Spring quản lý vòng đời của bean:
+
+Tạo instance
+Tiêm các phụ thuộc (dependencies)
+Destroy khi ứng dụng kết thúc
+
+Bean	                 Annotation	           Vai trò
+BuildingRepositoryImpl	@Repository	    Truy xuất dữ liệu từ database
+BuildingServiceImp	     @Service	    Xử lý logic nghiệp vụ
+BuildingAPI	          @RestController	Nhận request từ client và trả response
+Nếu đánh dấu class bằng các annotation như:@Component @Service @Repository @Controller
+Khi Spring Boot quét package, nó sẽ tự tạo object (instance) từ class đó, đưa vào container và quản lý nó dưới dạng Bean.
+
+Ví dụ:
+@Service
+public class BuildingService {
+    public String getInfo() {
+        return "Building info";
+    }
+}
+
+→ Spring tạo 1 object BuildingService và lưu trong container dưới tên bean mặc định "buildingService".
+2. Inject (Dependency Injection) là gì?
+
+Dependency Injection (DI) = Spring tự động gắn bean này vào bean khác, thay vì bạn phải tự tạo object.
+Trong Spring có nhiều cách DI, phổ biến nhất là Autowired:
+@Autowired
+private BuildingService buildingService;
+
+Ở đây, Spring nhìn vào type (BuildingService) và tìm bean cùng type để inject vào.
+Bạn không cần viết new BuildingServiceImp(), Spring tự tạo instance và gắn vào.
 ---
 @RestController
 public class BuildingAPI {
