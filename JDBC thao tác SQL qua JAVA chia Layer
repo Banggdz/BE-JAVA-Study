@@ -1,0 +1,201 @@
+Nhận dữ liệu qua buildingApi -> Đẩy qua BuildingService
+1. Khởi động ứng dụng
+
+1.Spring Boot đọc class @SpringBootApplication (ví dụ Application.java).
+2.Spring tạo Spring Context (ApplicationContext) – là nơi quản lý tất cả các bean.
+3.Spring quét toàn bộ package con (component scan) để tìm các class được đánh dấu:
+@RestController → tạo bean controller
+@Service → tạo bean service
+@Repository → tạo bean repository
+Spring tự động tiêm các dependency (dependency injection) dựa vào @Autowired.
+
+2. Spring quản lý bean
+a. Bean trong project của bạn:
+Bean	                   Annotation	         Vai trò
+BuildingAPI	             @RestController	Nhận request HTTP từ client
+BuildingServiceImp       @Service       	Xử lý business logic
+BuildingRepositoryImpl	 @Repository	    Truy xuất dữ liệu từ database
+
+b. Dependency Injection
+
+Trong BuildingAPI:
+@Autowired
+private BuildingService buildingService;
+→ Spring sẽ tiêm (Inject) bean BuildingServiceImp vào buildingService.
+Trong BuildingServiceImp:
+@Autowired
+private BuildingRepository buildingRepository;
+→ Spring sẽ tiêm bean BuildingRepositoryImpl vào buildingRepository
+
+3.
+3. Quy trình chạy khi client gọi API
+a. Gọi GET /api/building?name=ABC
+Client gửi HTTP GET request tới /api/building?name=ABC.
+Spring MVC dispatch request tới BuildingAPI.getBuilding().
+Spring tự động lấy giá trị name=ABC từ query parameter.
+getBuilding() gọi:
+List<BuildingDTO> result = buildingService.findAll(name);
+
+b. Service Layer (BuildingServiceImp.findAll())
+BuildingServiceImp gọi buildingRepository.findAll(name).
+Repository Layer truy xuất database bằng JDBC.
+
+c. Repository Layer (BuildingRepositoryImpl.findAll())
+Kết nối database:
+Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+Thực thi SQL:
+SELECT * FROM building b WHERE name like '%ABC%'
+Lấy dữ liệu từ ResultSet, map thành BuildingEntity, lưu vào List<BuildingEntity>.
+Trả List<BuildingEntity> lên BuildingServiceImp.
+
+d. Service Layer tiếp tục
+BuildingServiceImp chuyển đổi BuildingEntity thành BuildingDTO.
+Trả List<BuildingDTO> về BuildingAPI.
+
+e. Controller trả kết quả
+BuildingAPI trả List<BuildingDTO> về client dưới dạng JSON.
+Client nhận dữ liệu.
+BuildingEntity:	Đại diện dữ liệu thực tế từ database. Có tất cả các trường của bảng building trong MySQL.
+BuildingDTO:	Data Transfer Object – dùng để truyền dữ liệu giữa server và client (API). Chỉ chứa những thông tin cần thiết cho client, có thể gộp hoặc loại bỏ trường không cần thiết.
+Tóm tắt
+Client → HTTP GET /api/building → BuildingAPI (Controller)
+       → BuildingServiceImp (Service)
+       → BuildingRepositoryImpl (Repository)
+       → Database (MySQL)
+       → Repository trả List<BuildingEntity>
+       → Service chuyển thành List<BuildingDTO>
+       → Controller trả JSON về Client
+
+---
+@RestController
+public class BuildingAPI {
+	@Autowired
+	private BuildingService buildingService;
+	
+	@GetMapping(value="/api/building/")
+    public List<BuildingDTO> getBuilding(@RequestParam(name="name")String name) {
+		List<BuildingDTO> result = buildingService.findAll(name);
+    		return result;
+    }
+    @DeleteMapping(value="/api/building/{id}/{name}")
+    public void deleteBuilding(@PathVariable Integer id,
+    		@PathVariable String name,
+    		@RequestParam(value="ward",required=false) String ward
+    		) {
+    		System.out.print("Đã xóa tòa nhà có id: "+id+" ten: "+name);   
+    }
+}
+---- Layer Service
+@Service
+public class BuildingServiceImp implements BuildingService{
+	@Autowired
+	private BuildingRepository buildingRepository;
+	@Override
+	public List<BuildingDTO> findAll(String name) {
+		List<BuildingEntity> buildingEntities = buildingRepository.findAll(name);
+		List<BuildingDTO> result = new ArrayList<BuildingDTO>();
+		for(BuildingEntity item:buildingEntities) {
+			BuildingDTO building = new BuildingDTO();
+			building.setName(item.getName());
+			building.setAddress(item.getStreet()+" "+item.getWard());
+			building.setNumberOfBasement(item.getNumberOfBasement());
+			result.add(building);
+		}
+		
+		return result;
+	}
+}
+---- Layer Repository
+@Repository
+public class BuildingRepositoryImpl implements BuildingRepository{
+	static final String DB_URL = "jdbc:mysql://localhost:3306/estatebasic";
+	static final String USER = "root";
+	static final String PASS = "a0903298117";
+	
+	@Override
+	public List<BuildingEntity> findAll(String name) {
+		String sql = "SELECT * FROM building b WHERE name like '%"+name+"%'";
+		List<BuildingEntity> result = new ArrayList<>();
+		
+		try(Connection conn = DriverManager.getConnection(DB_URL,USER,PASS);
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql);){
+				while(rs.next()) {
+					BuildingEntity building = new BuildingEntity();
+					building.setName(rs.getString("name"));
+					building.setStreet(rs.getString("street"));
+					building.setWard(rs.getString("ward"));
+					building.setNumberOfBasement(rs.getInt("numberofbasement"));
+					result.add(building);
+				}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+}
+---
+package com.javaweb.respository.entity;
+
+public class BuildingEntity {
+	private String name;
+	private Integer numberOfBasement;
+	private String ward;
+	private String street;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Integer getNumberOfBasement() {
+		return numberOfBasement;
+	}
+	public void setNumberOfBasement(Integer numberOfBasement) {
+		this.numberOfBasement = numberOfBasement;
+	}
+	public String getWard() {
+		return ward;
+	}
+	public void setWard(String ward) {
+		this.ward = ward;
+	}
+	public String getStreet() {
+		return street;
+	}
+	public void setStreet(String street) {
+		this.street = street;
+	}
+	
+	}
+---
+package com.javaweb.model;
+
+public class BuildingDTO {
+	private String name;
+	private Integer numberOfBasement;
+	private String address;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Integer getNumberOfBasement() {
+		return numberOfBasement;
+	}
+	public void setNumberOfBasement(Integer numberOfBasement) {
+		this.numberOfBasement = numberOfBasement;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+}
+
