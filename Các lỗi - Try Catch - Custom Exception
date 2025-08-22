@@ -50,6 +50,12 @@ public class BuildingAPI {
     public BuildingDTO getBuilding2(@RequestBody BuildingDTO buildingDTO) {
     		return buildingDTO;
     }
+vd Body trong postman raw-JSON (viết ra body rồi post):
+{
+    "numberOfElement":4,
+    "ward":"Tan Mai",
+    "street":"Le Van Viet"
+}
     @DeleteMapping(value="/api/building/{id}/{name}")
     public void deleteBuilding(@PathVariable Integer id,
     		@PathVariable String name,
