@@ -14,7 +14,7 @@ Ví dụ: Nếu tên miền là javaweb.com, thì Group Id sẽ là com.javaweb.
 Ví dụ: Nếu bạn đang xây dựng một hệ thống quản lý sinh viên, Artifact Id có thể là student-management.
 
 
-1.Mở Eclipse EE, sau đó File -> New -> other
+1.Mở Eclipse EE, sau đó File -> New -> other -> maven project
 
 paste vào file pom.xml
 
