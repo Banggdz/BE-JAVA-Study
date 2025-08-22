@@ -102,6 +102,31 @@ private BuildingService buildingService;
 
 Ở đây, Spring nhìn vào type (BuildingService) và tìm bean cùng type để inject vào.
 Bạn không cần viết new BuildingServiceImp(), Spring tự tạo instance và gắn vào.
+
+src/main/java
+└── com.javaweb
+    ├── api
+    │   └── BuildingAPI.java
+    ├── controllerAdvice
+    │   └── ControllerAdvisor.java
+    ├── model
+    │   ├── BuildingDTO.java
+    │   └── ErrorResponseDTO.java
+    ├── repository
+    │   ├── entity
+    │   │   ├── BuildingEntity.java
+    │   │   └── DistrictEntity.java
+    │   └── impl
+    │       └── BuildingRepositoryImpl.java
+    │       └── BuildingRepository.java
+    └── service
+        ├── impl
+        │   └── BuildingServiceImp.java
+        └── BuildingService.java
+└── Application.java
+└── customerexception
+    └── FieldRequiredException.java
+
 ---
 @RestController
 public class BuildingAPI {
