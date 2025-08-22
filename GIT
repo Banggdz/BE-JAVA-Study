@@ -20,3 +20,6 @@ Sau khi gõ lệnh, nhấn i để nhập nội dung commit → nhấn Esc → g
 Tạo và chuyển sang một nhánh mới.
 - git checkout <tên_branch>
 Chuyển sang một nhánh đã tồn tại.
+
+
+Nhấp chuột phải vào file ko muốn push lên github -> TortoiseGit -> delete and add to ignore list -> *project
