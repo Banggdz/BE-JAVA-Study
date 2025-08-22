@@ -15,7 +15,7 @@ Ví dụ: Nếu bạn đang xây dựng một hệ thống quản lý sinh viên
 
 
 1.Mở Eclipse EE, sau đó File -> New -> other -> maven project
-
+tick Create a simple project
 paste vào file pom.xml
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
