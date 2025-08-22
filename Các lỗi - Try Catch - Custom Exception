@@ -2,7 +2,15 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
 https://200lab.io/blog/exception-la-gi-cach-xu-ly-exception-java
 https://www.tpointtech.com/custom-exception-in-java
 
-package com.javaweb.api;
+Trong Spring MVC:
+
+@GetMapping("/api/building/")
+public List<BuildingDTO> getBuildings(
+    @RequestParam(required = false) String name
+) { ... }
+Spring tự hiểu name là tên của query parameter.
+Nếu bạn chỉ truyền 1 biến và tên biến trùng với tên query parameter, bạn có thể bỏ value=.
+@RequestParam(value = "name", required = false) String name
 
 @RestController
 public class BuildingAPI {
