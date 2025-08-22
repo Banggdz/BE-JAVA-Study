@@ -1,4 +1,4 @@
-Tạo folder mới, copy file spring-non-jwt vào, Nhấp chuột phải vào nơi muốn tạo git, ấn git bash, nhập git clone + link respository github, git add., git push
+Tạo folder mới, copy file spring-non-jwt vào, Nhấp chuột phải vào nơi muốn tạo git, ấn git bash, nhập git clone + link respository github, git add., git push, ấn ^wq
 - git --version
 Kiểm tra phiên bản Git đang sử dụng.
 - git clone <URL>
