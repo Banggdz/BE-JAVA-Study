@@ -41,12 +41,12 @@ paste vào file pom.xml
 </project>
 // Dung ban spring boot 2.09 RL
 2.
-chuột phải vào spring-boot-non-jwt - show in - terminal - paste mvn clean install
+chuột phải vào spring-boot-non-jwt (tên dự án) - show in - terminal - paste: mvn clean install
 lệnh này để xóa file JAR cũ và build file JAR mới để update code mới rồi ấn Enter để build
 
 vào window -> preferences 
 - Tìm jre -> ấn Installed JREs -> add file jdk 1.8 đã tải
-- Vào maven - user Setting - browse file apache-maven đã tải - confi - setting
+- Vào maven - user Setting - browse user Setting file apache-maven đã tải - confi - setting
 3.
 : Sau khi hoàn tất quá trình build project, tiếp tục thực hiện các bước sau:
 - Truy cập vào thư mục src/main/java
