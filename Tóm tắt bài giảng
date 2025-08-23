@@ -93,7 +93,7 @@ Project 1:
 Cấu trúc quản lý tòa nhà và khách hàng:
 • 	Một quận có nhiều tòa nhà
 • 	Một tòa nhà có thể có nhiều diện tích cho thuê
-• 	Một tòa nhà có thể thuộc nhiều loại tòa nhà khác nhau
+• 	Một tòa nhà có thể có nhiều loại hình cho thuê -> N:N
 Phân công nhân viên quản lý:
 • 	Một tòa nhà có thể do nhiều nhân viên cùng quản lý
 • 	Một nhân viên có thể quản lý nhiều tòa nhà → quan hệ N:N
