@@ -118,7 +118,7 @@ src/main/java
     │   │   └── DistrictEntity.java
     │   └── impl
     │       └── BuildingRepositoryImpl.java
-    │       └── BuildingRepository.java
+    │   └── BuildingRepository.java
     └── service
         ├── impl
         │   └── BuildingServiceImpl.java
