@@ -121,7 +121,7 @@ src/main/java
     │       └── BuildingRepository.java
     └── service
         ├── impl
-        │   └── BuildingServiceImp.java
+        │   └── BuildingServiceImpl.java
         └── BuildingService.java
 └── Application.java
 └── customerexception
