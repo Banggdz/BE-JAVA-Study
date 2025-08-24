@@ -157,4 +157,6 @@ Resultset → (Java Bean) Entity (map 1:1 với DB) → Filter → DTO (model) �
 
 Update dữ liệu:
 View → DTO (model) → Filter → Entity → DB
---
+-----
+JPA
+https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#repositories.query-methods
