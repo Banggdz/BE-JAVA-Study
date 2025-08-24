@@ -1,4 +1,5 @@
 Nhận dữ liệu qua buildingApi -> Đẩy qua BuildingService
+https://shareprogramming.net/dung-lau-nhung-ban-co-phan-biet-duoc-component-va-bean-trong-spring-khong/
 1. Khởi động ứng dụng
 
 1.Spring Boot đọc class @SpringBootApplication (ví dụ Application.java).
