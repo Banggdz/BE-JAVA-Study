@@ -14,6 +14,7 @@ Thêm một file cụ thể vào vùng staging.
 Thêm tất cả các file chưa được thêm vào vùng staging.
 - git commit
 Sau khi gõ lệnh, nhấn i để nhập nội dung commit → nhấn Esc → gõ :wq để lưu và thoát.
+hoặc: git commit -m "...."
 - git push
 Đẩy các thay đổi từ máy tính lên GitHub.
 - git checkout -b <tên_branch>
