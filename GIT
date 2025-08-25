@@ -1,4 +1,4 @@
-Tạo folder mới, Nhấp chuột phải vào nơi muốn tạo git, ấn git bash, nhập git clone + link respository github, copy file spring-non-jwt vào, bật lại git bash trong folder lấy từ github, git add., 
+Tạo folder mới, Nhấp chuột phải vào nơi muốn tạo git(để .git trong folder project), ấn git bash, nhập git clone + link respository github, copy file spring-non-jwt vào, bật lại git bash trong folder lấy từ github, git add., 
 git commit: Nhập nội dung commit message ở trên cùng (thay chữ push bằng nội dung bạn muốn).Sau đó bấm:Esc (để thoát khỏi chế độ nhập).Gõ lệnh: :wq rồi nhấn Enter
 → nghĩa là write & quit (lưu và thoát)
 git push, 
