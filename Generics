@@ -1,0 +1,34 @@
+Khi bạn viết một class bình thường với biến (Object), bạn phải chỉ định kiểu dữ liệu cụ thể.
+
+class Box {
+    private Object content;
+
+    public void set(Object content) { this.content = content; }
+    public Object get() { return content; }
+}
+Box b = new Box();
+b.set("Hello");
+String s = (String) b.get();   // phải cast
+--
+Class <T> là giải pháp
+<T> là ký hiệu đại diện cho kiểu dữ liệu, bạn chưa biết trước là kiểu gì, và sẽ xác định khi tạo đối tượng.
+T không phải là một kiểu cụ thể, mà là chỗ trống đại diện cho kiểu sẽ được xác định khi sử dụng.
+Khi tạo đối tượng, bạn chỉ định kiểu thực tế cho T.
+
+class Box<T> {
+    private T content;  // T là kiểu do bạn xác định khi tạo object
+
+    public void set(T content) { this.content = content; }
+    public T get() { return content; }
+}
+Box<String> stringBox = new Box<>();  // T = String
+stringBox.set("Hello");
+String s = stringBox.get();           // Không cần cast
+
+Box<Integer> intBox = new Box<>();    // T = Integer
+intBox.set(123);
+Integer i = intBox.get();             // Không cần cast
+
+<T> ở đây là type parameter của method, định nghĩa một kiểu tổng quát (generic type) cho method này, đại diện cho Class.
+T sẽ thay bằng một kiểu cụ thể khi gọi method, đại diện cho 1 Object.
+Điều này khác với class generic, vì method này có thể dùng cho bất kỳ kiểu nào, ngay cả khi class không generic.
