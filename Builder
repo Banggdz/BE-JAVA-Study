@@ -1,0 +1,67 @@
+package builder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BuildingSearchBuilder {
+
+    private final String name;
+    private final Long floorArea;
+    private final String ward;
+    private final String street;
+    private final String districtCode;
+    private final Integer numberOfBasement;
+    private final List<String> typeCode;
+
+Chỉ Builder có thể tạo object.
+Constructor lấy Builder làm tham số và copy tất cả giá trị từ Builder sang object.
+Đặt private để bên ngoài không thể gọi trực tiếp, buộc phải dùng Builder.
+
+    private BuildingSearchBuilder(Builder builder) {
+        this.name = builder.name;
+        this.floorArea = builder.floorArea;
+        this.ward = builder.ward;
+        this.street = builder.street;
+        this.districtCode = builder.districtCode;
+        this.numberOfBasement = builder.numberOfBasement;
+        this.typeCode = builder.typeCode;
+
+    }
+
+    // ===== Getters =====
+    public String getName() { return name; }
+    public Long getFloorArea() { return floorArea; }
+    public String getWard() { return ward; }
+    public String getStreet() { return street; }
+    public String getDistrictCode() { return districtCode; }
+    public Integer getNumberOfBasement() { return numberOfBasement; }
+    public List<String> getTypeCode() { return typeCode; }
+
+    // ===== Builder =====
+    public static class Builder {
+        private String name;
+        private Long floorArea;
+        private String ward;
+        private String street;
+        private String districtCode;
+        private Integer numberOfBasement;
+        private List<String> typeCode = new ArrayList<>();
+
+        public Builder setName(String name) { this.name = name; return this; }
+        public Builder setFloorArea(Long floorArea) { this.floorArea = floorArea; return this; }
+        public Builder setWard(String ward) { this.ward = ward; return this; }
+        public Builder setStreet(String street) { this.street = street; return this; }
+        public Builder setDistrictCode(String districtCode) { this.districtCode = districtCode; return this; }
+        public Builder setNumberOfBasement(Integer numberOfBasement) { this.numberOfBasement = numberOfBasement; return this; }
+        public Builder setTypeCode(List<String> typeCode) { this.typeCode = typeCode; return this; }
+
+Khi bạn gọi build(), Builder sẽ tạo object BuildingSearchBuilder mới.
+Constructor của BuildingSearchBuilder sẽ copy tất cả giá trị từ Builder sang object chính.
+Sau khi build, bạn có 1 object bất biến, không thể thay đổi.
+        public BuildingSearchBuilder build() {
+            return new BuildingSearchBuilder(this);
+        }
+    }
+}
+Ví dụ cách dùng :
+BuildingSearchBuilder buildingSearchBuilder = new BuildingSearchBuilder.Builder().setName("Sun Tower").setFloorArea(2000L).build();
