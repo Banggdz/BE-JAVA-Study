@@ -2,6 +2,7 @@ Tạo folder mới, Nhấp chuột phải vào nơi muốn tạo git(để .git 
 git commit: Nhập nội dung commit message ở trên cùng (thay chữ push bằng nội dung bạn muốn).Sau đó bấm:Esc (để thoát khỏi chế độ nhập).Gõ lệnh: :wq rồi nhấn Enter
 → nghĩa là write & quit (lưu và thoát)
 git push, 
+(Nhớ thoát folder đang làm, mở folder lấy từ git về làm tiếp trên đó)
 - git --version
 Kiểm tra phiên bản Git đang sử dụng.
 
