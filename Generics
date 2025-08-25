@@ -11,9 +11,11 @@ b.set("Hello");
 String s = (String) b.get();   // phải cast
 --
 Class <T> là giải pháp
-<T> là ký hiệu đại diện cho kiểu dữ liệu, bạn chưa biết trước là kiểu gì, và sẽ xác định khi tạo đối tượng.
-T không phải là một kiểu cụ thể, mà là chỗ trống đại diện cho kiểu sẽ được xác định khi sử dụng.
+<T> là ký hiệu đại diện cho kiểu dữ liệu, chưa biết trước là kiểu gì, sẽ xác định khi tạo đối tượng.
+T không phải là một kiểu cụ thể, mà là chỗ trống đại diện cho kiểu sẽ được xác định khi sử dụng, .
 Khi tạo đối tượng, bạn chỉ định kiểu thực tế cho T.
+-> <T>: để "giới thiệu" một tham số kiểu cho compiler biết.
+    T : để "sử dụng" tham số kiểu đó trong code.
 
 class Box<T> {
     private T content;  // T là kiểu do bạn xác định khi tạo object
