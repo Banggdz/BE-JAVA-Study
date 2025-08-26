@@ -1,3 +1,87 @@
+1. Client gửi request tới API
+Ví dụ: client gọi URL:
+GET /api/building/?name=Sun&districtId=1&typeCode=OFFICE&typeCode=RETAIL
+Các tham số query (name, districtId, typeCode) được Spring Boot tự động map vào @RequestParam Map<String,Object> params và List<String> typeCode trong NewAPI.getBuilding().
+
+2. Controller nhận request
+@GetMapping("/api/building/")
+public Object getBuilding(@RequestParam Map<String,Object> params,
+                          @RequestParam(name = "typeCode", required = false) List<String> typeCode) {
+    return buildingService.findAll(params,typeCode);
+}
+
+NewAPI chỉ gọi buildingService.findAll để lấy dữ liệu.
+Đây là lớp điều hướng (Controller), nhiệm vụ chính là nhận request, gọi Service và trả dữ liệu JSON.
+
+3. Service xử lý logic nghiệp vụ
+@Override
+public List<BuildingDTO> findAll(Map<String,Object> params,List<String> typeCode) {
+    BuildingSearchBuilder buildingSearchBuilder = buildingSearchBuilderConverter.toBuildingSearchBuilder(params,typeCode);
+    List<BuildingEntity> buildingEntities = buildingRepository.findAll(buildingSearchBuilder);
+    List<BuildingDTO> result = new ArrayList<>();
+    for(BuildingEntity item: buildingEntities) {
+        result.add(buildingDTOConverter.toBuildingDTO(item));
+    }
+    return result;
+}
+
+Bước 1: Converter BuildingSearchBuilderConverter chuyển các params + typeCode thành object BuildingSearchBuilder.
+Mục đích: gói tất cả tham số tìm kiếm vào một object để Repository dùng.
+Bước 2: Repository (buildingRepository.findAll(buildingSearchBuilder)) thực hiện query SQL.
+Bước 3: Kết quả BuildingEntity được convert sang BuildingDTO để trả ra API (DTO thường chỉ chứa dữ liệu cần thiết, tránh lộ DB entity).
+
+4. Repository thực hiện query SQL
+
+BuildingRepository.findAll(BuildingSearchBuilder builder) có thể dùng JPA, Hibernate hoặc JDBC để query.
+Repository sẽ:
+Lấy tất cả các field từ builder (ví dụ: name, districtId, typeCode)
+Xây dựng SQL động: ví dụ:
+
+SELECT * FROM building b
+WHERE 1=1
+  AND (:name IS NULL OR b.name LIKE :name)
+  AND (:districtId IS NULL OR b.districtid = :districtId)
+  AND (:typeCode IS NULL OR b.typecode IN (:typeCode))
+
+Thực hiện query với các tham số đã bind.
+Map kết quả SQL ra entity (BuildingEntity) tương ứng với cột trong DB.
+
+5. Entity → DTO
+BuildingDTOConverter chuyển BuildingEntity → BuildingDTO.
+Ví dụ:
+public BuildingDTO toBuildingDTO(BuildingEntity entity) {
+    BuildingDTO dto = new BuildingDTO();
+    dto.setId(entity.getId());
+    dto.setName(entity.getName());
+    dto.setDistrictId(entity.getDistrictid());
+    ...
+    return dto;
+}
+
+Mục đích: tránh trả toàn bộ DB entity, chỉ trả dữ liệu client cần.
+
+6. Service trả danh sách DTO
+Service trả List<BuildingDTO> cho Controller.
+
+7. Controller trả response JSON
+Spring Boot tự động chuyển List<DTO> → JSON
+Response client nhận được sẽ trông như:
+[
+  {
+    "id": 1,
+    "name": "Sun Tower",
+    "districtId": 1,
+    "typeCode": ["OFFICE","RETAIL"],
+    "managerName": "John Doe",
+    ...
+  },
+  ...
+]
+
+Tóm tắt sơ đồ luồng dữ liệu
+Client → HTTP Request → Controller → Service → Converter → Repository → SQL → DB
+   ← JSON Response ← DTO ← Entity ← SQL Result ← Repository ← Builder/Converter
+--
 @RestController
 public class BuildingAPI {
 	static final String DB_URL = "jdbc:mysql://localhost:3306/estatebasic";
