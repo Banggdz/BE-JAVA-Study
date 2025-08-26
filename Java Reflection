@@ -75,7 +75,7 @@ public static void queryNormal(BuildingSearchBuilder buildingSearchBuilder,Strin
 			if(!fieldName.equals("staffId")&&!fieldName.equals("typeCode")
 					&&!fieldName.startsWith("area")&&!fieldName.startsWith("rentPrice")) {
 //			Lấy giá trị của field item qua instance, trả về object public Object get(Object obj)
-				Object value = item.get(buildingSearchBuilder).toString();
+				Object value = item.get(buildingSearchBuilder);
 				if(value != null) {
 					if(item.getType().getName().equals("java.lang.Long")||item.getType().getName().equals("java.lang.Integer")) {
 						where.append(" AND b."+fieldName+" = "+value);
