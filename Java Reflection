@@ -1,0 +1,93 @@
+https://gpcoder.com/2883-huong-dan-su-dung-java-reflection/
+
+import java.lang.reflect.Field;
+
+class Student {
+    private Long id;
+    public String name;
+    protected int age;
+}
+public class TestReflection {
+    public static void main(String[] args) throws Exception {
+        Class<?> clazz = Student.class;
+        // Lấy tất cả field (kể cả private/protected)
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field f : fields) {
+            System.out.println("Field: " + f.getName());
+            System.out.println("   -> getType(): " + f.getType());      // Class<?> object
+            System.out.println("   -> getType().getName(): " + f.getType().getName());  // tên đầy đủ
+            System.out.println("   -> getType().getSimpleName(): " + f.getType().getSimpleName()); // tên ngắn
+            System.out.println("---------------------");
+        }
+
+        // Lấy field private "id"
+        Field idField = clazz.getDeclaredField("id");
+        idField.setAccessible(true); // Cho phép truy cập private
+
+        // Gán giá trị cho instance Student
+        Student st = new Student();
+        idField.set(st, 123L);  // gán giá trị 123L vào private id
+
+        // Lấy giá trị
+        Object value = idField.get(st);
+        System.out.println("Giá trị id = " + value);
+    }
+}
+Field: id
+   -> getType(): class java.lang.Long
+   -> getType().getName(): java.lang.Long
+   -> getType().getSimpleName(): Long
+---------------------
+Field: name
+   -> getType(): class java.lang.String
+   -> getType().getName(): java.lang.String
+   -> getType().getSimpleName(): String
+---------------------
+Field: age
+   -> getType(): int
+   -> getType().getName(): int
+   -> getType().getSimpleName(): int
+---------------------
+Giá trị id = 123
+getType() → Trả về một Class object đại diện cho kiểu dữ liệu của field.
+Ví dụ: class java.lang.String, class java.lang.Long, hoặc int.
+
+getType().getName() → Trả về tên đầy đủ (fully qualified name) của kiểu.
+Ví dụ: "java.lang.String", "java.lang.Long", "int".
+
+getType().getSimpleName() → Trả về tên ngắn gọn (chỉ tên class không có package).
+Ví dụ: "String", "Long", "int".
+
+getDeclaredField("id") → Lấy field id (dù là private).
+setAccessible(true) → Cho phép bỏ qua kiểm tra truy cập để thao tác với private/protected field.
+
+field.set(object, value) → Gán giá trị vào field của object.
+field.get(object) → Lấy giá trị field từ object (trả về Object nên có thể cần ép kiểu).
+
+public static void queryNormal(BuildingSearchBuilder buildingSearchBuilder,StringBuilder where) {
+	try {
+		Field[] fields = BuildingSearchBuilder.class.getDeclaredFields();
+		for(Field item : fields) {
+//field.setAccessible(true) cho phép :Đọc,ghi giá trị private,Dùng reflection với bất kỳ access modifier nào
+			item.setAccessible(true);
+//			.getName() trả về tên của phương thức dưới dạng String.Ví dụ, nếu class có private String name; → fieldName = "name".	tương tự .getStaffId()		
+			String fieldName = item.getName();
+			if(!fieldName.equals("staffId")&&!fieldName.equals("typeCode")
+					&&!fieldName.startsWith("area")&&!fieldName.startsWith("rentPrice")) {
+//			Lấy giá trị của field item qua instance, trả về object public Object get(Object obj)
+				Object value = item.get(buildingSearchBuilder).toString();
+				if(value != null) {
+					if(item.getType().getName().equals("java.lang.Long")||item.getType().getName().equals("java.lang.Integer")) {
+						where.append(" AND b."+fieldName+" = "+value);
+					}
+					else {
+						where.append(" AND b."+fieldName+" LIKE '%"+value+"%' ");
+					}
+				}
+			}
+			
+		}
+	}
+	catch (Exception e) {
+		e.printStackTrace();	}
+}
