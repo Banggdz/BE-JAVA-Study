@@ -118,3 +118,9 @@ public class Bikini implements Outfit {
 📌Tóm lại
 🔴@Component → tạo ra Bean (instance) và đưa vào IoC Container (ApplicationContext).
 🔴@Autowired → lấy Bean đã có sẵn trong Container và gắn vào chỗ bạn cần.
+
+📌 @Autowired có thể đặt ở 3 nơi chính:
+
+🔹Trên constructor → gọi là constructor injection.
+🔹Trên field → gọi là field injection.
+🔹Trên setter method (như ví dụ bạn đưa) → gọi là setter injection.
