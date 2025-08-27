@@ -1,5 +1,5 @@
 Nhiệm vụ chính của Spring là tạo ra một cái Container chứa các Dependency cho chúng ta.
-SpringApplication.run(App.class, args) chính là câu lệnh để tạo ra container. 
+SpringApplication.run(App.class, args) là câu lệnh để tạo ra container. 
 Sau đó nó tìm toàn bộ các dependency trong project của bạn và đưa vào đó.
 Spring đặt tên cho container là ApplicationContext và đặt tên cho các DEPENDENCY là BEAN
 
@@ -11,7 +11,7 @@ public class OrderService {
 👉 Ở đây, OrderService phụ thuộc (depend) vào PaymentService. 
 
 ----- @Component
-@Component là một Annotation (chú thích) đánh dấu trên các Class để giúp Spring biết nó là một Bean.
+📌@Component là một Annotation (chú thích) đánh dấu trên các Class để giúp Spring biết nó là một Bean.
 
 public interface Outfit {
     public void wear();
@@ -52,9 +52,13 @@ Spring Boot khi chạy sẽ dò tìm toàn bộ các Class cùng cấp hoặc �
 Khi gặp một class được đánh dấu @Component thì nó sẽ ❗tạo ra một instance (new Bikini) và đưa vào ApplicationContext để quản lý.
 
 ----- @Autowired
-Bây giờ mình tạo ra một Class Girl và có một thuộc tính là Outfit.
-Mình cũng đánh dấu Girl là một @Component. 
-Tức Spring Boot cần tạo ra một instance của Girl để quản lý.
+📌@Autowired đánh dấu cho Spring biết rằng sẽ tự động inject bean tương ứng vào vị trí được đánh dấu.
+
+Bây giờ mình tạo ra một Class Girl và có một thuộc tính là Outfit, 
+- Đánh dấu Girl là một @Component
+👉 Tức Spring Boot cần tạo ra một instance của Girl để quản lý.
+- Đánh dấu thuộc tính Outfit của Girl bởi Annotation @Autowired.
+👉 Nói với Spring Boot hãy tự ❗inject (tiêm) một instance của Outfit vào thuộc tính này khi khởi tạo Girl.
 @Component
 public class Girl {
     @Autowired
@@ -65,16 +69,11 @@ public class Girl {
     // GET 
     // SET
 }
-
-Đánh dấu thuộc tính Outfit của Girl bởi Annotation @Autowired. 
-Điều này nói với Spring Boot hãy tự ❗inject (tiêm) một instance của Outfit vào thuộc tính này khi khởi tạo Girl.
-
 @SpringBootApplication
 public class App {
     public static void main(String[] args) {
         // ApplicationContext chính là container, chứa toàn bộ các Bean
         ApplicationContext context = SpringApplication.run(App.class, args);
-
         // Khi chạy xong, lúc này context sẽ chứa các Bean có đánh dấu @Component.
 
         // Lấy Bean ra bằng cách
