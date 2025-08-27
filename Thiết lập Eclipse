@@ -48,6 +48,9 @@ vào window -> preferences
 - Tìm jre -> ấn Installed JREs -> add file jdk 1.8 đã tải
 - Vào maven - user Setting - browse user Setting file apache-maven đã tải - confi - setting
 3.
+Nếu trong Java truyền thống, khi chạy cả một project phải định nghĩa một hàm main() và để nó khởi chạy đầu tiên.
+Thì Spring Boot cũng vậy, phải chỉ cho Spring Boot biết nơi nó khởi chạy lần đầu, để nó cài đặt mọi thứ.
+Cách thực hiện là thêm annotation @SpringBootApplication trên class chính và gọi SpringApplication.run(App.class, args); để chạy project.
 : Sau khi hoàn tất quá trình build project, tiếp tục thực hiện các bước sau:
 - Truy cập vào thư mục src/main/java
 - Tạo một package mới với tên: com.javaweb
