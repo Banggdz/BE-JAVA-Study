@@ -160,3 +160,28 @@ View → DTO (model) → Filter → Entity → DB
 -----
 JPA
 https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#repositories.query-methods
+
+🌐 Các công nghệ Java Persistence
+1. JDBC (Java Database Connectivity)
+- Viết tay 100%, dài dòng, dễ gây lỗi.
+- Phụ thuộc nhiều vào cơ sở dữ liệu (DB).
+- Vì hạn chế này, JPA (Java Persistence API) ra đời để đơn giản hóa.
+2. ORM (Object-Relational Mapping)
+- Kết nối trực tiếp với các Java Bean, cụ thể là Entity (mỗi Entity ánh xạ 1:1 với bảng trong DB).
+- Là nền tảng cho JPA.
+3. JPA
+- Sử dụng khoảng 60% trong ứng dụng.
+- Có 2 cách truy vấn:
+- JPQL (JPA Query Language): Làm việc hoàn toàn với Entity.
+- SQL Native: Viết truy vấn SQL thuần, cần hiểu rõ ngôn ngữ SQL.
+4. Spring Data JPA
+- Tích hợp với hệ sinh thái Spring Framework (FW4 → FW5).
+- Giúp đơn giản hóa thao tác với JPA, chỉ cần viết interface, không cần code chi tiết.
+- Sử dụng khoảng 30% trong ứng dụng.
+
+🔁 Tỷ lệ sử dụng trong thực tế (ước lượng):
+- JDBC: 100% (cơ bản, nhưng ít dùng trực tiếp)
+- JPA: 60%
+- Spring Data JPA: 30%
+- Hibernate: 70–80% (là một framework ORM phổ biến, hỗ trợ JPA)
+
