@@ -1,14 +1,15 @@
 Nhiệm vụ chính của Spring là tạo ra một cái Container chứa các Dependency cho chúng ta.
 SpringApplication.run(App.class, args) là câu lệnh để tạo ra container. 
 Sau đó nó tìm toàn bộ các dependency trong project của bạn và đưa vào đó.
-Spring đặt tên cho container là ApplicationContext và đặt tên cho các DEPENDENCY là BEAN
-
-- Dependency (Bean) là một class cần sử dụng chức năng/tài nguyên của một class khác để hoạt động.
+Spring đặt tên cho container là ApplicationContext và đặt tên cho các Dependency là bean (muốn dependency là bean phải dùng annotation đánh dấu)
+📌Dependency là một class cần sử dụng chức năng/tài nguyên của một class khác để hoạt động.
 Ví dụ:
 public class OrderService {
     private PaymentService paymentService;
 }
 👉 Ở đây, OrderService phụ thuộc (depend) vào PaymentService. 
+----- @SpringBootApplication: 
+Đánh dấu class là application được xây dựng bởi Spring Boot và nó sẽ được khởi tạo từ hàm main của class
 
 ----- @Component
 📌@Component là một Annotation (chú thích) đánh dấu trên các Class để giúp Spring biết nó là một Bean.
