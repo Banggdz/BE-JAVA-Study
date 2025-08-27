@@ -12,7 +12,7 @@ public class OrderService {
 
 ----- @Component
 📌@Component là một Annotation (chú thích) đánh dấu trên các Class để giúp Spring biết nó là một Bean.
-
+❗Ko dùng cho methods, fields
 public interface Outfit {
     public void wear();
 }
@@ -52,7 +52,8 @@ Spring Boot khi chạy sẽ dò tìm toàn bộ các Class cùng cấp hoặc �
 Khi gặp một class được đánh dấu @Component thì nó sẽ ❗tạo ra một instance (new Bikini) và đưa vào ApplicationContext để quản lý.
 🚨Chuyên biệt hóa (specialization) của @Component:
 ✏️ @Service: Dùng cho tầng Service (Business logic layer), đánh dấu class này chuyên xử lý nghiệp vụ
-✏️ @Repository: Dùng cho tầng DAO (Data Access Object / Repository layer).Bắt Exception liên quan đến persistence (CSDL) và chuyển thành Spring DataAccessException.
+✏️ @Repository: Dùng cho tầng DAO (Data Access Object / Repository layer).Thao tác trực tiếp với database
+    Bắt Exception liên quan đến persistence (CSDL) và chuyển thành Spring DataAccessException.
 ✏️ @Controller: dùng cho tầng Controller (Spring MVC).
 ✏️ @RestController: dùng cho REST API (trả JSON/XML).
 
