@@ -141,8 +141,12 @@ customer(id,fullname,phone,email)
 
 Làm để ra đúng yêu cầu → Clean Code:
 Design Pattern
+
 Xây dựng mô hình MVC, 3-Layer
+https://mona.software/mo-hinh-mvc/
+
 Modal:kết quả
+
 Code quá nhiều (Vi phạm yêu cầu SOLID)
 https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design
 
