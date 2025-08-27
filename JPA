@@ -1,1 +1,5 @@
+- Reference Documentation:
 https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#repositories.query-methods
+- ORM:
+ORM là 1 kỹ thuật lập trình giúp ánh xạ các record dữ liệu trong hệ quản trị cơ sở dữ liệu sang dạng đối tượng đang định nghĩa trong các class
+https://viblo.asia/p/object-relational-mapping-djeZ1PQ3KWz
