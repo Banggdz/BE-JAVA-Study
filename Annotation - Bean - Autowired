@@ -1,0 +1,121 @@
+Nhiệm vụ chính của Spring là tạo ra một cái Container chứa các Dependency cho chúng ta.
+SpringApplication.run(App.class, args) chính là câu lệnh để tạo ra container. 
+Sau đó nó tìm toàn bộ các dependency trong project của bạn và đưa vào đó.
+Spring đặt tên cho container là ApplicationContext và đặt tên cho các DEPENDENCY là BEAN
+
+- Dependency (Bean) là một class cần sử dụng chức năng/tài nguyên của một class khác để hoạt động.
+Ví dụ:
+public class OrderService {
+    private PaymentService paymentService;
+}
+👉 Ở đây, OrderService phụ thuộc (depend) vào PaymentService. 
+
+----- @Component
+@Component là một Annotation (chú thích) đánh dấu trên các Class để giúp Spring biết nó là một Bean.
+
+public interface Outfit {
+    public void wear();
+}
+implement nó là Class Bikini
+Đánh dấu class bằng @Component
+Class này sẽ được Spring Boot hiểu là một Bean (hoặc dependency) và sẽ được Spring Boot quản lý
+
+@Component
+public class Bikini implements Outfit {
+    @Override
+    public void wear() {
+        System.out.println("Mặc bikini");
+    }
+}
+@SpringBootApplication
+public class App {
+    public static void main(String[] args) {
+        // ApplicationContext chính là container, chứa toàn bộ các Bean
+        ApplicationContext context = SpringApplication.run(App.class, args);
+
+        // Khi chạy xong, lúc này context sẽ chứa các Bean có đánh dấu @Component.
+        // Lấy Bean ra bằng cách
+        Outfit outfit = context.getBean(Outfit.class);
+
+        // In ra để xem thử nó là gì
+        System.out.println("Instance: " + outfit);
+        // xài hàm wear()
+        outfit.wear();
+    }
+}
+Output:
+[1] Instance: me.loda.spring.helloworld.Bikini@1e1f6d9d
+[2] Mặc bikini
+Bạn sẽ thấy Outfit lúc này chính là Bikini. Class đã được đánh dấu là @Component.
+
+Spring Boot khi chạy sẽ dò tìm toàn bộ các Class cùng cấp hoặc ở trong các package thấp hơn so với class App mà bạn cung cấp cho Spring 
+Khi gặp một class được đánh dấu @Component thì nó sẽ ❗tạo ra một instance (new Bikini) và đưa vào ApplicationContext để quản lý.
+
+----- @Autowired
+Bây giờ mình tạo ra một Class Girl và có một thuộc tính là Outfit.
+Mình cũng đánh dấu Girl là một @Component. 
+Tức Spring Boot cần tạo ra một instance của Girl để quản lý.
+@Component
+public class Girl {
+    @Autowired
+    Outfit outfit;
+    public Girl(Outfit outfit) {
+        this.outfit = outfit;
+    }
+    // GET 
+    // SET
+}
+
+Đánh dấu thuộc tính Outfit của Girl bởi Annotation @Autowired. 
+Điều này nói với Spring Boot hãy tự ❗inject (tiêm) một instance của Outfit vào thuộc tính này khi khởi tạo Girl.
+
+@SpringBootApplication
+public class App {
+    public static void main(String[] args) {
+        // ApplicationContext chính là container, chứa toàn bộ các Bean
+        ApplicationContext context = SpringApplication.run(App.class, args);
+
+        // Khi chạy xong, lúc này context sẽ chứa các Bean có đánh dấu @Component.
+
+        // Lấy Bean ra bằng cách
+        Outfit outfit = context.getBean(Outfit.class);
+
+        // In ra để xem thử nó là gì
+        System.out.println("Output Instance: " + outfit);
+        // xài hàm wear()
+        outfit.wear();
+        Girl girl = context.getBean(Girl.class);
+
+        System.out.println("Girl Instance: " + girl);
+        System.out.println("Girl Outfit: " + girl.outfit);
+        girl.outfit.wear();
+    }
+}
+Output:
+[1] Output Instance: me.loda.spring.helloworld.Bikini@2e16f13a
+[2] Mặc bikini
+[3] Girl Instance: me.loda.spring.helloworld.Girl@353cb1cb
+[4] Girl Outfit: me.loda.spring.helloworld.Bikini@2e16f13a
+[5] Mặc bikini
+
+Spring Boot đã tự tạo ra một Girl và trong quá trình tạo ra đó, nó truyền Outfit vào làm thuộc tính.
+Singleton
+Các Bean được quản lý bên trong ApplicationContext đều là singleton. Bạn chắc đã để ý điều này từ các Output ở phía trên.
+
+[1] Output Instance: me.loda.spring.helloworld.Bikini@2e16f13a
+[4] Girl Outfit: me.loda.spring.helloworld.Bikini@2e16f13a
+
+Outfit ở 2 đối tượng trên là một.
+Tất cả những Bean được quản lý trong ApplicationContext đều chỉ được tạo ra một lần duy nhất và khi có Class yêu cầu @Autowired thì nó sẽ lấy đối tượng có sẵn trong ApplicationContext để inject vào.
+Trong trường hợp bạn muốn mỗi lần sử dụng là một instance hoàn toàn mới. Thì hãy đánh dấu @Component đó bằng @Scope("prototype")
+
+@Component
+@Scope("prototype")
+public class Bikini implements Outfit {
+    @Override
+    public void wear() {
+        System.out.println("Mặc bikini");
+    }
+📌Tóm lại
+🔴@Component → tạo ra Bean (instance) và đưa vào IoC Container (ApplicationContext).
+🔴@Autowired → lấy Bean đã có sẵn trong Container và gắn vào chỗ bạn cần.
