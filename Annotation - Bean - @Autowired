@@ -50,6 +50,11 @@ Bạn sẽ thấy Outfit lúc này chính là Bikini. Class đã được đánh
 
 Spring Boot khi chạy sẽ dò tìm toàn bộ các Class cùng cấp hoặc ở trong các package thấp hơn so với class App mà bạn cung cấp cho Spring 
 Khi gặp một class được đánh dấu @Component thì nó sẽ ❗tạo ra một instance (new Bikini) và đưa vào ApplicationContext để quản lý.
+🚨Chuyên biệt hóa (specialization) của @Component:
+✏️ @Service: Dùng cho tầng Service (Business logic layer), đánh dấu class này chuyên xử lý nghiệp vụ
+✏️ @Repository: Dùng cho tầng DAO (Data Access Object / Repository layer).Bắt Exception liên quan đến persistence (CSDL) và chuyển thành Spring DataAccessException.
+✏️ @Controller: dùng cho tầng Controller (Spring MVC).
+✏️ @RestController: dùng cho REST API (trả JSON/XML).
 
 ----- @Autowired
 📌@Autowired đánh dấu cho Spring biết rằng sẽ tự động inject bean tương ứng vào vị trí được đánh dấu.
