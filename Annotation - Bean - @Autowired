@@ -23,7 +23,7 @@ Bean	                   Annotation	         Vai trò
 BuildingAPI	             @RestController	Nhận request HTTP từ client
 BuildingServiceImp       @Service       	Xử lý business logic
 BuildingRepositoryImpl	 @Repository	    Truy xuất dữ liệu từ database
-📌Ví dụ:
+📌 Ví dụ:
 - Không dùng Bean (tự new đối tượng):
 public class BuildingService {
     private BuildingSearchBuilderConverter converter = new BuildingSearchBuilderConverter();
@@ -33,8 +33,20 @@ public class BuildingService {
 
 → Nếu class BuildingSearchBuilderConverter thay đổi constructor (ví dụ cần tham số khác), phải sửa ở tất cả chỗ dùng.
 - Dùng Bean (Spring quản lý):
+@Service
+public class BuildingService {
+    @Autowired
+    private BuildingSearchBuilderConverter converter;
 
-b. Dependency Injection
+    public void doSomething() {
+        converter.toBuildingSearchBuilder(...);
+    }
+}
+Bạn không cần new BuildingSearchBuilderConverter().
+Spring sẽ tự inject sẵn converter khi chạy chương trình.
+Nếu sau này converter có thêm dependency khác, Spring cũng tự lo luôn (không cần sửa code Service).
+
+📌 Dependency Injection
 Trong BuildingAPI:
 @Autowired
 private BuildingService buildingService;
@@ -43,6 +55,15 @@ Trong BuildingServiceImp:
 @Autowired
 private BuildingRepository buildingRepository;
 → Spring sẽ tiêm bean BuildingRepositoryImpl vào buildingRepository
+
+Dependency Injection (DI) = Spring tự động gắn bean này vào bean khác, thay vì bạn phải tự tạo object.
+Trong Spring có nhiều cách DI, phổ biến nhất là Autowired:
+@Autowired
+private BuildingService buildingService;
+
+Ở đây, Spring nhìn vào type (BuildingService) và tìm bean cùng type để inject vào.
+Bạn không cần viết new BuildingServiceImp(), Spring tự tạo ❗instance và gắn vào.
+
 ----- @SpringBootApplication: 
 Đánh dấu class là application được xây dựng bởi Spring Boot và nó sẽ được khởi tạo từ hàm main của class
 
