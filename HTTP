@@ -4,6 +4,10 @@ BuildingAPI.java
 Có từ Spring 2.x → đến nay vẫn còn dùng được.
 Nó là annotation gốc, cho phép định nghĩa nhiều method HTTP (GET, POST, PUT, DELETE…)
 
+@GetMapping, @PostMapping, @PutMapping, @DeleteMapping:
+Được giới thiệu từ Spring 4.3 (2016).
+Là annotation rút gọn của @RequestMapping cho từng method HTTP.
+Code gọn hơn, dễ đọc hơn. Ví dụ
 @RestController = @Controller + @ResponseBody
 
 @Controller
@@ -62,10 +66,7 @@ public class BuildingDTO {
 	...
 }
 
-@GetMapping, @PostMapping, @PutMapping, @DeleteMapping:
-Được giới thiệu từ Spring 4.3 (2016).
-Là annotation rút gọn của @RequestMapping cho từng method HTTP.
-Code gọn hơn, dễ đọc hơn. Ví dụ
+------------
 
 @RestController
 public class BuildingAPI {
