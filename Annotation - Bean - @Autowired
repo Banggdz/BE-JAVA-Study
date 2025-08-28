@@ -7,7 +7,42 @@ Ví dụ:
 public class OrderService {
     private PaymentService paymentService;
 }
-👉 Ở đây, OrderService phụ thuộc (depend) vào PaymentService. 
+👉 Ở đây, OrderService phụ thuộc (depend) vào PaymentService.
+----- Quy trình chạy
+📌 Khởi động ứng dụng
+1.Spring Boot đọc class @SpringBootApplication (ví dụ Application.java).
+2.Spring tạo Spring Context (ApplicationContext) – là nơi quản lý tất cả các bean.
+3.Spring quét toàn bộ package con (component scan) để tìm các class được đánh dấu:
+@RestController → tạo bean controller
+@Service → tạo bean service
+@Repository → tạo bean repository
+Spring tự động tiêm các dependency (dependency injection) dựa vào @Autowired.
+------ Spring quản lý bean
+a. Bean trong project của bạn:
+Bean	                   Annotation	         Vai trò
+BuildingAPI	             @RestController	Nhận request HTTP từ client
+BuildingServiceImp       @Service       	Xử lý business logic
+BuildingRepositoryImpl	 @Repository	    Truy xuất dữ liệu từ database
+📌Ví dụ:
+- Không dùng Bean (tự new đối tượng):
+public class BuildingService {
+    private BuildingSearchBuilderConverter converter = new BuildingSearchBuilderConverter();
+
+    public void doSomething() {
+        converter.toBuildingSearchBuilder(...);
+
+→ Nếu class BuildingSearchBuilderConverter thay đổi constructor (ví dụ cần tham số khác), phải sửa ở tất cả chỗ dùng.
+- Dùng Bean (Spring quản lý):
+
+b. Dependency Injection
+Trong BuildingAPI:
+@Autowired
+private BuildingService buildingService;
+→ Spring sẽ tiêm (Inject) bean BuildingServiceImp vào buildingService.
+Trong BuildingServiceImp:
+@Autowired
+private BuildingRepository buildingRepository;
+→ Spring sẽ tiêm bean BuildingRepositoryImpl vào buildingRepository
 ----- @SpringBootApplication: 
 Đánh dấu class là application được xây dựng bởi Spring Boot và nó sẽ được khởi tạo từ hàm main của class
 
@@ -57,6 +92,34 @@ Khi gặp một class được đánh dấu @Component thì nó sẽ ❗tạo ra
     Bắt Exception liên quan đến persistence (CSDL) và chuyển thành Spring DataAccessException.
 ✏️ @Controller: dùng cho tầng Controller (Spring MVC).
 ✏️ @RestController: dùng cho REST API (trả JSON/XML).
+---
+1. Khởi động ứng dụng
+
+1.Spring Boot đọc class @SpringBootApplication (ví dụ Application.java).
+2.Spring tạo Spring Context (ApplicationContext) – là nơi quản lý tất cả các bean.
+3.Spring quét toàn bộ package con (component scan) để tìm các class được đánh dấu:
+@RestController → tạo bean controller
+@Service → tạo bean service
+@Repository → tạo bean repository
+Spring tự động tiêm các dependency (dependency injection) dựa vào @Autowired.
+
+2. Spring quản lý bean
+a. Bean trong project của bạn:
+Bean	                   Annotation	         Vai trò
+BuildingAPI	             @RestController	Nhận request HTTP từ client
+BuildingServiceImp       @Service       	Xử lý business logic
+BuildingRepositoryImpl	 @Repository	    Truy xuất dữ liệu từ database
+
+b. Dependency Injection
+
+Trong BuildingAPI:
+@Autowired
+private BuildingService buildingService;
+→ Spring sẽ tiêm (Inject) bean BuildingServiceImp vào buildingService.
+Trong BuildingServiceImp:
+@Autowired
+private BuildingRepository buildingRepository;
+→ Spring sẽ tiêm bean BuildingRepositoryImpl vào buildingRepository
 
 ----- @Autowired
 📌@Autowired đánh dấu cho Spring biết rằng sẽ tự động inject bean tương ứng vào vị trí được đánh dấu.
