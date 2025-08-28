@@ -12,8 +12,33 @@ Code gọn hơn, dễ đọc hơn.
     @RequestBody thường đường dùng cùng với các RESTful API như POST, PUT.
 👉 @RequestParam: trích xuất thông tin từ URL.
 👉 @ResponseBody: được dùng để liên kết dữ liệu trả về với một đối tượng, Spring Boot sẽ serialize đối tượng này để trả về một đối tượng JSON hoặc XML.
+
+@Controller
+
+Là annotation được dùng để đánh dấu một class là Controller trong mô hình MVC.
+Nó thường được sử dụng với Spring MVC để trả về View (HTML, JSP, Thymeleaf, …) thay vì dữ liệu JSON/XML.
+Khi return một giá trị từ method, Spring sẽ hiểu đó là tên View, và sẽ đi tìm template tương ứng để render.
+
+👉 Ví dụ:
+
+@Controller
+public class HomeController {
+    
+    @GetMapping("/home")
+    public String homePage(Model model) {
+        model.addAttribute("message", "Xin chào Spring MVC!");
+        return "home"; // Trả về file home.html (hoặc home.jsp)
+    }
+}
+Ở đây "home" là view name, không phải dữ liệu JSON.
+
+2. @RestController
 @RestController = @Controller + @ResponseBody
 
+👉 Dữ liệu return từ method có dạng  JSON/XML, không đi qua View Resolver.
+Thường dùng để xây dựng RESTful API (Web Service).
+
+-----
 @Controller
 public class BuildingAPI {
 
