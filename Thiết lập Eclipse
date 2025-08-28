@@ -101,7 +101,7 @@ ta thay đổi sang cổng 8081
 6. Run
 Chuột phải Application.java - run as - java application
 
-bonus:
+bonus:Để kết nối với mySql
 vào web
 (https://dev.mysql.com/doc/connectors/en/connector-j-installing-maven.html
 paste code vào pom.xml:
