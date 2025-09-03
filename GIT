@@ -1,9 +1,20 @@
-Tạo folder mới, Nhấp chuột phải vào nơi muốn tạo git(để .git trong folder project), ấn git bash, nhập git clone + link respository github, copy file spring-non-jwt vào, bật lại git bash trong folder lấy từ github, git add., 
+✨Tạo folder mới, Nhấp chuột phải vào nơi muốn tạo git(để .git trong folder project), 
+ấn git bash, nhập git clone + link respository github, copy file spring-non-jwt vào, bật lại git bash trong folder lấy từ github, git add., 
 git commit: Nhập nội dung commit message ở trên cùng (thay chữ push bằng nội dung bạn muốn).Sau đó bấm:Esc (để thoát khỏi chế độ nhập).Gõ lệnh: :wq rồi nhấn Enter
 → nghĩa là write & quit (lưu và thoát)
 git push, 
 (Nhớ thoát folder đang làm, mở folder lấy từ github về làm tiếp trên đó)
-- git --version
+
+✨ Cách chuyển các file chưa được add/commit sang nhánh khác để commit và push lên github ở nhánh đó:
+git stash push -u -m "Mang tất cả thay đổi sang nhánh khác"
+git checkout builder
+git stash pop
+(Mặc định, git stash chỉ lưu file đã được Git theo dõi (tracked).Các file untracked (mới tạo, chưa git add) thì Git bỏ qua.Nếu muốn stash cả untracked 
+-m "message" : Ghi chú cho stash (để dễ nhớ).
+-u : Bao gồm cả file mới (untracked).
+-a : Bao gồm cả file bị ignore.
+
+- git --version thì thêm -u.)
 Kiểm tra phiên bản Git đang sử dụng.
 
 - git clone <URL>
