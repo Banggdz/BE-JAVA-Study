@@ -1,7 +1,33 @@
 https://gpcoder.com/2883-huong-dan-su-dung-java-reflection/
 
-import java.lang.reflect.Field;
+--- Nạp Class động
+try {
+    Class c =  Class.forName("com.gpcoder.Cat");
+	System.out.println(c.getName()); // in ra "com.gpcoder.Cat"
+		(Lúc này bạn có một đối tượng Class (metadata về class Cat).
+		Nhưng bạn chưa có đối tượng Cat nào cả.)
+} catch (ClassNotFoundException e) {
+    System.err.println(e);
+}
+🔸Đây là cách nạp (load) class động bằng tên (string).
+"com.gpcoder.Cat" là tên đầy đủ (fully qualified name) của class Cat trong package com.gpcoder.
+Khi chạy, JVM sẽ:
+Tìm file class com/gpcoder/Cat.class trong classpath.
+Nạp class đó vào bộ nhớ.
+Trả về đối tượng Class đại diện cho class Cat
+🔸Nếu bạn có một đối tượng, có thể lấy được đối tượng Class.
+Cat cat = new Cat();
+Class c = cat.getClass();
+System.out.println(c.getName());          // in ra tên đầy đủ: com.gpcoder.Cat
+System.out.println(c.getSimpleName());    // in ra tên ngắn: Cat
+System.out.println(c.getPackageName());   // in ra package: com.gpcoder
 
+👉cat.getClass() → cần có sẵn một object rồi mới lấy ra Class.
+  Cat.class → lấy trực tiếp đối tượng Class từ tên class, không cần tạo object.
+  Class.forName("com.gpcoder.Cat") → lấy Class thông qua tên chuỗi (có thể chưa biết class cụ thể khi viết code).
+
+--------
+import java.lang.reflect.Field;
 class Student {
     private Long id;
     public String name;
