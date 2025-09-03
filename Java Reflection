@@ -107,11 +107,12 @@ field.get(object) → Lấy giá trị field từ object (trả về Object nên
 
 public static void queryNormal(BuildingSearchBuilder buildingSearchBuilder,StringBuilder where) {
 	try {
+// Lấy danh sách tất cả các field được khai báo là public, private, ..
 		Field[] fields = BuildingSearchBuilder.class.getDeclaredFields();
 		for(Field item : fields) {
 //field.setAccessible(true) cho phép :Đọc,ghi giá trị private,Dùng reflection với bất kỳ access modifier nào
 			item.setAccessible(true);
-//			.getName() trả về tên của phương thức dưới dạng String.Ví dụ, nếu class có private String name; → fieldName = "name".	tương tự .getStaffId()		
+//			.getName() trả về tên của FIELD dưới dạng String
 			String fieldName = item.getName();
 			if(!fieldName.equals("staffId")&&!fieldName.equals("typeCode")
 					&&!fieldName.startsWith("area")&&!fieldName.startsWith("rentPrice")) {
