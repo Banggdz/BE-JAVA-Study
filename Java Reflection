@@ -1,5 +1,20 @@
 https://gpcoder.com/2883-huong-dan-su-dung-java-reflection/
+--- Đối tượng class
+Mọi class khi được jvm nạp vào bộ nhớ đều được biểu diễn bởi một đối tượng đặc biệt thuộc lớp java.lang.Class.
+nói cách khác: Class chính là class mô tả class khác (metadata).
+nó chứa thông tin để jvm và developer biết:
+tên class,
+package,
+cha, interface,
+các field, method, constructor, annotation…
+VD:
+Cat cat = new Cat();          // tạo object Cat
+Class<?> c1 = Cat.class;      // lấy đối tượng Class trực tiếp
+Class<?> c2 = cat.getClass(); // lấy đối tượng Class từ object
+c1 và c2 đều là cùng một đối tượng Class, đại diện cho class Cat.
+bạn không thể “new Class()”, mà chỉ có jvm tạo và quản lý các object Class.
 
+👉 Đối tượng Class là đại diện (metadata) cho một class trong jvm, chứa toàn bộ thông tin mô tả class đó.
 --- Nạp Class động
 try {
     Class c =  Class.forName("com.gpcoder.Cat");
