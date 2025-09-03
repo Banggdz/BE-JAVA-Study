@@ -41,7 +41,16 @@ System.out.println(c.getPackageName());   // in ra package: com.gpcoder
   Cat.class → lấy trực tiếp đối tượng Class từ tên class, không cần tạo object.
   Class.forName("com.gpcoder.Cat") → lấy Class thông qua tên chuỗi (có thể chưa biết class cụ thể khi viết code).
 
---------
+-------- FIELD
+Class aClazz = Cat.class;
+🔸Lấy dữ liệu của 1 field: item.get(Object obj) 👉 lấy giá trị của field item từ object obj.
+	Cat tom = new Cat("Tom", 1);
+	Field ageField = aClazz.getField("age");
+	Integer age = (Integer) ageField.get(tom);
+	System.out.println("Age = " + age);
+Lấy ra field để truy xuất dữ liệu:
+Field field = aClazz.getField("NUMBER_OF_LEGS");
+---------
 import java.lang.reflect.Field;
 class Student {
     private Long id;
