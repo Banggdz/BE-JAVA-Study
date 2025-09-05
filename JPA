@@ -1,4 +1,4 @@
-https://www.baeldung.com/jpa-hibernate-persistence-context
+
 - Reference Documentation:
 https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#repositories.query-methods
 - ORM:
@@ -32,6 +32,7 @@ Làm việc với JPA có 2 cách chính:
 + name là tên cột thật trong bảng.
 + Câu query phụ thuộc vào loại DB (MySQL, Oracle, PostgreSQL…).
 ---- Persistent Context
+https://www.baeldung.com/jpa-hibernate-persistence-context
 - Một instance của EntityManager được gắn với một persistence context. Persistence context là tập hợp các entity, trong đó mỗi định danh entity chỉ tồn tại duy nhất một instance. 
 Bên trong persistence context, các entity và vòng đời của chúng được quản lý. 
 EntityManager API được dùng để tạo, xóa entity, tìm kiếm theo khóa chính, và thực hiện query: persist(), merge(), remove(), find(), createQuery()
