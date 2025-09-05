@@ -189,3 +189,32 @@ https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#rep
 - Spring Data JPA: 30%
 - Hibernate: 70–80% (là một framework ORM phổ biến, hỗ trợ JPA)
 
+ Làm việc với JPA có 2 cách chính:
+- JPQL (Java Persistence Query Language) : Ngôn ngữ truy vấn hướng đối tượng (Object-Oriented Query Language).
++ Sử dụng hoàn toàn với các đối tượng Entity trong Java.
++ Truy vấn mang tính hướng đối tượng, không phụ thuộc vào cấu trúc bảng csdl, Khi chạy, Hibernate/EclipseLink sẽ dịch JPQL thành SQL gốc phù hợp với DB bạn dùng..
+
+- Native Query
++ Viết truy vấn SQL thuần, gần giống như cách làm việc trực tiếp với cơ sở dữ liệu.
++ Dễ dàng tận dụng các tính năng đặc thù của hệ quản trị cơ sở dữ liệu.
+
+Hibernate Framework:
+- dev: môi trường cho dev test
+- uat: môi trường cho tester tham gia test
+- pro: môi trường cho khách hàng sử dụng
+
+🔗 Quan hệ giữa các Entity trong JPA:
+- 1:N sử dụng 2 annotation: @OneToMany và @ManyToOne
+- N:N được biểu diễn bằng cách kết hợp hai quan hệ 1:N + 1:N
+Ví dụ:
+- "100,200"
+- "200,300,400"
+
+⚙️ Chiến lược fetch dữ liệu:
+- Những quan hệ load danh sách (@ManyToMany, @OneToMany) → fetch = Lazy
+- Những quan hệ load một đối tượng (@OneToOne, @ManyToOne) → fetch = Eager
+
+🗃️ Thêm dữ liệu xuống cơ sở dữ liệu:
+- Sử dụng phương thức persist
+
+
