@@ -9,7 +9,7 @@ https://www.tutorialspoint.com/jpa/jpa_architecture.htm
 https://www.baeldung.com/jpql-hql-criteria-query
 https://stackoverflow.com/questions/50322550/hibernate-dialect-for-mysql-8
 
- Làm việc với JPA có 2 cách chính:
+Làm việc với JPA có 2 cách chính:
 - JPQL (Java Persistence Query Language) : Ngôn ngữ truy vấn hướng đối tượng (Object-Oriented Query Language).
 + Sử dụng hoàn toàn với các đối tượng Entity trong Java.
 + Truy vấn mang tính hướng đối tượng, không phụ thuộc vào cấu trúc bảng csdl, Khi chạy, Hibernate/EclipseLink sẽ dịch JPQL thành SQL gốc phù hợp với DB bạn dùng..
@@ -56,3 +56,22 @@ Mặc định loại persistence context là PersistenceContextType.TRANSACTION.
 ❤️ Extended-scoped persistence context:
 Gắn với vòng đời EntityManager/bean -> Có thể tồn tại qua nhiều transaction.
 Có thể persist entity mà không cần transaction, nhưng không thể flush nếu không có transaction.
+⚠️ Trong Stateless Session Bean, extended persistence context của mỗi component là độc lập.
+Ví dụ: persist ở Component A không thể thấy trong Component B (ngay cả khi cùng transaction).
+VD:
+@Component
+public class TransctionPersistenceContextUserService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+    
+    @Transactional
+    public User insertWithTransaction(User user) {
+        entityManager.persist(user);
+        return user;
+    }
+    
+    public User find(long id) {
+        return entityManager.find(User.class, id);
+    }
+}
