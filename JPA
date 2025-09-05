@@ -8,3 +8,26 @@ https://viblo.asia/p/object-relational-mapping-djeZ1PQ3KWz
 https://www.tutorialspoint.com/jpa/jpa_architecture.htm
 https://www.baeldung.com/jpql-hql-criteria-query
 https://stackoverflow.com/questions/50322550/hibernate-dialect-for-mysql-8
+
+ Làm việc với JPA có 2 cách chính:
+- JPQL (Java Persistence Query Language) : Ngôn ngữ truy vấn hướng đối tượng (Object-Oriented Query Language).
++ Sử dụng hoàn toàn với các đối tượng Entity trong Java.
++ Truy vấn mang tính hướng đối tượng, không phụ thuộc vào cấu trúc bảng csdl, Khi chạy, Hibernate/EclipseLink sẽ dịch JPQL thành SQL gốc phù hợp với DB bạn dùng..
++ VD: String sql = "FROM BuildingEntity b";
+      Query query = entityManager.createQuery(sql,BuildingEntity.class);
+	  return query.getResultList();
+👉 Ở đây:
++ BuildingEntity là tên Entity class.
++ b.name là thuộc tính trong class BuildingEntity.
++ Không quan tâm bảng thật trong DB tên gì (building, tbl_building, ...).
+
+- Native Query
++ Viết truy vấn SQL thuần, gần giống như cách làm việc trực tiếp với cơ sở dữ liệu.
++ Dễ dàng tận dụng các tính năng đặc thù của hệ quản trị cơ sở dữ liệu.
++ VD: String sql = "FROM BuildingEntity b WHERE b.name like '%building%";
+	  Query query = entityManager.createNativeQuery(sql,BuildingEntity.class);
+	  return query.getResultList();
+👉 Ở đây:
++ building là tên bảng trong DB.
++ name là tên cột thật trong bảng.
++ Câu query phụ thuộc vào loại DB (MySQL, Oracle, PostgreSQL…).
