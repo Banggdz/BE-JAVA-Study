@@ -34,3 +34,14 @@ Integer i = intBox.get();             // Không cần cast
 <T> ở đây là type parameter của method, định nghĩa một kiểu tổng quát (generic type) cho method này, đại diện cho Class.
 T sẽ thay bằng một kiểu cụ thể khi gọi method, đại diện cho 1 Object.
 Điều này khác với class generic, vì method này có thể dùng cho bất kỳ kiểu nào, ngay cả khi class không generic.
+---
+getTypeName() là một method của class Class<?> trong Java.
+Nó trả về tên đầy đủ (fully qualified name) của kiểu dữ liệu mà Class object đó đại diện.
+System.out.println(String.class.getTypeName());    // java.lang.String
+System.out.println(Integer.class.getTypeName());   // java.lang.Integer
+System.out.println(Long.class.getTypeName());      // java.lang.Long
+System.out.println(int.class.getTypeName());       // int
+System.out.println(double[].class.getTypeName());  // double[]
+System.out.println(String.class.getName());        // java.lang.String
+System.out.println(String.class.getTypeName());    // java.lang.String
+System.out.println(String.class.getSimpleName());  // String
