@@ -39,3 +39,20 @@ EntityManager API được dùng để tạo, xóa entity, tìm kiếm theo khó
 👉Persistence context theo dõi mọi thay đổi được thực hiện trên managed entity. Nó theo dõi thay đổi của entity. Khi transaction kết thúc, thay đổi này sẽ được flush (ghi ra) vào database
 👉Persistence Context chính là nơi Hibernate/JPA giữ các entity đang được quản lý, đảm bảo chúng đồng bộ với database.
 👉EntityManager là interface cho phép chúng ta tương tác với persistence context. Bất cứ khi nào chúng ta sử dụng EntityManager, thực chất chúng ta đang làm việc với persistence context.
+
+🟢 Flush là gì?
+Flush = quá trình đồng bộ (synchronize) trạng thái của các entity trong Persistence Context (bộ nhớ tạm/first-level cache) xuống cơ sở dữ liệu (DB).
+👉đẩy các thay đổi từ Persistence Context → DB.
+
+🟢 persist là gì?
+persist() là phương thức của EntityManager dùng để lưu một entity mới vào persistence context (nghĩa là đưa entity vào trạng thái Managed).
+Khi gọi persist(), entity chưa chắc đã được ghi ngay xuống database, mà nó sẽ được quản lý trong Persistence Context trước.
+- Có 2 loại:
+❤️ Transaction-scoped persistence context:
+Gắn liền với một transaction (persistence context được tạo khi transaction bắt đầu và bị hủy khi transaction kết thúc (commit/rollback))
+Khi transaction kết thúc, các entity trong persistence context được flush xuống DB.
+Nếu có persistence context đang tồn tại, nó sẽ được dùng lại; nếu không, EntityManager sẽ tạo mới.
+Mặc định loại persistence context là PersistenceContextType.TRANSACTION. Viết gọn: @PersistenceContext:
+❤️ Extended-scoped persistence context:
+Gắn với vòng đời EntityManager/bean -> Có thể tồn tại qua nhiều transaction.
+Có thể persist entity mà không cần transaction, nhưng không thể flush nếu không có transaction.
