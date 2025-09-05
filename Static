@@ -1,0 +1,40 @@
+Static method/field là gì?
+
+Gắn liền với class, không gắn với instance (object).
+Gọi qua tên class, không cần new:
+VD:
+MapUtil.getObject(...);   // gọi trực tiếp
+
+
+✅Khi nào nên dùng static?
+
+👉Các hàm thuần tiện ích (util): parse, convert, toán học, xử lý String, xử lý Map…
+👉Hàm không phụ thuộc vào trạng thái (state) của object.
+
+Ví dụ:
+public class StringUtil {
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+}
+
+❌Khi nào không nên dùng static?
+
+Nếu method đó cần:
+Truy cập/tương tác với các bean Spring khác (Repository, Service…),
+Hoặc cần inject dependency.
+
+Ví dụ: Nếu bạn viết converter nhưng cần ModelMapper (bean Spring), thì không nên static, mà nên inject:
+
+@Component
+public class UserConverter {
+    private final ModelMapper modelMapper;
+
+    @Autowired
+    public UserConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+    public UserDTO convert(UserEntity entity) {
+        return modelMapper.map(entity, UserDTO.class);
+    }
+}
