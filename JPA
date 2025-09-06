@@ -7,6 +7,16 @@ https://viblo.asia/p/object-relational-mapping-djeZ1PQ3KWz
 https://www.tutorialspoint.com/jpa/jpa_architecture.htm
 https://www.baeldung.com/jpql-hql-criteria-query
 https://stackoverflow.com/questions/50322550/hibernate-dialect-for-mysql-8
+| Thành phần           |                                           Mô tả                                                                                                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EntityManagerFactory | Đây là lớp factory của EntityManager. Nó tạo và quản lý nhiều thể hiện (instance) của EntityManager.                                                                      |
+| EntityManager        | Đây là một Interface, chịu trách nhiệm quản lý các thao tác persistence (lưu trữ/duy trì) trên các đối tượng. Nó hoạt động như một factory để tạo ra các đối tượng Query. |
+| Entity               | Là các đối tượng persistence, được lưu trữ dưới dạng bản ghi (record) trong cơ sở dữ liệu.                                                                                |
+| EntityTransaction    | Có quan hệ một-một với EntityManager. Với mỗi EntityManager, các thao tác giao dịch (transaction) được quản lý bởi lớp EntityTransaction.                                 |
+| Persistence          | Lớp này chứa các phương thức static để lấy ra một thể hiện của EntityManagerFactory.                                                                                      |
+| Query                | Đây là một interface, được mỗi nhà cung cấp JPA (JPA vendor) cài đặt để truy vấn và lấy ra các đối tượng quan hệ thỏa mãn điều kiện.                                      |
+
+👉 Kết luận: JPA cung cấp kiến trúc chuẩn với các class & interface chính để ánh xạ đối tượng Java sang bảng dữ liệu, quản lý transaction, và thực hiện query một cách đơn giản, giúp lập trình viên tập trung vào logic ứng dụng thay vì viết nhiều code SQL.
 
 Làm việc với JPA có 2 cách chính:
 - JPQL (Java Persistence Query Language) : Ngôn ngữ truy vấn hướng đối tượng (Object-Oriented Query Language).
