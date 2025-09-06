@@ -1,36 +1,90 @@
-Object Relational Mapping (ORM) là khả năng lập trình để chuyển đổi dữ liệu từ kiểu đối tượng sang kiểu quan hệ và ngược lại.
-Tính năng chính của ORM là mapping (ánh xạ) hay ràng buộc một đối tượng với dữ liệu của nó trong cơ sở dữ liệu. 
-Khi ánh xạ, ta cần xem xét dữ liệu, kiểu dữ liệu và mối quan hệ của nó với chính thực thể hoặc thực thể khác trong bảng khác.
+ORM là 1 kỹ thuật lập trình giúp ánh xạ các record dữ liệu trong hệ quản trị cơ sở dữ liệu sang dạng đối tượng đang định nghĩa trong các class 
 - Kiến trúc ORM:
-Object Relational Mapping
+Giải thích cách dữ liệu đối tượng được lưu vào cơ sở dữ liệu quan hệ qua 3 giai đoạn.
 
-Kiến trúc trên giải thích cách dữ liệu đối tượng được lưu vào cơ sở dữ liệu quan hệ qua 3 giai đoạn.
+Phase 1: Tầng Object/Ứng dụng (Object data phase)
+  Chứa các lớp POJO, interface dịch vụ và lớp dịch vụ. Đây là tầng thành phần nghiệp vụ chính, có logic nghiệp vụ và thuộc tính.
+  
+  - POJO (Plain Old Java Object): Là lớp Java đơn giản, chỉ chứa thuộc tính (fields) và getter/setter
+  - Interface dịch vụ (Service Interface): Là hợp đồng (contract) hoặc bản mô tả các chức năng mà một dịch vụ cung cấp.
+    VD:
+    public interface EmployeeService {
+        void createEmployee(Employee emp);
+        Employee findEmployeeById(int id);
+        void deleteEmployee(int id);
+    }
+  - Lớp dịch vụ (Service Class / Implementation Class): Là class hiện thực (implements) interface dịch vụ.
+    Ví dụ:
+    public class EmployeeServiceImpl implements EmployeeService {
+        private EntityManager entityManager;
+        public EmployeeServiceImpl(EntityManager em) {
+            this.entityManager = em;
+        }
+        @Override
+        public void createEmployee(Employee emp) {
+            entityManager.persist(emp);
+        }
+        @Override
+        public Employee findEmployeeById(int id) {
+            return entityManager.find(Employee.class, id);
+        }
+    
+        @Override
+        public void deleteEmployee(int id) {
+            Employee emp = entityManager.find(Employee.class, id);
+            if(emp != null) {
+                entityManager.remove(emp);
+            }
+        }
+    }
+  Ví dụ: giả sử ta có cơ sở dữ liệu nhân viên (Employee).
+  Employee POJO class chứa các thuộc tính: ID, name, salary, designation cùng các phương thức getter/setter.
+  Employee DAO/Service classes chứa các phương thức dịch vụ: create employee, find employee, delete employee.
 
-Phase 1
-Giai đoạn đầu tiên, gọi là Object data phase, chứa các lớp POJO, interface dịch vụ và lớp dịch vụ. Đây là tầng thành phần nghiệp vụ chính, có logic nghiệp vụ và thuộc tính.
-Ví dụ: giả sử ta có cơ sở dữ liệu nhân viên (Employee).
-Employee POJO class chứa các thuộc tính: ID, name, salary, designation cùng các phương thức getter/setter.
-Employee DAO/Service classes chứa các phương thức dịch vụ: create employee, find employee, delete employee.
+Phase 2: Mapping / Persistence Phase (Tầng JPA/ORM)
+  Chứa: JPA provider, mapping file (ORM.xml), JPA Loader, và Object Grid.
+  JPA Provider: Sản phẩm của nhà cung cấp JPA (javax.persistence). Ví dụ: EclipseLink, TopLink, Hibernate.
+    👉 chịu trách nhiệm dịch các thao tác với entity thành câu SQL cụ thể cho DB
+  Mapping file (ORM.xml): Chứa cấu hình ánh xạ giữa dữ liệu trong lớp POJO và dữ liệu trong CSDL quan hệ.
+  JPA Loader: Hoạt động như bộ nhớ đệm (cache), có thể nạp dữ liệu lưới quan hệ (relational grid). Tương tác với các lớp dịch vụ qua dữ liệu POJO.
+  Object Grid: Vị trí tạm thời lưu bản sao dữ liệu quan hệ (cache). Mọi truy vấn tới CSDL trước tiên tác động vào object grid, chỉ khi commit mới ghi vào CSDL chính.
+    👉Lưu tạm các entity đang được quản lý.
+       Khi bạn gọi persist(), entity chưa ghi ngay xuống DB, mà được lưu trong Object Grid.
+       Khi gọi commit(), toàn bộ thay đổi trong grid mới được flush (ghi xuống DB).
+       Khi query, JPA sẽ tìm trong Object Grid trước, nếu chưa có mới gửi SQL đến DB.
+  👉 Cơ chế này giúp giảm truy cập DB trực tiếp, cải thiện hiệu năng và đồng bộ dữ liệu.
+Phase 3: Relational Data Phase (Tầng CSDL Quan hệ)
+  Chứa dữ liệu quan hệ gắn với thành phần nghiệp vụ.
+  Chỉ khi commit, dữ liệu mới được ghi thực sự vào CSDL bằng SQL lệnh INSERT, UPDATE, DELETE. Trước đó, dữ liệu được lưu trong cache (object grid). Việc lấy dữ liệu cũng tương tự.
+  → Cơ chế tương tác giữa ba giai đoạn trên gọi là Object Relational Mapping.
+  Khi truy vấn (find, query):
+  JPA tìm trong Object Grid (cache).
+  Nếu không có → sinh SQL SELECT → DB trả kết quả → JPA Loader ánh xạ thành Entity → lưu lại trong Object Grid.
 
-Phase 2
-Giai đoạn thứ hai gọi là mapping/persistence phase, chứa: JPA provider, mapping file (ORM.xml), JPA Loader, và Object Grid.
-JPA Provider: Sản phẩm của nhà cung cấp JPA (javax.persistence). Ví dụ: EclipseLink, TopLink, Hibernate.
-Mapping file (ORM.xml): Chứa cấu hình ánh xạ giữa dữ liệu trong lớp POJO và dữ liệu trong CSDL quan hệ.
-JPA Loader: Hoạt động như bộ nhớ đệm (cache), có thể nạp dữ liệu lưới quan hệ (relational grid). Tương tác với các lớp dịch vụ qua dữ liệu POJO.
-Object Grid: Vị trí tạm thời lưu bản sao dữ liệu quan hệ (cache). Mọi truy vấn tới CSDL trước tiên tác động vào object grid, chỉ khi commit mới ghi vào CSDL chính.
+🔄Toàn bộ cơ chế: Object Relational Mapping (ORM)
+  Ứng dụng tạo Object (POJO/Entity) trong code.
+  DAO/Service gọi JPA (EntityManager) để lưu/đọc object.
+  JPA Layer kiểm tra Persistence Context (cache), nếu chưa có thì query DB.
+  JPA Loader + Mapping dịch object ↔ record (ORM).
+  JPA Provider sinh SQL và thực thi trên Relational DB.
+  Kết quả (record) được map ngược lại thành Object trong Java.
+  Nếu có cache (Object Grid, Data Grid), dữ liệu sẽ được lưu để lần sau truy cập nhanh hơn.
 
-Phase 3
-Giai đoạn thứ ba là Relational data phase. Nó chứa dữ liệu quan hệ gắn với thành phần nghiệp vụ.
-Như đã nói ở trên, chỉ khi commit, dữ liệu mới được ghi thực sự vào CSDL. Trước đó, dữ liệu được lưu trong cache (object grid). Việc lấy dữ liệu cũng tương tự.
-→ Cơ chế tương tác giữa ba giai đoạn trên gọi là Object Relational Mapping.
+Ví dụ về việc tìm kiếm danh sách bản ghi với điều kiện với sql thuần
 
-Ứng dụng tạo Object (POJO/Entity) trong code.
-DAO/Service gọi JPA (EntityManager) để lưu/đọc object.
-JPA Layer kiểm tra Persistence Context (cache), nếu chưa có thì query DB.
-JPA Loader + Mapping dịch object ↔ record (ORM).
-JPA Provider sinh SQL và thực thi trên Relational DB.
-Kết quả (record) được map ngược lại thành Object trong Java.
-Nếu có cache (Object Grid, Data Grid), dữ liệu sẽ được lưu để lần sau truy cập nhanh hơn.
+book_list = new List();
+sql = "SELECT * FROM library WHERE author = 'Linus'";
+data = query(sql);
+while (row = data.next())
+{
+     book = new Book();
+     book.setAuthor(row.get('author');
+     book_list.add(book);
+}
+
+Với ORM, nó sẽ đơn giản như sau:
+
+book_list = BookTable.query(author="Linus");
 
 | Annotation         | Mô tả                                                           |
 | ------------------ | --------------------------------------------------------------- |
