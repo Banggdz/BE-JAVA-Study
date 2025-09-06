@@ -4,7 +4,6 @@ https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#rep
 - ORM:
 ORM là 1 kỹ thuật lập trình giúp ánh xạ các record dữ liệu trong hệ quản trị cơ sở dữ liệu sang dạng đối tượng đang định nghĩa trong các class
 https://viblo.asia/p/object-relational-mapping-djeZ1PQ3KWz
-https://thorben-janssen.com/best-practices-many-one-one-many-associations-mappings/
 https://www.tutorialspoint.com/jpa/jpa_architecture.htm
 https://www.baeldung.com/jpql-hql-criteria-query
 https://stackoverflow.com/questions/50322550/hibernate-dialect-for-mysql-8
