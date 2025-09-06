@@ -77,6 +77,7 @@ public class TransctionPersistenceContextUserService {
     }
 }
 --- Many-To-One and One-To-Many Association Mappings
+https://thorben-janssen.com/best-practices-many-one-one-many-associations-mappings/
 VD:
 ♦ Entity PurchaseOrder:
 @Entity
@@ -120,9 +121,9 @@ Sau đó, với mỗi Item, nó tự động chạy thêm 1 query riêng để l
 Nếu có 100 item → 1 query ban đầu + 100 query phụ = 101 query → rất chậm.
 
 🔶Log SQL minh họa:
--- Query đầu tiên load tất cả Item
+// Query đầu tiên load tất cả Item
 	select item0_.id, item0_.name, item0_.fk_order ...
--- Sau đó, với từng Item, load PurchaseOrder
+// Sau đó, với từng Item, load PurchaseOrder
 	from Item item0_
 	select purchaseor0_.id ...
 	from PurchaseOrder purchaseor0_
@@ -140,22 +141,18 @@ Nếu có 100 item → 1 query ban đầu + 100 query phụ = 101 query → rấ
 	}
 	Khi để LAZY, Hibernate không tự động load PurchaseOrder. Nó chỉ load khi bạn thực sự gọi item.getOrder().
 - JOIN FETCH:
-@ManyToOne mặc định là EAGER → dễ gây N+1 query.
-Bạn đổi sang LAZY để tránh N+1 → nhưng nếu bạn cần load luôn quan hệ thì sao?
+	@ManyToOne mặc định là EAGER → dễ gây N+1 query.
+	Bạn đổi sang LAZY để tránh N+1 → nhưng nếu bạn cần load luôn quan hệ thì sao?
+		
+	List<Item> items = em.createQuery("SELECT i FROM Item i JOIN FETCH i.order", Item.class).getResultList();
 	
-List<Item> items = em.createQuery("SELECT i FROM Item i JOIN FETCH i.order", Item.class).getResultList();
-
-🫵 i = entity Item
-   JOIN FETCH i.order = bảo Hibernate: “join luôn bảng purchase_order và trả về dữ liệu đầy đủ để khởi tạo field order của Item”.
-Hibernate sẽ dịch thành SQL kiểu:
-select i.id, i.name, i.fk_order,
-       po.id, po.version
-from item i
-join purchase_order po on i.fk_order = po.id;
-. Kết quả
-
-Trả về List<Item> (giống như bình thường).
-
-Nhưng khác biệt là: mỗi Item trong list đã có order được load sẵn.
-
-Hibernate không phải chạy thêm query phụ khi bạn gọi item.getOrder().
+	🫵 i = entity Item
+	   JOIN FETCH i.order = bảo Hibernate: “join luôn bảng purchase_order và trả về dữ liệu đầy đủ để khởi tạo field order của Item”.
+		Hibernate sẽ dịch thành SQL kiểu:
+		select i.id, i.name, i.fk_order,
+		       po.id, po.version
+		from item i
+		join purchase_order po on i.fk_order = po.id;
+		. Kết quả
+			Trả về List<Item> (giống như bình thường), mỗi Item trong list đã có order được load sẵn.
+			Hibernate không phải chạy thêm query phụ khi bạn gọi item.getOrder().
