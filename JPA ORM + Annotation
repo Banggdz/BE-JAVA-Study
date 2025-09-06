@@ -24,6 +24,14 @@ Giai đoạn thứ ba là Relational data phase. Nó chứa dữ liệu quan h�
 Như đã nói ở trên, chỉ khi commit, dữ liệu mới được ghi thực sự vào CSDL. Trước đó, dữ liệu được lưu trong cache (object grid). Việc lấy dữ liệu cũng tương tự.
 → Cơ chế tương tác giữa ba giai đoạn trên gọi là Object Relational Mapping.
 
+Ứng dụng tạo Object (POJO/Entity) trong code.
+DAO/Service gọi JPA (EntityManager) để lưu/đọc object.
+JPA Layer kiểm tra Persistence Context (cache), nếu chưa có thì query DB.
+JPA Loader + Mapping dịch object ↔ record (ORM).
+JPA Provider sinh SQL và thực thi trên Relational DB.
+Kết quả (record) được map ngược lại thành Object trong Java.
+Nếu có cache (Object Grid, Data Grid), dữ liệu sẽ được lưu để lần sau truy cập nhanh hơn.
+
 | Annotation         | Mô tả                                                           |
 | ------------------ | --------------------------------------------------------------- |
 | @Entity            | Đánh dấu class là entity (bảng).                                |
