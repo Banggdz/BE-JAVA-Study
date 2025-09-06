@@ -1,0 +1,48 @@
+Object Relational Mapping (ORM) là khả năng lập trình để chuyển đổi dữ liệu từ kiểu đối tượng sang kiểu quan hệ và ngược lại.
+Tính năng chính của ORM là mapping (ánh xạ) hay ràng buộc một đối tượng với dữ liệu của nó trong cơ sở dữ liệu. 
+Khi ánh xạ, ta cần xem xét dữ liệu, kiểu dữ liệu và mối quan hệ của nó với chính thực thể hoặc thực thể khác trong bảng khác.
+- Kiến trúc ORM:
+Object Relational Mapping
+
+Kiến trúc trên giải thích cách dữ liệu đối tượng được lưu vào cơ sở dữ liệu quan hệ qua 3 giai đoạn.
+
+Phase 1
+Giai đoạn đầu tiên, gọi là Object data phase, chứa các lớp POJO, interface dịch vụ và lớp dịch vụ. Đây là tầng thành phần nghiệp vụ chính, có logic nghiệp vụ và thuộc tính.
+Ví dụ: giả sử ta có cơ sở dữ liệu nhân viên (Employee).
+Employee POJO class chứa các thuộc tính: ID, name, salary, designation cùng các phương thức getter/setter.
+Employee DAO/Service classes chứa các phương thức dịch vụ: create employee, find employee, delete employee.
+
+Phase 2
+Giai đoạn thứ hai gọi là mapping/persistence phase, chứa: JPA provider, mapping file (ORM.xml), JPA Loader, và Object Grid.
+JPA Provider: Sản phẩm của nhà cung cấp JPA (javax.persistence). Ví dụ: EclipseLink, TopLink, Hibernate.
+Mapping file (ORM.xml): Chứa cấu hình ánh xạ giữa dữ liệu trong lớp POJO và dữ liệu trong CSDL quan hệ.
+JPA Loader: Hoạt động như bộ nhớ đệm (cache), có thể nạp dữ liệu lưới quan hệ (relational grid). Tương tác với các lớp dịch vụ qua dữ liệu POJO.
+Object Grid: Vị trí tạm thời lưu bản sao dữ liệu quan hệ (cache). Mọi truy vấn tới CSDL trước tiên tác động vào object grid, chỉ khi commit mới ghi vào CSDL chính.
+
+Phase 3
+Giai đoạn thứ ba là Relational data phase. Nó chứa dữ liệu quan hệ gắn với thành phần nghiệp vụ.
+Như đã nói ở trên, chỉ khi commit, dữ liệu mới được ghi thực sự vào CSDL. Trước đó, dữ liệu được lưu trong cache (object grid). Việc lấy dữ liệu cũng tương tự.
+→ Cơ chế tương tác giữa ba giai đoạn trên gọi là Object Relational Mapping.
+
+| Annotation         | Mô tả                                                           |
+| ------------------ | --------------------------------------------------------------- |
+| @Entity            | Đánh dấu class là entity (bảng).                                |
+| @Table             | Chỉ định tên bảng.                                              |
+| @Basic             | Chỉ định thuộc tính không có ràng buộc đặc biệt.                |
+| @Embedded          | Chỉ định thuộc tính là instance của lớp embeddable.             |
+| @Id                | Đánh dấu thuộc tính là khóa chính.                              |
+| @GeneratedValue    | Chỉ định cách sinh giá trị cho khóa chính.                      |
+| @Transient         | Đánh dấu thuộc tính không được lưu trong CSDL.                  |
+| @Column            | Chỉ định cột ứng với thuộc tính.                                |
+| @SequenceGenerator | Định nghĩa sequence để sinh giá trị cho @GeneratedValue.        |
+| @TableGenerator    | Định nghĩa bảng dùng để sinh giá trị cho @GeneratedValue.       |
+| @AccessType        | Chỉ định cách truy cập: FIELD hay PROPERTY.                     |
+| @JoinColumn        | Chỉ định cột liên kết trong quan hệ (many-to-one, one-to-many). |
+| @UniqueConstraint  | Đặt ràng buộc unique.                                           |
+| @ColumnResult      | Tham chiếu tên cột trong câu SQL SELECT.                        |
+| @ManyToMany        | Định nghĩa quan hệ nhiều-nhiều.                                 |
+| @ManyToOne         | Định nghĩa quan hệ nhiều-một.                                   |
+| @OneToMany         | Định nghĩa quan hệ một-nhiều.                                   |
+| @OneToOne          | Định nghĩa quan hệ một-một.                                     |
+| @NamedQueries      | Khai báo danh sách named query.                                 |
+| @NamedQuery        | Khai báo một query tĩnh theo tên.                               |
