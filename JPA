@@ -11,22 +11,22 @@ https://stackoverflow.com/questions/50322550/hibernate-dialect-for-mysql-8
 
 Làm việc với JPA có 2 cách chính:
 - JPQL (Java Persistence Query Language) : Ngôn ngữ truy vấn hướng đối tượng (Object-Oriented Query Language).
-+ Sử dụng hoàn toàn với các đối tượng Entity trong Java.
-+ Truy vấn mang tính hướng đối tượng, không phụ thuộc vào cấu trúc bảng csdl, Khi chạy, Hibernate/EclipseLink sẽ dịch JPQL thành SQL gốc phù hợp với DB bạn dùng..
-+ VD: String sql = "FROM BuildingEntity b";
-      Query query = entityManager.createQuery(sql,BuildingEntity.class);
-	  return query.getResultList();
+	+ Sử dụng hoàn toàn với các đối tượng Entity trong Java.
+	+ Truy vấn mang tính hướng đối tượng, không phụ thuộc vào cấu trúc bảng csdl, Khi chạy, Hibernate/EclipseLink sẽ dịch JPQL thành SQL gốc phù hợp với DB bạn dùng..
+	+ VD: String sql = "FROM BuildingEntity b";
+	      Query query = entityManager.createQuery(sql,BuildingEntity.class);
+		  return query.getResultList();
 👉 Ở đây:
-+ BuildingEntity là tên Entity class.
-+ b.name là thuộc tính trong class BuildingEntity.
-+ Không quan tâm bảng thật trong DB tên gì (building, tbl_building, ...).
+	+ BuildingEntity là tên Entity class.
+	+ b.name là thuộc tính trong class BuildingEntity.
+	+ Không quan tâm bảng thật trong DB tên gì (building, tbl_building, ...).
 
 - Native Query
-+ Viết truy vấn SQL thuần, gần giống như cách làm việc trực tiếp với cơ sở dữ liệu.
-+ Dễ dàng tận dụng các tính năng đặc thù của hệ quản trị cơ sở dữ liệu.
-+ VD: String sql = "FROM BuildingEntity b WHERE b.name like '%building%";
-	  Query query = entityManager.createNativeQuery(sql,BuildingEntity.class);
-	  return query.getResultList();
+	+ Viết truy vấn SQL thuần, gần giống như cách làm việc trực tiếp với cơ sở dữ liệu.
+	+ Dễ dàng tận dụng các tính năng đặc thù của hệ quản trị cơ sở dữ liệu.
+	+ VD: String sql = "FROM BuildingEntity b WHERE b.name like '%building%";
+		  Query query = entityManager.createNativeQuery(sql,BuildingEntity.class);
+		  return query.getResultList();
 👉 Ở đây:
 + building là tên bảng trong DB.
 + name là tên cột thật trong bảng.
@@ -42,21 +42,21 @@ EntityManager API được dùng để tạo, xóa entity, tìm kiếm theo khó
 👉EntityManager là interface cho phép chúng ta tương tác với persistence context. Bất cứ khi nào chúng ta sử dụng EntityManager, thực chất chúng ta đang làm việc với persistence context.
 
 🟢 Flush là gì?
-Flush = quá trình đồng bộ (synchronize) trạng thái của các entity trong Persistence Context (bộ nhớ tạm/first-level cache) xuống cơ sở dữ liệu (DB).
-👉đẩy các thay đổi từ Persistence Context → DB.
+	Flush = quá trình đồng bộ (synchronize) trạng thái của các entity trong Persistence Context (bộ nhớ tạm/first-level cache) xuống cơ sở dữ liệu (DB).
+	👉đẩy các thay đổi từ Persistence Context → DB.
 
 🟢 persist là gì?
-persist() là phương thức của EntityManager dùng để lưu một entity mới vào persistence context (nghĩa là đưa entity vào trạng thái Managed).
-Khi gọi persist(), entity chưa chắc đã được ghi ngay xuống database, mà nó sẽ được quản lý trong Persistence Context trước.
+	persist() là phương thức của EntityManager dùng để lưu một entity mới vào persistence context (nghĩa là đưa entity vào trạng thái Managed).
+	Khi gọi persist(), entity chưa chắc đã được ghi ngay xuống database, mà nó sẽ được quản lý trong Persistence Context trước.
 - Có 2 loại:
 ❤️ Transaction-scoped persistence context:
-Gắn liền với một transaction (persistence context được tạo khi transaction bắt đầu và bị hủy khi transaction kết thúc (commit/rollback))
-Khi transaction kết thúc, các entity trong persistence context được flush xuống DB.
-Nếu có persistence context đang tồn tại, nó sẽ được dùng lại; nếu không, EntityManager sẽ tạo mới.
-Mặc định loại persistence context là PersistenceContextType.TRANSACTION. Viết gọn: @PersistenceContext:
+	Gắn liền với một transaction (persistence context được tạo khi transaction bắt đầu và bị hủy khi transaction kết thúc (commit/rollback))
+	Khi transaction kết thúc, các entity trong persistence context được flush xuống DB.
+	Nếu có persistence context đang tồn tại, nó sẽ được dùng lại; nếu không, EntityManager sẽ tạo mới.
+	Mặc định loại persistence context là PersistenceContextType.TRANSACTION. Viết gọn: @PersistenceContext:
 ❤️ Extended-scoped persistence context:
-Gắn với vòng đời EntityManager/bean -> Có thể tồn tại qua nhiều transaction.
-Có thể persist entity mà không cần transaction, nhưng không thể flush nếu không có transaction.
+	Gắn với vòng đời EntityManager/bean -> Có thể tồn tại qua nhiều transaction.
+	Có thể persist entity mà không cần transaction, nhưng không thể flush nếu không có transaction.
 ⚠️ Trong Stateless Session Bean, extended persistence context của mỗi component là độc lập.
 Ví dụ: persist ở Component A không thể thấy trong Component B (ngay cả khi cùng transaction).
 VD:
@@ -76,3 +76,86 @@ public class TransctionPersistenceContextUserService {
         return entityManager.find(User.class, id);
     }
 }
+--- Many-To-One and One-To-Many Association Mappings
+VD:
+♦ Entity PurchaseOrder:
+@Entity
+@Table(name = "purchase_order")
+public class PurchaseOrder {
+    @Id
+    private Long id;
+}
+♦ Entity Item
+@Entity
+@Table(name = "item")
+public class Item {
+    @Id
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_order") // cột này nằm trong bảng item trong db
+    private PurchaseOrder order;
+}
+🫵 - @Entity → Hibernate/JPA biết đây là bảng trong cơ sở dữ liệu.
+   - @Table(name = "purchase_order") → chỉ định tên bảng trong DB là purchase_order (nếu không khai báo, Hibernate sẽ dùng tên class).
+   - @Id private Long id; → cột primary key của bảng purchase_order.
+   - private PurchaseOrder order: field kiểu entity → có thể truy xuất Item.order.getId() hoặc Item.order để lấy toàn bộ thông tin PurchaseOrder. Hibernate tự động quản lý giá trị cột fk_order khi persist/update entity Item.
+   - item.getOrder().getId()
+	+ item.getOrder() → trả về entity PurchaseOrder liên kết với Item.
+    + .getId() → truy cập field id của entity PurchaseOrder.
+    + Hibernate biết order trỏ tới bản ghi nào nhờ cột fk_order trong bảng item. 
+🟢 FetchType.LAZY and FetchType.EAGER
+- FetchType.EAGER:
+	Theo chuẩn JPA, với các quan hệ kiểu to-one (ví dụ @ManyToOne, @OneToOne) thì mặc định sẽ là FetchType.EAGER.
+	Nghĩa là: khi bạn load 1 entity, Hibernate sẽ tự động load luôn quan hệ liên kết (ví dụ Item thì load thêm PurchaseOrder đi kèm).
+	Nếu chỉ load 1 bản ghi, thì cũng chỉ cần thêm 1 query phụ nữa → không tốn kém lắm.
+	Nhưng nếu bạn lấy danh sách nhiều Item, thì vấn đề nảy sinh: Hibernate phải chạy thêm 1 query phụ cho mỗi bản ghi Item để lấy PurchaseOrder.
+	N+1 SELECT problem (vấn đề N+1 truy vấn)
+
+Ví dụ:
+List<Item> items = em.createQuery("SELECT i FROM Item i", Item.class).getResultList();
+
+Hibernate sẽ chạy 1 query để lấy tất cả Item.
+Sau đó, với mỗi Item, nó tự động chạy thêm 1 query riêng để lấy PurchaseOrder. (Hibernate tự động load luôn quan hệ liên kết)
+Nếu có 100 item → 1 query ban đầu + 100 query phụ = 101 query → rất chậm.
+
+🔶Log SQL minh họa:
+-- Query đầu tiên load tất cả Item
+	select item0_.id, item0_.name, item0_.fk_order ...
+-- Sau đó, với từng Item, load PurchaseOrder
+	from Item item0_
+	select purchaseor0_.id ...
+	from PurchaseOrder purchaseor0_
+	where purchaseor0_.id=?
+	→ Query đầu tiên lấy Item, sau đó mỗi lần lại query tiếp PurchaseOrder theo id.
+
+- FetchType.LAZY: để giải quyết n+1 select, for @ManyToOne 
+	+ Hibernate không load dữ liệu quan hệ ngay lập tức, chỉ tạo một proxy (đối tượng giả).
+	+ Khi bạn thực sự truy cập đến dữ liệu quan hệ, Hibernate mới chạy SQL để lấy từ DB.
+	@Entity
+	public class Item { 
+	    @ManyToOne(fetch = FetchType.LAZY)
+	    @JoinColumn(name = "fk_order")
+	    private PurchaseOrder order;
+	}
+	Khi để LAZY, Hibernate không tự động load PurchaseOrder. Nó chỉ load khi bạn thực sự gọi item.getOrder().
+- JOIN FETCH:
+@ManyToOne mặc định là EAGER → dễ gây N+1 query.
+Bạn đổi sang LAZY để tránh N+1 → nhưng nếu bạn cần load luôn quan hệ thì sao?
+	
+List<Item> items = em.createQuery("SELECT i FROM Item i JOIN FETCH i.order", Item.class).getResultList();
+
+🫵 i = entity Item
+   JOIN FETCH i.order = bảo Hibernate: “join luôn bảng purchase_order và trả về dữ liệu đầy đủ để khởi tạo field order của Item”.
+Hibernate sẽ dịch thành SQL kiểu:
+select i.id, i.name, i.fk_order,
+       po.id, po.version
+from item i
+join purchase_order po on i.fk_order = po.id;
+. Kết quả
+
+Trả về List<Item> (giống như bình thường).
+
+Nhưng khác biệt là: mỗi Item trong list đã có order được load sẵn.
+
+Hibernate không phải chạy thêm query phụ khi bạn gọi item.getOrder().
