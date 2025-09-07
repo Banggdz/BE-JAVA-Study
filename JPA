@@ -7,15 +7,8 @@ https://viblo.asia/p/object-relational-mapping-djeZ1PQ3KWz
 https://www.tutorialspoint.com/jpa/jpa_architecture.htm
 https://www.baeldung.com/jpql-hql-criteria-query
 https://stackoverflow.com/questions/50322550/hibernate-dialect-for-mysql-8
-| Thành phần           |                                           Mô tả                                                                                                                                                                     |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| EntityManagerFactory | Đây là lớp factory của EntityManager. Nó tạo và quản lý nhiều thể hiện (instance) của EntityManager.                                                                      |
-| EntityManager        | Đây là một Interface, chịu trách nhiệm quản lý các thao tác persistence (lưu trữ/duy trì) trên các đối tượng. Nó hoạt động như một factory để tạo ra các đối tượng Query. |
-| Entity               | Là các đối tượng persistence, được lưu trữ dưới dạng bản ghi (record) trong cơ sở dữ liệu.                                                                                |
-| EntityTransaction    | Có quan hệ một-một với EntityManager. Với mỗi EntityManager, các thao tác giao dịch (transaction) được quản lý bởi lớp EntityTransaction.                                 |
-| Persistence          | Lớp này chứa các phương thức static để lấy ra một thể hiện của EntityManagerFactory.                                                                                      |
-| Query                | Đây là một interface, được mỗi nhà cung cấp JPA (JPA vendor) cài đặt để truy vấn và lấy ra các đối tượng quan hệ thỏa mãn điều kiện.                                      |
-
+             
+Các hàm có sắn JPA entityManager: https://docs.oracle.com/javaee/7/api/javax/persistence/EntityManager.html
 👉 Kết luận: JPA cung cấp kiến trúc chuẩn với các class & interface chính để ánh xạ đối tượng Java sang bảng dữ liệu, quản lý transaction, và thực hiện query một cách đơn giản, giúp lập trình viên tập trung vào logic ứng dụng thay vì viết nhiều code SQL.
 
 Làm việc với JPA có 2 cách chính:
@@ -43,14 +36,15 @@ Làm việc với JPA có 2 cách chính:
 
 🟢 JPA bao gồm ba thành phần chính là: Entity, EntityManager, và EntityManagerFactory. Ngoài ra còn có, EntityTransaction, Persistence, Query.
 - Entity
-Entity là các đối tượng thể hiện tương ứng 1 table trong cơ sở dữ liệu. Entity thường là các class POJO đơn giản, chỉ gồm các phương thức getter, setter.
+Entity là các đối tượng persistence thể hiện tương ứng 1 table trong cơ sở dữ liệu. Entity thường là các class POJO đơn giản, chỉ gồm các phương thức getter, setter.
 + Entity có thể tương tác với cơ sở dữ liệu quan hệ.
 + Entity được xác định thông qua một định danh (id), tương đương với khóa chính trong table của cơ sở dữ liệu quan hệ.
 + Entity hỗ trợ transaction.
 + Entity hỗ trợ kế thừa giống như những class Java khác.
 
 - EntityManager
-EntityManager là một interface cung cấp các API cho việc tương tác với các Entity, quản lý các đối tượng Entity và từ đó có thể sử dụng Entity Manager để thực hiện các hoạt động CRUD (Create, Read, Update, Delete) trên csdl.
+EntityManager là một interface (quản lý các thao tác persistence (lưu trữ/duy trì)) cung cấp các API cho việc tương tác với các Entity, quản lý các đối tượng Entity và từ đó có thể sử dụng Entity Manager để thực hiện các hoạt động CRUD (Create, Read, Update, Delete) trên csdl.
+Nó hoạt động như một factory để tạo ra các đối tượng Query.
 Một số chức năng cơ bản của EntityManager như:
 + Persist: phương thức này dùng để lưu một thực thể mới tạo vào cơ sở dữ liệu.
 + Merge: dùng để cập nhật trạng thái của entity vào cơ sở dữ liệu.
@@ -63,13 +57,14 @@ Một số chức năng cơ bản của EntityManager như:
 	}
 
 - EntityManagerFactory
-EntityManagerFactory được dùng để tạo ra một instance của EntityManager.
+Đây là lớp factory của EntityManager. Nó tạo và quản lý nhiều thể hiện (instance) của EntityManager.            
 
 - Persistence
 Một Persistence định nghĩa một tập hợp các Entity class được quản lý bởi 1 instacne của EntityManager trong ứng dụng.
 Persistence (javax.persistence.Persistence) class bao gồm các phương thức static để lấy instance của EntityManagerFactory.
 
 - EntityTransaction
+Có quan hệ một-một với EntityManager.Với mỗi EntityManager, các thao tác giao dịch (transaction) được quản lý bởi lớp EntityTransaction.    
 Một Transaction là một tập hợp các thao tác trong đó tất cả các thao tác phải được thực hiện thành công hoặc tất cả thất bại.
 trong JPA, mỗi hoạt động liên quan đến cơ sở dữ liệu sẽ được thực hiện trong một transaction.
 Một database transaction bao gồm một tập hợp các câu lệnh SQL được committed hoặc rolled back trong một unit.
