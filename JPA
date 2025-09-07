@@ -46,7 +46,7 @@ https://www.baeldung.com/jpa-hibernate-persistence-context
 Bên trong persistence context, các entity và vòng đời của chúng được quản lý. 
 EntityManager API được dùng để tạo, xóa entity, tìm kiếm theo khóa chính, và thực hiện query: persist(), merge(), remove(), find(), createQuery()
 👉Persistence context là bộ nhớ đệm cấp một (first-level cache), nơi tất cả các entity được lấy ra từ cơ sở dữ liệu hoặc được lưu vào cơ sở dữ liệu. Nó nằm ở giữa ứng dụng của chúng ta và tầng lưu trữ dữ liệu
-👉Persistence context theo dõi mọi thay đổi được thực hiện trên managed entity. Nó theo dõi thay đổi của entity. Khi transaction kết thúc, thay đổi này sẽ được flush (ghi ra) vào database
+👉Persistence context theo dõi mọi thay đổi được thực hiện trên managed entity (load, update hay persist trong persistence context).Khi transaction kết thúc (commit transaction), thay đổi này sẽ được flush (ghi ra) vào database
 👉Persistence Context chính là nơi Hibernate/JPA giữ các entity đang được quản lý, đảm bảo chúng đồng bộ với database.
 👉EntityManager là interface cho phép chúng ta tương tác với persistence context. Bất cứ khi nào chúng ta sử dụng EntityManager, thực chất chúng ta đang làm việc với persistence context.
 
