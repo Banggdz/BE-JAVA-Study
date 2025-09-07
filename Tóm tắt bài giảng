@@ -194,6 +194,10 @@ https://docs.spring.io/spring-data/data-jpa/docs/1.4.x/reference/htmlsingle/#rep
 + Sử dụng hoàn toàn với các đối tượng Entity trong Java.
 + Truy vấn mang tính hướng đối tượng, không phụ thuộc vào cấu trúc bảng csdl, Khi chạy, Hibernate/EclipseLink sẽ dịch JPQL thành SQL gốc phù hợp với DB bạn dùng..
 
+- Criteria API
++ Là API hướng đối tượng để xây dựng JPQL bằng Java code.
++ Không phải SQL thật, mà khi chạy JPA sẽ dịch Criteria → JPQL → SQL tương ứng cho DB.
+
 - Native Query
 + Viết truy vấn SQL thuần, gần giống như cách làm việc trực tiếp với cơ sở dữ liệu.
 + Dễ dàng tận dụng các tính năng đặc thù của hệ quản trị cơ sở dữ liệu.
