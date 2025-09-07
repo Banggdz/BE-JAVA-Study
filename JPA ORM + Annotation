@@ -1,3 +1,10 @@
+https://www.tutorialspoint.com/jpa/jpa_orm_components.htm
+Các khó khăn nếu không dùng ORM
+  Viết nhiều SQL thủ công → dễ sai, khó bảo trì.
+  Phải tự chuyển đổi dữ liệu giữa object và record SQL.
+  Quản lý transaction, lazy loading, caching rất phức tạp.
+  Khi đổi database (Oracle → MySQL) phải sửa nhiều SQL.
+
 ORM là 1 kỹ thuật lập trình giúp ánh xạ các record dữ liệu trong hệ quản trị cơ sở dữ liệu sang dạng đối tượng đang định nghĩa trong các class 
 - Kiến trúc ORM:
 Giải thích cách dữ liệu đối tượng được lưu vào cơ sở dữ liệu quan hệ qua 3 giai đoạn.
@@ -108,3 +115,11 @@ book_list = BookTable.query(author="Linus");
 | @OneToOne          | Định nghĩa quan hệ một-một.                                     |
 | @NamedQueries      | Khai báo danh sách named query.                                 |
 | @NamedQuery        | Khai báo một query tĩnh theo tên.                               |
+
+@PersistenceContext
+Dùng để inject một EntityManager vào bean hoặc EJB để thao tác với database mà không cần tạo thủ công EntityManager. 
+JPA sẽ đảm bảo EntityManager luôn gắn với persistence context phù hợp với phạm vi của transaction.
+- 2 loaij
+TRANSACTION: EntityManager gắn với transaction hiện tại, xóa khi transaction kết thúc. (phổ biến nhất)
+
+EXTENDED: EntityManager tồn tại lâu hơn, dùng cho stateful bean, giữ entity giữa nhiều transactio
