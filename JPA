@@ -40,6 +40,44 @@ Làm việc với JPA có 2 cách chính:
 + building là tên bảng trong DB.
 + name là tên cột thật trong bảng.
 + Câu query phụ thuộc vào loại DB (MySQL, Oracle, PostgreSQL…).
+
+🟢 JPA bao gồm ba thành phần chính là: Entity, EntityManager, và EntityManagerFactory. Ngoài ra còn có, EntityTransaction, Persistence, Query.
+- Entity
+Entity là các đối tượng thể hiện tương ứng 1 table trong cơ sở dữ liệu. Entity thường là các class POJO đơn giản, chỉ gồm các phương thức getter, setter.
++ Entity có thể tương tác với cơ sở dữ liệu quan hệ.
++ Entity được xác định thông qua một định danh (id), tương đương với khóa chính trong table của cơ sở dữ liệu quan hệ.
++ Entity hỗ trợ transaction.
++ Entity hỗ trợ kế thừa giống như những class Java khác.
+
+- EntityManager
+EntityManager là một interface cung cấp các API cho việc tương tác với các Entity, quản lý các đối tượng Entity và từ đó có thể sử dụng Entity Manager để thực hiện các hoạt động CRUD (Create, Read, Update, Delete) trên csdl.
+Một số chức năng cơ bản của EntityManager như:
++ Persist: phương thức này dùng để lưu một thực thể mới tạo vào cơ sở dữ liệu.
++ Merge: dùng để cập nhật trạng thái của entity vào cơ sở dữ liệu.
++ Remove: xóa một instance của entity.
+	VD:
+	public void createEmployee(Employee employee) {
+	    EntityManager entityManager = // lấy Entity Manager từ EntityManagerFactory
+	    
+	    entityManager.persist(employee); // thêm đối tượng vào cơ sở dữ liệu
+	}
+
+- EntityManagerFactory
+EntityManagerFactory được dùng để tạo ra một instance của EntityManager.
+
+- Persistence
+Một Persistence định nghĩa một tập hợp các Entity class được quản lý bởi 1 instacne của EntityManager trong ứng dụng.
+Persistence (javax.persistence.Persistence) class bao gồm các phương thức static để lấy instance của EntityManagerFactory.
+
+- EntityTransaction
+Một Transaction là một tập hợp các thao tác trong đó tất cả các thao tác phải được thực hiện thành công hoặc tất cả thất bại.
+trong JPA, mỗi hoạt động liên quan đến cơ sở dữ liệu sẽ được thực hiện trong một transaction.
+Một database transaction bao gồm một tập hợp các câu lệnh SQL được committed hoặc rolled back trong một unit.
+EntityTransaction có quan hệ 1-1 với EntityManager. Bất kỳ thao tác nào được bắt đầu thông qua đối tượng EntityManager đều được đặt trong một Transaction. Đối tượng EntityManager giúp tạo EntityTransaction.
+
+- Query
+Đây là một interface, được mỗi nhà cung cấp JPA implement để có được các đối tượng quan hệ đáp ứng các tiêu chí (criteria) truy vấn.
+
 ---- Persistent Context
 https://www.baeldung.com/jpa-hibernate-persistence-context
 - Một instance của EntityManager được gắn với một persistence context. Persistence context là tập hợp các entity, trong đó mỗi định danh entity chỉ tồn tại duy nhất một instance. 
@@ -87,3 +125,4 @@ public class TransctionPersistenceContextUserService {
 }
 - Many-To-One and One-To-Many Association Mappings
 https://thorben-janssen.com/best-practices-many-one-one-many-associations-mappings/
+
