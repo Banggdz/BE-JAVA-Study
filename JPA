@@ -165,3 +165,21 @@ Nếu có 100 item → 1 query ban đầu + 100 query phụ = 101 query → rấ
 		. Kết quả
 			Trả về List<Item> (giống như bình thường), mỗi Item trong list đã có order được load sẵn.
 			Hibernate không phải chạy thêm query phụ khi bạn gọi item.getOrder().
+
+- @ManyToMany
+Mapping trong UserEntity:
+
+@ManyToMany(fetch = FetchType.LAZY)
+@JoinTable(
+    name = "user_role",                         // tên bảng trung gian trong DB
+    joinColumns = @JoinColumn(name = "userid"), // FK trỏ về User
+    inverseJoinColumns = @JoinColumn(name = "roleid") // FK trỏ về Role
+)
+private List<RoleEntity> roles = new ArrayList<>();
+Mapping ngược trong RoleEntity (nếu muốn 2 chiều):
+@ManyToMany(mappedBy = "roles")
+private List<UserEntity> users = new ArrayList<>();
+🧩 Lưu ý
+	Nếu bạn không viết @JoinTable, Hibernate vẫn tự tạo bảng trung gian mặc định cho quan hệ ManyToMany.
+	Nhưng khi bạn muốn điều khiển tên bảng/cột (ví dụ user_role, userid, roleid), thì bạn phải dùng @JoinTable.
+	@JoinColumn trong @JoinTable chính là cột foreign key trong bảng trung gian.
