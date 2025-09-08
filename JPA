@@ -121,3 +121,88 @@ public class TransctionPersistenceContextUserService {
 - Many-To-One and One-To-Many Association Mappings
 https://thorben-janssen.com/best-practices-many-one-one-many-associations-mappings/
 
+--- JPA và JDBC
+1. Object Mapping
+
+- Với JDBC ta phải map các trường trong bảng với các thuộc tính của Java object một cách "thủ công".
+VD: //rs là ResultSet trả về từ câu query get dữ liệu bảng user.
+List<User> users=new ArrayList<User>();
+while(rs.next()) {
+     User user = new User();
+     user.setUserId(rs.getString("UserId"));
+     user.setName(rs.getString("FirstName"));
+     user.setEmail(rs.getString(“Email”));
+     users.add(user);
+ }
+-  Với Hibernate sẽ hỗ trợ ta map một cách "tự động" thông qua các file cấu hình map XML hay sử dụng các anotation:
+@Entity
+@Table(name = "user")
+public class UserModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
+    @NotEmpty
+    @Column(name = "email", unique = true)
+    private String email;
+    @NotEmpty
+    @Column(name = "name")
+    private String name;
+    public BigInteger getId() {
+        return this.id;
+    }
+    getter/setter
+}
+2. Database Independent
+khi ta muốn lấy 10 bản ghi dữ liệu của một table từ 2 CSDL khác nhau
+- Với JDBC:
+	#MySQL
+	SELECT column_name FROM table_name ORDER BY column_name ASC LIMIT 10; 
+	#SQL Server 
+	SELECT TOP 10 column_name FROM table_name ORDER BY column_name ASC;
+- Với JPA:
+	Session.CreateQuery("SELECT E.id FROM Employee E ORDER BY E.id ASC").SetMaxResults(10).List();
+
+--- JPA và Spring JPA
+Ví dụ muốn query lấy tất cả User bằng Hibernate truyền thống sẽ như sau:
+- JPA:
+	// Giả sử đã có đối tượng session rồi
+	Session session = getSession();
+	
+	try {
+	    // Tất cả các lệnh hành động với DB thông qua Hibernate
+	    // đều phải nằm trong 1 giao dịch (Transaction)
+	    // Bắt đầu giao dịch
+	    session.getTransaction().begin();	
+	    // Tạo một query
+	    String sql = "Select u from " + User.class.getName() + " u
+	    // Tạo đối tượng Query.
+	    Query<User> query = session.createQuery(sql);
+	    // Thực hiện truy vấn và lấy ra dữ liệu.
+	    List<User> users = query.getResultList();
+	    // In ra màn hình
+	    for (User user : users) {
+	        System.out.println(user);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+- Spring JPA:
+Để sử dụng Spring JPA, cần sử dụng interface JpaRepository.
+
+Yêu cầu của interface này đó là bạn phải cung cấp 2 thông tin:
+	+ Entity (Đối tượng tương ứng với Table trong DB)
+	+ Kiểu dữ liệu của khóa chính (primary key)
+
+Ví dụ: Tôi muốn lấy thông tin của bảng User thì làm như sau:
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+👉 @Repository đánh dấu UserRepository là một Bean và chịu trách nhiệm giao tiếp với DB.
+Spring Boot sẽ tự tìm thấy và khởi tạo ra đối tượng UserRepository trong Context. Việc tạo ra UserRepository hoàn toàn tự động và tự config, vì chúng ta đã kế thừa JpaRepository.
+Bây giờ, việc lấy ra toàn bộ User sẽ như sau:
+
+@Autowired
+UserRepository userRepository;
+userRepository.findAll()
+                .forEach(System.out::println);
