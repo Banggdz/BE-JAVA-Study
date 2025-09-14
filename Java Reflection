@@ -113,7 +113,11 @@ Ví dụ: "String", "Long", "int".
 
 🔸field.set(object, value) → Gán giá trị vào field của object.
 🔸field.get(object obj) → lấy giá trị của field item trong đối tượng obj (trả về Object nên có thể cần ép kiểu).
-VD:	String value = item.get(buildingSearchBuilder).toString();
+VD:	 Field field = Person.class.getDeclaredField("name");
+        field.setAccessible(true);
+        // Lấy giá trị field từ object person
+        Object value = field.get(person);
+Person person = new Person();
 
 public static void queryNormal(BuildingSearchBuilder buildingSearchBuilder,StringBuilder where) {
 	try {
