@@ -1,0 +1,94 @@
+👍 Spring Data JPA chỉ cung cấp CRUD cơ bản thông qua JpaRepository (thừa kế từ CrudRepository), 
+ví dụ:
+	findById(ID id)
+	findAll()
+	save(S entity)
+	deleteById(ID id)
+	count()
+-> Những hàm này JPA đã định nghĩa sẵn.
+
+Còn các hàm kiểu:
+
+findByName(...)
+findByNameContaining(...)
+findByNameIgnoreCase(...)
+
+👉 Đây là Derived Query Methods (truy vấn sinh ra từ tên hàm).
+Tức là: bạn không cần viết SQL hay JPQL, nhưng bạn phải khai báo tên method trong Repository, Spring Data mới phân tích tên đó, hiểu được bạn muốn query theo cột nào (name) và sinh query tương ứng.
+➡️Nhờ Spring Data JPA Query Method (cơ chế generate query tự động từ tên method).
+1. deleteById(ID id):
+SQL generate:
+  select u.id from user u where u.id = 1;
+  delete from user where id = 1;
+
+Hàm tự tạo:
+1. Spring Data JPA Query Method
+Spring Data JPA phân tích tên method bạn viết trong Repository → rồi tự sinh ra query tương ứng.
+Ví dụ:
+List<User> findByName(String name);
+List<User> findByAgeGreaterThan(int age);
+List<User> findByIdIn(List<Long> ids);
+
+Nó map sang SQL kiểu:
+
+select * from user where name = ?;
+select * from user where age > ?;
+select * from user where id in (?);
+
+2. Áp dụng cho deleteByIdIn
+deleteByIdIn(Long[] ids) vẫn chạy được, dù Spring Data JPA không có sẵn method này.
+
+public interface BuildingRepository extends JpaRepository<BuildingEntity, Long>{
+	void deleteByIdIn(Long[] ids);
+}
+
+Spring Data JPA sẽ hiểu là:
+
+deleteBy... → đây là delete query.
+IdIn → điều kiện where id in (...).
+Tham số Long[] ids → chính là danh sách id truyền vào.
+
+SQL generate sẽ là:
+  delete from building where id in (?,?,?...);
+
+2. Ví dụ các cách đặt tên phổ biến
+a. So sánh bằng (=)
+BuildingEntity findByName(String name);
+👉 Query: WHERE name = ?
+
+b. LIKE (chuỗi con)
+List<BuildingEntity> findByNameContaining(String keyword);
+👉 Query: WHERE name LIKE %keyword%
+
+List<BuildingEntity> findByNameStartingWith(String prefix);
+👉 Query: WHERE name LIKE prefix%
+
+List<BuildingEntity> findByNameEndingWith(String suffix);
+👉 Query: WHERE name LIKE %suffix
+
+c. So sánh số
+List<BuildingEntity> findByRentPriceGreaterThan(Long price);
+List<BuildingEntity> findByRentPriceLessThanEqual(Long price);
+List<BuildingEntity> findByFloorAreaBetween(Long min, Long max);
+👉 Query tương ứng với >, <=, BETWEEN … AND …
+
+d. Kết hợp nhiều điều kiện (AND/OR)
+List<BuildingEntity> findByNameAndStreet(String name, String street);
+List<BuildingEntity> findByNameOrStreet(String name, String street);
+👉 Query: WHERE name = ? AND street = ? hoặc OR
+
+e. Null check
+List<BuildingEntity> findByServiceFeeIsNull();
+List<BuildingEntity> findByServiceFeeIsNotNull();
+
+f. Sắp xếp (Order By)
+List<BuildingEntity> findByNameOrderByRentPriceAsc(String name);
+List<BuildingEntity> findByNameOrderByRentPriceDesc(String name);
+
+g. Giới hạn kết quả
+BuildingEntity findFirstByOrderByRentPriceAsc();
+BuildingEntity findTopByOrderByRentPriceDesc();
+List<BuildingEntity> findTop3ByName(String name);
+
+h. IgnoreCase (không phân biệt hoa thường)
+List<BuildingEntity> findByNameIgnoreCase(String name);
