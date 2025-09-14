@@ -1,0 +1,33 @@
+JPQL stands for Java Persistence Query Language.
+It defines queries using the @Query annotation in Spring to execute both JPQL and native SQL queries
+
+1. JPQL (Java Persistence Query Language)
+
+Là ngôn ngữ truy vấn hướng đối tượng của JPA/Hibernate.
+Truy vấn trên Entity và field (thuộc tính Java), không truy vấn trực tiếp bảng/cột trong DB.
+Được dịch sang SQL tương ứng theo DB bạn dùng (MySQL, Oracle, PostgreSQL...).
+
+Ví dụ (JPQL):
+// BuildingEntity có field "name"
+String jpql = "SELECT b FROM BuildingEntity b WHERE b.name = :name";
+TypedQuery<BuildingEntity> query = entityManager.createQuery(jpql, BuildingEntity.class);
+query.setParameter("name", "Bitexco");
+List<BuildingEntity> list = query.getResultList();
+
+👉 Ở đây BuildingEntity là class Entity, name là thuộc tính Java, không phải tên bảng hay tên cột.
+
+🔹 2. Native Query (SQL gốc)
+
+Là câu lệnh SQL thuần (như bạn chạy trực tiếp trong MySQL Workbench, SQL Developer…).
+Truy vấn trực tiếp tên bảng, tên cột trong DB.
+Không portable: gắn chặt vào cú pháp DB cụ thể.
+Dùng khi JPQL không hỗ trợ được (ví dụ: hàm đặc thù của DB, query phức tạp).
+
+Ví dụ (Native SQL):
+
+String sql = "SELECT * FROM building WHERE name = ?";
+Query query = entityManager.createNativeQuery(sql, BuildingEntity.class);
+query.setParameter(1, "Bitexco");
+List<BuildingEntity> list = query.getResultList();
+
+👉 Ở đây "building" là tên bảng trong DB, "name" là tên cột thực trong bảng.
