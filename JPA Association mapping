@@ -8,6 +8,9 @@ VD:
 public class PurchaseOrder {
     @Id
     private Long id;
+
+ @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 }
 ♦ Entity Item
 @Entity
@@ -17,7 +20,7 @@ public class Item {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_order") // cột này nằm trong bảng item trong db
+    @JoinColumn(name = "fk_order") // cột foreign key nằm trong bảng item trong db
     private PurchaseOrder order;
 }
 🫵 - @Entity → Hibernate/JPA biết đây là bảng trong cơ sở dữ liệu.
