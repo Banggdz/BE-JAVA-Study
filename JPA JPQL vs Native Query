@@ -31,3 +31,12 @@ query.setParameter(1, "Bitexco");
 List<BuildingEntity> list = query.getResultList();
 
 👉 Ở đây "building" là tên bảng trong DB, "name" là tên cột thực trong bảng.
+
+-----
+public List<BuildingEntity> findAll(Map<String,Object> params,List<String> typeCode){
+		String sql = "FROM BuildingEntity b WHERE b.name LIKE '%building%'";
+		Query query = entityManager.createQuery(sql,BuildingEntity.class);
+//		String sql = "FROM BuildingEntity b WHERE b.name like '%building%";
+//		Query query = entityManager.createNativeQuery(sql,BuildingEntity.class);
+		return query.getResultList();			
+	}
