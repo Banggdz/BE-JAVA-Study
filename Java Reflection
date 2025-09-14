@@ -49,7 +49,7 @@ Class aClazz = Cat.class;
 	Integer age = (Integer) ageField.get(tom);
 	System.out.println("Age = " + age);
 Lấy ra field để truy xuất dữ liệu:
-Field field = aClazz.getField("NUMBER_OF_LEGS");
+🔸Field field = aClazz.getField("NUMBER_OF_LEGS");
 ---------
 import java.lang.reflect.Field;
 class Student {
@@ -99,20 +99,21 @@ Field: age
    -> getType().getSimpleName(): int
 ---------------------
 Giá trị id = 123
-getType() → Trả về một Class object đại diện cho kiểu dữ liệu của field.
+🔸getType() → Trả về một Class object đại diện cho kiểu dữ liệu của field.
 Ví dụ: class java.lang.String, class java.lang.Long, hoặc int.
 
-getType().getName() → Trả về tên đầy đủ (fully qualified name) của kiểu.
+🔸getType().getName() → Trả về tên đầy đủ (fully qualified name) của kiểu.
 Ví dụ: "java.lang.String", "java.lang.Long", "int".
 
-getType().getSimpleName() → Trả về tên ngắn gọn (chỉ tên class không có package).
+VgetType().getSimpleName() → Trả về tên ngắn gọn (chỉ tên class không có package).
 Ví dụ: "String", "Long", "int".
 
-getDeclaredField("id") → Lấy field id (dù là private).
-setAccessible(true) → Cho phép bỏ qua kiểm tra truy cập để thao tác với private/protected field.
+🔸getDeclaredField("id") → Lấy field id (dù là private).
+🔸setAccessible(true) → Cho phép bỏ qua kiểm tra truy cập để thao tác với private/protected field.
 
-field.set(object, value) → Gán giá trị vào field của object.
-field.get(object) → Lấy giá trị field từ object (trả về Object nên có thể cần ép kiểu).
+🔸field.set(object, value) → Gán giá trị vào field của object.
+🔸field.get(object obj) → lấy giá trị của field item trong đối tượng obj (trả về Object nên có thể cần ép kiểu).
+VD:	String value = item.get(buildingSearchBuilder).toString();
 
 public static void queryNormal(BuildingSearchBuilder buildingSearchBuilder,StringBuilder where) {
 	try {
