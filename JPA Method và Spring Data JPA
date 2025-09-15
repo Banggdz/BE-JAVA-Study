@@ -51,7 +51,7 @@ Tham số Long[] ids → chính là danh sách id truyền vào.
 SQL generate sẽ là:
   delete from building where id in (?,?,?...);
 
-2. Ví dụ các cách đặt tên phổ biến
+3️⃣Ví dụ các cách đặt tên phổ biến
 a. So sánh bằng (=)
 BuildingEntity findByName(String name);
 👉 Query: WHERE name = ?
