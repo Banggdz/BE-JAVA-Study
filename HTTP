@@ -1,10 +1,10 @@
 BuildingAPI.java
 
-@RequestMapping:
+1️⃣ @RequestMapping:
 Có từ Spring 2.x → đến nay vẫn còn dùng được.
 Nó là annotation gốc, cho phép định nghĩa nhiều method HTTP (GET, POST, PUT, DELETE…)
 
-@GetMapping, @PostMapping, @PutMapping, @DeleteMapping:
+2️⃣ @GetMapping, @PostMapping, @PutMapping, @DeleteMapping:
 Được giới thiệu từ Spring 4.3 (2016).
 Là annotation rút gọn của @RequestMapping cho từng method HTTP.
 Code gọn hơn, dễ đọc hơn.
@@ -13,7 +13,7 @@ Code gọn hơn, dễ đọc hơn.
 👉 @RequestParam: trích xuất thông tin từ URL.
 👉 @ResponseBody: được dùng để liên kết dữ liệu trả về với một đối tượng, Spring Boot sẽ serialize đối tượng này để trả về một đối tượng JSON hoặc XML.
 
-@Controller
+3️⃣ @Controller
 
 Là annotation được dùng để đánh dấu một class là Controller trong mô hình MVC.
 Nó thường được sử dụng với Spring MVC để trả về View (HTML, JSP, Thymeleaf, …) thay vì dữ liệu JSON/XML.
@@ -32,13 +32,13 @@ public class HomeController {
 }
 Ở đây "home" là view name, không phải dữ liệu JSON.
 
-2. @RestController
+4️⃣ @RestController
 @RestController = @Controller + @ResponseBody
 
 👉 Dữ liệu return từ method có dạng  JSON/XML, không đi qua View Resolver.
 Thường dùng để xây dựng RESTful API (Web Service).
 
------
+5️⃣ VD:
 @Controller
 public class BuildingAPI {
 
