@@ -1,4 +1,4 @@
-👍 Spring Data JPA chỉ cung cấp CRUD cơ bản thông qua JpaRepository (thừa kế từ CrudRepository), 
+1️⃣Spring Data JPA chỉ cung cấp CRUD cơ bản thông qua JpaRepository (thừa kế từ CrudRepository), 
 ví dụ:
 	findById(ID id)
 	findAll()
@@ -21,7 +21,7 @@ SQL generate:
   select u.id from user u where u.id = 1;
   delete from user where id = 1;
 
-Hàm tự tạo:
+2️⃣Hàm tự tạo:
 1. Spring Data JPA Query Method
 Spring Data JPA phân tích tên method bạn viết trong Repository → rồi tự sinh ra query tương ứng.
 Ví dụ:
