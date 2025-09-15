@@ -1,7 +1,7 @@
 https://stackjava.com/hibernate/hibernate-fetchtype-la-gi-phan-biet-fetchtype-lazy-voi-eager.html
 https://thorben-janssen.com/best-practices-many-one-one-many-associations-mappings/
 
-VD:
+1️⃣ VD:
 ♦ Entity PurchaseOrder:
 @Entity
 @Table(name = "purchase_order")
@@ -31,7 +31,7 @@ public class Item {
 	+ item.getOrder() → trả về entity PurchaseOrder liên kết với Item.
     + .getId() → truy cập field id của entity PurchaseOrder.
     + Hibernate biết order trỏ tới bản ghi nào nhờ cột fk_order trong bảng item. 
-🟢 FetchType.LAZY and FetchType.EAGER
+2️⃣ FetchType.LAZY and FetchType.EAGER
 - FetchType.EAGER:
 	Theo chuẩn JPA, với các quan hệ kiểu to-one (ví dụ @ManyToOne, @OneToOne) thì mặc định sẽ là FetchType.EAGER.
 	Nghĩa là: khi bạn load 1 entity, Hibernate sẽ tự động load luôn quan hệ liên kết (ví dụ Item thì load thêm PurchaseOrder đi kèm).
@@ -83,7 +83,7 @@ Nếu có 100 item → 1 query ban đầu + 100 query phụ = 101 query → rấ
 			Trả về List<Item> (giống như bình thường), mỗi Item trong list đã có order được load sẵn.
 			Hibernate không phải chạy thêm query phụ khi bạn gọi item.getOrder().
 
-- @ManyToMany
+3️⃣ @ManyToMany
 Mapping trong UserEntity:
 
 @ManyToMany(fetch = FetchType.LAZY)
