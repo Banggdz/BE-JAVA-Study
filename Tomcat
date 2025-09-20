@@ -1,0 +1,51 @@
+Khi bạn chạy một ứng dụng web trên Tomcat, việc Tomcat “trỏ” vào folder nào phụ thuộc vào cách bạn triển khai ứng dụng:
+
+1️⃣ Nếu triển khai dưới dạng WAR (truyền thống)
+
+Bạn đặt file yourapp.war vào:
+TOMCAT_HOME/webapps/
+Tomcat sẽ tự giải nén WAR thành thư mục con webapps/yourapp/ và coi đây là document root cho ứng dụng đó.
+
+Ví dụ:
+webapps/
+    yourapp/       <-- folder mà Tomcat dùng làm root của app
+        WEB-INF/
+        index.jsp
+
+URL truy cập: http://localhost:8080/yourapp/
+
+2️⃣ Nếu triển khai trực tiếp từ IDE (IntelliJ, Eclipse)
+
+Tomcat, khi chạy từ IDE, sẽ map folder này làm web root, không dùng WAR gốc.
+IDE thường tạo một “exploded artifact”, tức là một folder bản sao tạm chứa toàn bộ (gồm .class, WEB-INF, resources, static, v.v.) trong folder riêng (out/artifacts/..._war_exploded/).
+Ví dụ IntelliJ:
+out/artifacts/YourApp_war_exploded/
+Tomcat map folder tạm này làm web root, tức là nó không trực tiếp đọc/ghi vào folder gốc của project.
+
+Mọi thay đổi bạn thực hiện trong folder gốc (ví dụ src/main/resources hay src/main/webapp) sẽ không tự động phản ánh nếu bạn chưa rebuild artifact. IDE sẽ copy lại các file cần thiết vào folder exploded để Tomcat dùng.
+
+✅ Nói cách khác: Tomcat chỉ thao tác trên bản sao, file gốc vẫn an toàn, không bị thay đổi.
+
+Khi bạn code trực tiếp trong IntelliJ, việc thay đổi file diễn ra ở folder gốc của project, tức là nơi bạn lưu source code:
+Java/Kotlin code: src/main/java/...
+Resources tĩnh (CSS, JS, images): src/main/resources/static hoặc src/main/webapp
+Template (Thymeleaf, Freemarker…): src/main/resources/templates
+
+Khi bạn sửa file trong IntelliJ:
+
+Nếu là Java/Kotlin: cần build/recompile (Build → Build Project) → IDE cập nhật .class vào out/artifacts/..._war_exploded/WEB-INF/classes/.
+Nếu là resources (HTML, JS, CSS, images):
+
+Với Spring Boot và “Update resources” bật trong Run Configuration, IDE có thể tự copy vào folder exploded để Tomcat load ngay.
+Nếu không, bạn phải Build → Rebuild Project để cập nhật.
+
+File gốc không bị thay đổi:
+Tomcat và artifact chỉ đọc từ folder tạm (out/artifacts/..._war_exploded/), không đụng tới src/main/... hay file gốc của project.
+3️⃣ Thư mục static và resources trong Spring Boot
+
+Với Spring Boot, bạn không dùng WAR trừ khi muốn deploy vào Tomcat ngoài:
+Spring Boot embedded Tomcat sẽ đọc từ src/main/resources/static hoặc src/main/resources/public để phục vụ tài nguyên tĩnh.
+Template (Thymeleaf, Freemarker…) nằm ở src/main/resources/templates.
+Nếu deploy WAR ra Tomcat bình thường:
+src/main/resources/static → sẽ nằm trong WEB-INF/classes/static khi build
+Tomcat vẫn trỏ document root của ứng dụng vào folder của WAR/exploded WAR.
