@@ -1,3 +1,4 @@
+https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
 1️⃣Spring Data JPA chỉ cung cấp CRUD cơ bản thông qua JpaRepository (thừa kế từ CrudRepository), 
 ví dụ:
 	findById(ID id)
