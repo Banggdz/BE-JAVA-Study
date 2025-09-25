@@ -1,6 +1,22 @@
 ✨Tạo folder mới, Nhấp chuột phải vào nơi muốn tạo git(để .git trong folder project),-thư mục .git phải nằm ở thư mục gốc của dự án — tức là nơi chứa toàn bộ mã nguồn, cấu trúc thư mục, và các file liên quan (ví dụ: các file HTML, thư mục assets, v.v.).
  
-ấn git bash, nhập git clone + link respository github, copy file spring-non-jwt vào, bật lại git bash trong folder lấy từ github, git add., 
+ấn git bash, 
+git init                         # khởi tạo repo git trong project
+git branch -M main               # đổi tên nhánh mặc định thành main
+git remote add origin https://github.com/username/myproject.git
+3. Đẩy code lần đầu lên GitHub
+
+git add .                        # đưa toàn bộ file vào staged
+git commit -m "first commit"     # commit code lần đầu
+git push -u origin main          # đẩy lên GitHub
+4. Các lần sau chỉ cần
+bash
+Sao chép mã
+git add .
+git commit -m "cập nhật code"
+git push
+
+-> Cái này là tạo folder github mới về máy để copy dữ liệu vào, dùng cái trên thì ko cần /*nhập git clone + link respository github, copy file spring-non-jwt vào, bật lại git bash trong folder lấy từ github, git add., */
 git commit: Nhập nội dung commit message ở trên cùng (thay chữ push bằng nội dung bạn muốn).Sau đó bấm:Esc (để thoát khỏi chế độ nhập).Gõ lệnh: :wq rồi nhấn Enter
 → nghĩa là write & quit (lưu và thoát)
 git push, 
