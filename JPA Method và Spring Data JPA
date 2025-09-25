@@ -17,6 +17,9 @@ findByNameIgnoreCase(...)
 👉 Đây là Derived Query Methods (truy vấn sinh ra từ tên hàm).
 Tức là: bạn không cần viết SQL hay JPQL, nhưng bạn phải khai báo tên method trong Repository, Spring Data mới phân tích tên đó, hiểu được bạn muốn query theo cột nào (name) và sinh query tương ứng.
 ➡️Nhờ Spring Data JPA Query Method (cơ chế generate query tự động từ tên method).
+Nó dùng JPQL, chứ không phải native SQL.
+JPQL sau đó được Hibernate dịch sang SQL thật để chạy trên database.
+
 1. deleteById(ID id):
 SQL generate:
   select u.id from user u where u.id = 1;
