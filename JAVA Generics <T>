@@ -45,3 +45,28 @@ System.out.println(double[].class.getTypeName());  // double[]
 System.out.println(String.class.getName());        // java.lang.String
 System.out.println(String.class.getTypeName());    // java.lang.String
 System.out.println(String.class.getSimpleName());  // String
+------
+public static <T> T getObject(Object obj, Class<T> tClass){
+        if(obj != null){
+            if(tClass.getTypeName().equals("java.lang.Long")){
+                obj = obj != "" ? Long.parseLong(obj.toString()) : null;
+            }
+            else if(tClass.getTypeName().equals("java.lang.String")){
+                obj = obj != "" ? obj.toString() : null;
+            }
+            else if(tClass.getTypeName().equals("java.lang.Integer")){
+                obj = obj != "" ? Integer.parseInt(obj.toString()) : null;
+            }
+
+        }
+        return tClass.cast(obj);
+    }
+ ép kiểu 2 lần :
+1. Ép kiểu giá trị thực tế (giá trị nguyên thủy)
+- obj ban đầu là Object, có thể là bất kỳ kiểu gì (ví dụ: String, Integer, Long, v.v.).
+- Để đảm bảo nó đúng kiểu mong muốn (Long, Integer, String), ta phải chuyển đổi giá trị thực tế sang kiểu đó.
+- Ví dụ: nếu obj = "123" và tClass = Long.class, thì cần Long.parseLong("123") để có giá trị Long.
+2. Ép kiểu về kiểu generic T
+- ép kiểu về T để trả về - giá trị dưới dạng kiểu generic T.
+- ➡️ tClass.cast(obj) chính là cách để nói với Java:
+      “Hãy ép obj về kiểu T mà tôi đã truyền vào (Long, String, Integer,..) 
