@@ -1,3 +1,5 @@
+https://shareprogramming.net/tao-va-trien-khai-crud-trong-project-spring-boot/
+
 DTO (Request): chứa dữ liệu đầu vào khi người dùng gửi dữ liệu lên server, thường không có id (vì khi tạo mới chưa có).
 
 Response (Output): chứa dữ liệu đã lưu, thường có id, createdDate,.. khi server trả dữ liệu về client (JSON, HTML, hoặc redirect)
