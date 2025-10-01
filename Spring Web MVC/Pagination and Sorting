@@ -32,7 +32,44 @@ public String viewPage(
   <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span>
   <a th:if="${currentPage < totalPages}" th:href="@{/products(pageNo=${currentPage+1})}">Next</a>
 </div>
+
+✅Khi bạn bấm Next ở trang 1:
+➡️ Trình duyệt sẽ gọi URL: /products?pageNo=2&sortField=name&sortDir=asc
+Controller nhận request:     
+    // pageNo lúc này = 2 do người dùng bấm Next
+    Page<Product> page = productService.findPaginated(pageNo, 5, sortField, sortDir); 
+-> render lại viewu
+
+
+
 Cách 2: DisplayTag library
+🔸@GetMapping(value="/admin/building-list")
+public ModelAndView buildingList(
+        @ModelAttribute BuildingSearchRequest buildingSearchRequest,
+        HttpServletRequest request) {
+
+    ModelAndView mav = new ModelAndView("admin/building/list");
+    mav.addObject("modelSearch", buildingSearchRequest);
+
+    // lấy thông tin phân trang (page, maxPageItems) từ request
+    DisplayTagUtils.of(request, buildingSearchRequest);
+
+    // gọi service phân trang
+    List<BuildingSearchResponse> buildingSearchResponse =
+            buildingService.findAll(buildingSearchRequest,
+               PageRequest.of(buildingSearchRequest.getPage() - 1, 
+                              buildingSearchRequest.getMaxPageItems()));
+
+    // wrap vào result để truyền cho display:table
+    BuildingSearchResponse result = new BuildingSearchResponse();
+    result.setListResult(buildingSearchResponse);
+    result.setTotalItems(buildingService.countTotalItem(buildingSearchResponse));
+
+    mav.addObject("buildingList", result);
+
+    return mav;
+}
+
 🔸<display:table 
     name="buildingList.listResult"
     requestURI="${buildingListURL}"
@@ -41,6 +78,28 @@ Cách 2: DisplayTag library
     pagesize="${buildingList.maxPageItems}"
     ...
 >
+
+✅DisplayTag sẽ:
+
+Dựa vào requestURI="${buildingListURL}" để biết URL gốc cần gọi (ví dụ /admin/building-list).
+Dựa vào size và pagesize để tính số trang cần hiển thị.
+Nó sẽ tự sinh ra thanh phân trang (paging bar) ở dưới bảng, ví dụ:
+
+<div class="pagelinks">
+   <a href="/admin/building-list?page=1">1</a>
+   <a href="/admin/building-list?page=2">2</a>
+   <a href="/admin/building-list?page=3">3</a>
+   ...
+   <a href="/admin/building-list?page=next">Next</a>
+</div>
+
+Khi user bấm nút Next/Prev ở bảng của DisplayTag → nó gửi request mới kèm ?page=2 (hoặc page=3 …).
+Controller nhận request
+DisplayTagUtils.of(request, buildingSearchRequest) sẽ đọc param page và set vào buildingSearchRequest.setPage(page).
+Sau đó bạn dùng buildingSearchRequest.getPage() để query DB với PageRequest.of(page-1, maxPageItems).
+Kết quả mới được gán vào buildingList.listResult → DisplayTag render lại.
+
+Khi người dùng bấm Next hoặc số trang, DisplayTag không AJAX, mà chỉ đơn giản sinh link <a> và để trình duyệt gửi HTTP request GET mới tới controller, kèm param ?page=N.
 
 2. Client-side Pagination (JS render)
 <table id="productTable"></table>
