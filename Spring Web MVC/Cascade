@@ -1,0 +1,65 @@
+https://stackjava.com/hibernate/code-vi-du-hibernate-cascade-annotation-cascade.html
+
+package stackjava.com.hibernatedemo.entities;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cascade;
+@Entity
+@Table(name = "company")
+public class Company {
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
+  @Column(name = "name")
+  private String name;
+  
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+//  @Cascade(value= {org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+  private Set<Employee> listEmployee = new HashSet<>();
+  // setter - getter
+  @Override
+  public String toString() {
+    return "Company [id=" + id + ", name=" + name + "]";
+  }
+  
+}
+
+package stackjava.com.hibernatedemo.entities;
+import javax.persistence.*;
+@Entity
+@Table(name = "employee")
+public class Employee {
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
+  
+  @Column(name = "name")
+  private String name;
+  
+  @ManyToOne
+  @JoinColumn(name = "company_id", nullable = false)
+  private Company company;
+  // setter - getter
+  @Override
+  public String toString() {
+    return "Employee [id=" + id + ", name=" + name + ", company=" + company + "]";
+  }
+ } 
+Dùng entityManager nên sẽ sử dụng thuộc tính cascade trong @OneToMany (Nếu sử dụng sesionFactory thì sử dụng annotation @Cascade)
+cascade = {CascadeType.REMOVE, CascadeType.PERSIST}: Tức là khi xóa company thì các employee liên quan cũng bị xóa, khi insert company thì các employee bên trong nó cũng được tự động insert vào database.
+📌
+- CascadeTypexác định hành vi lan truyền (cascade) của các thao tác trên entity cha xuống entity con.
+👉 Các loại cascade phổ biến:
+PERSIST: Khi lưu entity cha → lưu luôn entity con.
+MERGE: Khi merge entity cha → merge entity con.
+REMOVE: Khi xóa entity cha → xóa luôn entity con.
+REFRESH: Khi refresh cha từ DB → refresh con.
+DETACH: Khi detach cha khỏi persistence context → detach con.
+ALL: Bao gồm tất cả các loại trên.
+
+- OrphanRemoval (JPA 2.0) cho phép xóa các entity khi chúng không còn liên kết đến mội entity nào nữa.
+orphanRemoval = true có nghĩa là:
+Nếu một entity con bị gỡ khỏi collection của cha, thì Hibernate sẽ coi nó là mồ côi (orphan) → và sẽ tự động DELETE nó khỏi DB.
