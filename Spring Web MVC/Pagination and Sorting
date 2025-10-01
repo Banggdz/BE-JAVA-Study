@@ -1,3 +1,78 @@
 https://www.baeldung.com/spring-data-jpa-pagination-sorting?utm_source=chatgpt.com
 https://www.geeksforgeeks.org/advance-java/spring-mvc-building-pagination-and-sorting-in-web-applications/?utm_source=chatgpt.com
 https://hazendaz.github.io/displaytag/tut_externalSortAndPage.html?utm_source=chatgpt.com
+
+1. Server-side Pagination (Spring Boot + Thymeleaf)
+
+🔸Controller:
+
+@GetMapping("/products")
+public String viewPage(
+        @RequestParam(defaultValue = "1") int pageNo,
+        Model model) {
+    int pageSize = 5;
+    Page<Product> page = productService.findPaginated(pageNo, pageSize);
+    model.addAttribute("products", page.getContent());
+    model.addAttribute("currentPage", pageNo);
+    model.addAttribute("totalPages", page.getTotalPages());
+    return "products";
+}
+
+
+🔸HTML (Thymeleaf):
+<table>
+  <tr th:each="p : ${products}">
+    <td th:text="${p.name}"></td>
+    <td th:text="${p.price}"></td>
+  </tr>
+</table>
+
+<div>
+  <a th:if="${currentPage > 1}" th:href="@{/products(pageNo=${currentPage-1})}">Prev</a>
+  <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span>
+  <a th:if="${currentPage < totalPages}" th:href="@{/products(pageNo=${currentPage+1})}">Next</a>
+</div>
+Cách 2: DisplayTag library
+🔸<display:table 
+    name="buildingList.listResult"
+    requestURI="${buildingListURL}"
+    partialList="true"
+    size="${buildingList.totalItems}"
+    pagesize="${buildingList.maxPageItems}"
+    ...
+>
+
+2. Client-side Pagination (JS render)
+<table id="productTable"></table>
+<div id="pagination"></div>
+
+<script>
+const pageSize = 5;
+let currentPage = 1;
+let products = [];
+
+async function loadData() {
+  const res = await fetch('/api/products/all'); // trả về toàn bộ data
+  products = await res.json();
+  renderPage(1);
+}
+
+function renderPage(page) {
+  currentPage = page;
+  const start = (page-1) * pageSize;
+  const end = start + pageSize;
+  const pageItems = products.slice(start, end);
+
+  document.getElementById("productTable").innerHTML = pageItems.map(p => 
+    `<tr><td>${p.name}</td><td>${p.price}</td></tr>`
+  ).join("");
+
+  let totalPages = Math.ceil(products.length/pageSize);
+  document.getElementById("pagination").innerHTML = 
+    `<button onclick="renderPage(${page-1})" ${page===1?"disabled":""}>Prev</button>
+     Page ${page} / ${totalPages}
+     <button onclick="renderPage(${page+1})" ${page===totalPages?"disabled":""}>Next</button>`;
+}
+
+loadData();
+</script>
