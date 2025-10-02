@@ -3,16 +3,17 @@ Cấu hình: https://laptrinhjavaweb.com/huong-dan-tao-project-spring-mvc-su-dun
 https://itviec.com/blog/spring-mvc-la-gi/
 
 Trung tâm của kiến trúc Spring MVC là DispatcherServlet. Nó hoạt động như một “Front Controller,” nghĩa là mọi yêu cầu HTTP từ client đều đi qua nó đầu tiên. Sau đó, DispatcherServlet sẽ điều phối yêu cầu này đến các thành phần khác để xử lý.
+
 DispatcherServlet (Front Controller)
+ 👉 Là cổng vào duy nhất của ứng dụng, tiếp nhận tất cả các request HTTP, phân tích chúng và ủy quyền cho các thành phần phù hợp xử lý.
+Cấu hình: Trước đây, DispatcherServlet thường được khai báo trong file web.xml. 
+Với Spring Boot hoặc cấu hình dựa trên Java (Java-based configuration), việc này được tự động hóa, nhưng bạn vẫn có thể tùy chỉnh nó qua lớp AbstractAnnotationConfigDispatcherServletInitializer.
 
-Vai trò: Là cổng vào duy nhất của ứng dụng. Nó tiếp nhận tất cả các request HTTP, phân tích chúng và ủy quyền cho các thành phần phù hợp xử lý.
-Cấu hình: Trước đây, DispatcherServlet thường được khai báo trong file web.xml. Với Spring Boot hoặc cấu hình dựa trên Java (Java-based configuration), việc này được tự động hóa, nhưng bạn vẫn có thể tùy chỉnh nó qua lớp AbstractAnnotationConfigDispatcherServletInitializer.
 HandlerMapping (Người chỉ đường)
-
-Vai trò: Sau khi nhận request, DispatcherServlet sẽ hỏi HandlerMapping rằng: “Với URL là /san-pham/123, Controller nào sẽ xử lý?”. HandlerMapping sẽ quét qua các Controller đã được định nghĩa và tìm ra phương thức phù hợp.
+ 👉 Sau khi nhận request, DispatcherServlet sẽ hỏi HandlerMapping rằng: “Với URL là /san-pham/123, Controller nào sẽ xử lý?”. HandlerMapping sẽ quét qua các Controller đã được định nghĩa và tìm ra phương thức phù hợp.
 Triển khai phổ biến: RequestMappingHandlerMapping là triển khai mặc định, nó tìm kiếm các phương thức được đánh dấu bằng annotation @RequestMapping, @GetMapping, @PostMapping, v.v.
-Controller (Người xử lý)
 
+Controller (Người xử lý)
 Vai trò: Đây là nơi logic nghiệp vụ được thực thi. Controller nhận request, tương tác với các service hoặc repository để xử lý dữ liệu, sau đó đóng gói kết quả và thông tin về View sẽ hiển thị.
 Cách tạo: Bạn tạo một class và đánh dấu nó bằng @Controller (cho ứng dụng web truyền thống) hoặc @RestController (để xây dựng RESTful APIs, tự động chuyển đổi kết quả thành JSON/XML).
 ModelAndView (Gói hàng)
