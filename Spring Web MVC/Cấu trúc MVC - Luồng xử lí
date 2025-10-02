@@ -1,0 +1,112 @@
+https://examples.javacodegeeks.com/java-development/enterprise-java/spring/mvc/spring-mvc-pagination-example/?utm_source=chatgpt.com
+Cấu hình: https://laptrinhjavaweb.com/huong-dan-tao-project-spring-mvc-su-dung-xml-configuration-8
+https://itviec.com/blog/spring-mvc-la-gi/
+
+Trung tâm của kiến trúc Spring MVC là DispatcherServlet. Nó hoạt động như một “Front Controller,” nghĩa là mọi yêu cầu HTTP từ client đều đi qua nó đầu tiên. Sau đó, DispatcherServlet sẽ điều phối yêu cầu này đến các thành phần khác để xử lý.
+DispatcherServlet (Front Controller)
+
+Vai trò: Là cổng vào duy nhất của ứng dụng. Nó tiếp nhận tất cả các request HTTP, phân tích chúng và ủy quyền cho các thành phần phù hợp xử lý.
+Cấu hình: Trước đây, DispatcherServlet thường được khai báo trong file web.xml. Với Spring Boot hoặc cấu hình dựa trên Java (Java-based configuration), việc này được tự động hóa, nhưng bạn vẫn có thể tùy chỉnh nó qua lớp AbstractAnnotationConfigDispatcherServletInitializer.
+HandlerMapping (Người chỉ đường)
+
+Vai trò: Sau khi nhận request, DispatcherServlet sẽ hỏi HandlerMapping rằng: “Với URL là /san-pham/123, Controller nào sẽ xử lý?”. HandlerMapping sẽ quét qua các Controller đã được định nghĩa và tìm ra phương thức phù hợp.
+Triển khai phổ biến: RequestMappingHandlerMapping là triển khai mặc định, nó tìm kiếm các phương thức được đánh dấu bằng annotation @RequestMapping, @GetMapping, @PostMapping, v.v.
+Controller (Người xử lý)
+
+Vai trò: Đây là nơi logic nghiệp vụ được thực thi. Controller nhận request, tương tác với các service hoặc repository để xử lý dữ liệu, sau đó đóng gói kết quả và thông tin về View sẽ hiển thị.
+Cách tạo: Bạn tạo một class và đánh dấu nó bằng @Controller (cho ứng dụng web truyền thống) hoặc @RestController (để xây dựng RESTful APIs, tự động chuyển đổi kết quả thành JSON/XML).
+ModelAndView (Gói hàng)
+
+Vai trò: Là một đối tượng "container" tiện lợi do Controller trả về. Nó chứa hai thứ: Model (dữ liệu cần hiển thị, thường là một Map) và tên logic của View (một chuỗi, ví dụ: "productDetail").
+Cách trả về: Controller sẽ tạo một đối tượng ModelAndView, thêm dữ liệu vào đó và trả về cho DispatcherServlet.
+ModelAndView mav = new ModelAndView("productDetail"); mav.addObject("product", productService.getProductById(123)); return mav;
+Copy
+ViewResolver (Người phiên dịch)
+
+Vai trò: DispatcherServlet nhận ModelAndView và không biết "productDetail" là file nào. Nó sẽ đưa tên logic này cho ViewResolver. ViewResolver sẽ “dịch” tên logic này thành một đường dẫn đến file View cụ thể.
+Triển khai phổ biến: InternalResourceViewResolver thường được dùng cho JSP. Nó sẽ thêm tiền tố (prefix) và hậu tố (suffix) vào tên logic. Ví dụ: "productDetail" sẽ được dịch thành /WEB-INF/views/productDetail.jsp. ThymeleafViewResolver được dùng cho template Thymeleaf.
+View (Người trình bày)
+
+Vai trò: Là trạm cuối cùng. View (ví dụ: file productDetail.jsp) nhận dữ liệu từ Model, thực hiện các logic hiển thị (như vòng lặp, điều kiện) và render ra HTML cuối cùng.
+Công nghệ thường dùng: JSP, Thymeleaf (khuyến khích), FreeMarker, Velocity.
+Cuối cùng, DispatcherServlet nhận kết quả HTML từ View và gửi nó về trình duyệt của người dùng dưới dạng một HTTP Response, kết thúc một chu kỳ xử lý request.
+
+Các khái niệm và tính năng quan trọng của Spring MVC
+Sau đây chúng ta sẽ đi sâu vào các “viên gạch” quan trọng đã làm nên sức mạnh và sự linh hoạt của Spring MVC. Đây là những khái niệm và tính năng bạn sẽ sử dụng hàng ngày khi làm việc với framework này.
+
+Annotations – Ngôn ngữ giao tiếp với framework
+Annotations là cách chính để bạn “chỉ thị” cho Spring MVC biết phải làm gì với code của bạn. Chúng giúp giảm thiểu cấu hình XML rườm rà và làm cho code trở nên trực quan hơn. 
+
+Dưới đây là một vài Annotations bạn sẽ thường xuyên gặp trong quá trình phát triển sử dụng mô hình Spring MVC:
+
+1. @Controller & @RestController:
+
+@Controller: Đánh dấu một class là một Controller truyền thống. Các phương thức trong class này thường trả về tên của một View (ví dụ: tên file JSP/Thymeleaf).
+@RestController: Là sự kết hợp của @Controller và @ResponseBody. Nó chuyên dùng để xây dựng RESTful APIs, nơi mỗi phương thức trả về dữ liệu (như JSON/XML) trực tiếp cho client thay vì một View.
+2. @RequestMapping và các biến thể: Ánh xạ một request HTTP tới một phương thức xử lý (handler method).
+
+@RequestMapping("/users"): Có thể xử lý mọi phương thức HTTP (GET, POST, etc.).
+@GetMapping("/users"): Chỉ xử lý request GET.
+@PostMapping("/users"): Chỉ xử lý request POST.
+Tương tự với @PutMapping, @DeleteMapping, @PatchMapping.
+3. Lấy dữ liệu từ Request:
+
+@RequestParam: Lấy giá trị từ query parameter trong URL. Ví dụ: ?id=123.
+@PathVariable: Lấy giá trị từ một phần của đường dẫn URI. Ví dụ: /users/{id}.
+@RequestBody: Ánh xạ toàn bộ phần thân (body) của request (thường là một chuỗi JSON/XML) vào một đối tượng Java (POJO).
+4. Xử lý dữ liệu trả về:
+
+@ResponseBody: Báo cho Spring biết rằng giá trị trả về của phương thức nên được ghi thẳng vào body của HTTP response, thay vì được phân giải thành một View.
+
+@RestController đã tích hợp sẵn annotation này.
+
+5. Làm việc với Model và Session:
+
+@ModelAttribute: Có hai cách dùng chính:
+
+Trên phương thức: Phương thức đó sẽ được thực thi trước cả handler method, giá trị nó trả về sẽ được tự động thêm vào Model.
+Trên tham số của phương thức: Lấy một đối tượng đã có sẵn trong Model để sử dụng.
+@SessionAttributes: Lưu trữ các model attribute trong session HTTP, giúp duy trì trạng thái qua nhiều request.
+
+6. Xác thực dữ liệu:
+
+@Valid / @Validated: Kích hoạt cơ chế kiểm tra tính hợp lệ của dữ liệu đầu vào (ví dụ: một đối tượng được gửi lên từ form).
+
+Xử lý Form (Form Handling) 
+Spring MVC cung cấp cơ chế mạnh mẽ để xử lý dữ liệu từ các form HTML.
+
+Data Binding: Spring có khả năng tự động “bind” (liên kết) các trường dữ liệu từ một form (ví dụ: username, password) vào các thuộc tính của một đối tượng Java (thường gọi là Command Object hoặc Form-backing Object).
+Form Tags: Khi dùng với JSP, Spring cung cấp một thư viện thẻ (form tags) giúp dễ dàng tạo form và liên kết nó với Command Object, cũng như hiển thị các lỗi xác thực một cách thuận tiện. Với Thymeleaf, việc tích hợp cũng rất liền mạch.
+Xác thực dữ liệu (Data Validation) 
+Việc đảm bảo dữ liệu người dùng nhập vào là hợp lệ là một yêu cầu bắt buộc.Spring tích hợp hoàn hảo với tiêu chuẩn Bean Validation (JSR 303/JSR 380): Bạn chỉ cần thêm các annotation xác thực như @NotNull, @Size(min=6, max=20), @Email, @Pattern(regexp="...") trực tiếp lên các trường của đối tượng Java.
+
+Khi kết hợp @Valid trong Controller, nếu dữ liệu không hợp lệ, các lỗi sẽ được ghi lại và bạn có thể dễ dàng hiển thị chúng trên View để thông báo cho người dùng.
+
+Xử lý ngoại lệ (Exception Handling) 
+Một ứng dụng tốt phải xử lý được các tình huống không mong muốn.
+
+@ExceptionHandler: Đặt annotation này trên một phương thức bên trong Controller để “bắt” và xử lý một loại ngoại lệ cụ thể chỉ xảy ra trong Controller đó.
+@ControllerAdvice / @RestControllerAdvice: Đây là cách xử lý ngoại lệ toàn cục. Bạn tạo một class riêng được đánh dấu bằng annotation này, và các phương thức @ExceptionHandler bên trong nó sẽ xử lý ngoại lệ từ tất cả các Controller trong ứng dụng. Điều này giúp tránh lặp lại code xử lý lỗi.
+Interceptors (Bộ Chặn) 
+Interceptor cho phép bạn thực thi một đoạn logic trước khi request được xử lý bởi Controller, sau khi Controller xử lý xong, hoặc sau khi View đã được render.
+
+Interceptor rất hữu ích cho các tác vụ xuyên suốt (cross-cutting concerns) như:
+
+Ghi log (logging) mọi request.
+Kiểm tra xác thực (authentication) và phân quyền (authorization).
+Thêm các thuộc tính chung vào ModelAndView cho mọi request.
+Cách tạo: Triển khai interface HandlerInterceptor (hoặc kế thừa lớp HandlerInterceptorAdapter đã lỗi thời) và đăng ký nó với Spring.
+
+Hỗ trợ RESTful Web Services 
+Đây là một trong những thế mạnh lớn nhất của Spring MVC hiện đại.
+
+@RestController: Như đã đề cập, đây là chìa khóa để xây dựng API.
+Xử lý HTTP Methods: Dễ dàng ánh xạ các hành động CRUD (Create, Read, Update, Delete) tới các phương thức POST, GET, PUT, DELETE tương ứng.
+Content Negotiation: Spring có thể tự động chuyển đổi đối tượng Java trả về thành định dạng mà client yêu cầu (víg dụ: JSON hoặc XML) dựa trên header Accept của request.
+Tải tệp lên (File Uploading) 
+Spring MVC đơn giản hóa việc xử lý các tệp được tải lên từ client.
+
+Cấu hình MultipartResolver: Bạn cần cấu hình một bean MultipartResolver để Spring có thể xử lý các request multipart (request chứa tệp). Với Spring Boot, việc này thường được tự động cấu hình khi bạn thêm dependency cần thiết.
+Xử lý trong Controller: Sử dụng MultipartFile làm tham số trong handler method để dễ dàng nhận và xử lý tệp tin được tải lên.
+Đa ngôn ngữ (Localization – i18n) 
+Spring cung cấp cơ chế toàn diện để xây dựng các ứng dụng hỗ trợ nhiều ngôn ngữ. Bằng cách sử dụng các ResourceBundleMessageSource và LocaleResolver, bạn có thể dễ dàng quản lý các file chứa chuỗi văn bản cho từng ngôn ngữ và hiển thị ngôn ngữ phù hợp dựa trên lựa chọn của người dùng hoặc cài đặt trình duyệt.
