@@ -2,9 +2,7 @@ method: https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletReque
 
 🧩 1. HttpServletRequest là gì?
 HttpServletRequest là một đối tượng đại diện cho yêu cầu (request) mà client (trình duyệt) gửi đến server (ứng dụng Java Web) thông qua giao thức HTTP.
-
 Nó nằm trong package: javax.servlet.http.HttpServletRequest
-
 
 Mỗi khi người dùng gửi yêu cầu (ví dụ mở trang, bấm nút, chuyển trang, hoặc gọi API), container servlet (như Tomcat, Jetty, v.v.) sẽ tạo ra một đối tượng HttpServletRequest chứa mọi thông tin của request đó, rồi truyền vào các phương thức
 
@@ -31,3 +29,101 @@ name = "abc"
 Lấy ra bằng:
 String sPage = request.getParameter("buildingList_page"); // "2"
 String name = request.getParameter("name");               // "abc"
+
+---
+package com.javaweb.utils;
+
+import com.javaweb.model.dto.AbstractDTO;
+import org.apache.commons.lang.StringUtils;
+import org.displaytag.tags.TableTagParameters;
+import org.displaytag.util.ParamEncoder;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class DisplayTagUtils {//private static final Logger log = Logger.getLogger(DisplayTagUtils.class);
+🧩 1️⃣ Hàm DisplayTagUtils.of() dùng để:
+Đọc tham số phân trang (page) mà thư viện DisplayTag sinh ra từ request,
+sau đó gán lại giá trị trang hiện tại vào đối tượng dto (là model bạn đang hiển thị).
+
+public static void of(HttpServletRequest request, AbstractDTO dto) {
+        if (dto != null) {
+            String sPage = request.getParameter(new ParamEncoder(dto.getTableId()).encodeParameterName(TableTagParameters.PARAMETER_PAGE));
+            Integer page = 1;
+            if (StringUtils.isNotBlank(sPage)) {
+                try {
+                    page = Integer.valueOf(sPage);
+                } catch (Exception e) {
+                    //log.error(e.getMessage());
+                }
+            }
+            dto.setPage(page);
+        }
+    }
+}
+🧩 dto.getTableId()
+→ là id của bảng DisplayTag mà bạn khai báo trong JSP.
+
+Ví dụ: <display:table id="buildingList" ...>
+→ thì dto.getTableId() = "buildingList"
+
+🧩 TableTagParameters.PARAMETER_PAGE
+→ là hằng số "page" (được định nghĩa sẵn trong thư viện displaytag).
+
+🧩 new ParamEncoder("buildingList").encodeParameterName("page")
+→ DisplayTag sử dụng ParamEncoder để mã hóa tên tham số an toàn và không bị trùng giữa nhiều bảng.
+Kết quả của hàm này là:
+
+"buildingList_page"
+
+
+💡 Đây chính là tên thật của tham số trong request mà DisplayTag tạo ra!
+🧠 5️⃣ Đọc tham số từ request
+String sPage = request.getParameter("buildingList_page");
+
+
+Ví dụ:
+Người dùng click Trang 2, thì URL sẽ là:
+
+/admin/building-list?buildingList_page=2
+
+
+→ Lúc này: sPage = "2"
+
+⚙️ Chuyển đổi sang số nguyên
+Integer page = 1;
+if (StringUtils.isNotBlank(sPage)) {
+    try {
+        page = Integer.valueOf(sPage);
+    } catch (Exception e) {
+        // nếu lỗi, giữ nguyên mặc định là 1
+    }
+}
+
+
+Giải thích:
+        Tình huống              sPage	  page sau khi chạy
+Người dùng chưa chọn trang nào	null	          1
+Người dùng click trang 2	      "2"	            2
+Tham số lỗi (ví dụ: abc)	      "abc"	          1 (vì lỗi parse)
+📤 Gán lại vào DTO
+dto.setPage(page);
+
+Giờ DTO của bạn (ví dụ BuildingSearchResponse) sẽ có page = 2.
+Sau đó Controller có thể dùng để truyền vào PageRequest.of(page - 1, maxPageItems).
+Bước	Mô tả	Ví dụ
+1️⃣	DisplayTag render bảng với id "buildingList"	<display:table id="buildingList" ...>
+2️⃣	Khi người dùng click “Trang 2”	URL: ...?buildingList_page=2
+3️⃣	DisplayTagUtils.of(request, model) chạy	Đọc tham số "buildingList_page"
+4️⃣	Gán model.setPage(2)	Để Controller biết hiển thị trang thứ 2
+
+Tóm tắt:
+      Dòng code	                                                                        Ý nghĩa
+HttpServletRequest request	                                Đại diện cho request của người dùng (truy cập trang web).
+AbstractDTO dto	                                            Là DTO chứa dữ liệu phân trang, ví dụ BuildingDTO, có thuộc tính tableId và page.
+dto.getTableId()	                                          Lấy ID bảng (ví dụ "buildingList") — để biết bảng nào đang được phân trang.
+new ParamEncoder(dto.getTableId())	                        Tạo ra mã hóa tham số để tránh trùng tên khi có nhiều bảng DisplayTag trong cùng trang.
+.encodeParameterName(TableTagParameters.PARAMETER_PAGE)	    Sinh ra tên tham số thực tế (ví dụ: "buildingList_page").
+request.getParameter(...)	                                  Lấy giá trị trang hiện tại mà người dùng đang chuyển đến, ví dụ ?buildingList_page=2.
+StringUtils.isNotBlank(sPage)	                              Kiểm tra xem tham số đó có tồn tại hay không.
+page = Integer.valueOf(sPage)	                              Chuyển chuỗi "2" thành số 2.
+dto.setPage(page)	                                          Ghi lại trang hiện tại vào DTO, để controller biết đang ở trang số mấy.
