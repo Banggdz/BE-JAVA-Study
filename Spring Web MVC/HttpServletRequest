@@ -1,0 +1,33 @@
+method: https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html
+
+🧩 1. HttpServletRequest là gì?
+HttpServletRequest là một đối tượng đại diện cho yêu cầu (request) mà client (trình duyệt) gửi đến server (ứng dụng Java Web) thông qua giao thức HTTP.
+
+Nó nằm trong package: javax.servlet.http.HttpServletRequest
+
+
+Mỗi khi người dùng gửi yêu cầu (ví dụ mở trang, bấm nút, chuyển trang, hoặc gọi API), container servlet (như Tomcat, Jetty, v.v.) sẽ tạo ra một đối tượng HttpServletRequest chứa mọi thông tin của request đó, rồi truyền vào các phương thức
+
+⚙️ 2. HttpServletRequest chứa những gì?
+
+🔹 a. Thông tin chung của request
+URL, URI, phương thức HTTP (GET, POST, PUT…)
+Header, Cookie, Session, IP, User-Agent, …
+
+Ví dụ:
+request.getRequestURI();     // "/building-list"
+request.getMethod();         // "GET"
+request.getHeader("User-Agent"); // thông tin trình duyệt
+
+🔹 b. Thông tin các tham số (parameter) mà người dùng gửi lên
+
+Ví dụ: người dùng truy cập:
+http://localhost:8080/building-list?buildingList_page=2&name=abc
+
+→ Server nhận được 2 request parameter:
+buildingList_page = "2"
+name = "abc"
+
+Lấy ra bằng:
+String sPage = request.getParameter("buildingList_page"); // "2"
+String name = request.getParameter("name");               // "abc"
