@@ -1,0 +1,310 @@
+🧩 NHÓM: Authentication with Spring Security
+
+Mục tiêu: Xác thực (authentication) người dùng — kiểm tra danh tính, đảm bảo “bạn là ai”.
+
+1️⃣ Spring Security Form Login
+🔹 Mục đích
+
+Cấu hình đăng nhập bằng form HTML (username/password) — cách truyền thống nhất trong ứng dụng web.
+
+🔹 Cách hoạt động
+
+Spring Security tự động cung cấp một form login mặc định tại /login.
+
+Khi người dùng gửi form, request được chuyển đến UsernamePasswordAuthenticationFilter.
+
+Filter này:
+
+Lấy username + password từ form.
+
+Gửi đến AuthenticationManager để xác thực.
+
+Nếu thành công → lưu thông tin Authentication vào SecurityContextHolder.
+
+Nếu thất bại → chuyển hướng về /login?error.
+
+🔹 Code cấu hình
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests()
+                .requestMatchers("/home", "/register").permitAll()
+                .anyRequest().authenticated()
+            .and()
+            .formLogin()
+                .loginPage("/login") // tùy chỉnh trang login
+                .defaultSuccessUrl("/dashboard", true)
+                .failureUrl("/login?error=true")
+            .and()
+            .logout()
+                .logoutSuccessUrl("/login?logout=true");
+        return http.build();
+    }
+}
+
+🔹 Lỗi thường gặp
+
+Không tạo controller hoặc view cho /login → lỗi 404.
+
+Không tắt CSRF trong khi test bằng Postman → login thất bại.
+
+Quên @EnableWebSecurity → cấu hình không kích hoạt.
+
+2️⃣ Basic Authentication
+🔹 Mục đích
+
+Dùng header HTTP Basic Auth (Authorization: Basic base64(username:password)) cho API.
+
+🔹 Cơ chế
+
+Không có form HTML.
+
+Spring Security sẽ kiểm tra header Authorization.
+
+Nếu hợp lệ → tạo Authentication object → lưu vào SecurityContext.
+
+🔹 Code cấu hình
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf().disable()
+        .authorizeHttpRequests()
+            .anyRequest().authenticated()
+        .and()
+        .httpBasic(); // bật Basic Auth
+    return http.build();
+}
+
+🔹 Ưu / Nhược điểm
+Ưu điểm	Nhược điểm
+Đơn giản, phù hợp API nội bộ	Gửi mật khẩu mỗi request
+Dễ test bằng Postman	Không nên dùng nếu không có HTTPS
+3️⃣ Custom AuthenticationProvider
+🔹 Mục đích
+
+Tự định nghĩa cách xác thực riêng thay vì dùng mặc định của Spring.
+
+🔹 Cơ chế
+
+Bạn tạo class implement AuthenticationProvider.
+
+Trong authenticate(), kiểm tra user/password (VD: DB, LDAP, API…).
+
+Nếu hợp lệ → trả về UsernamePasswordAuthenticationToken.
+
+🔹 Code ví dụ
+@Component
+public class CustomAuthProvider implements AuthenticationProvider {
+    @Override
+    public Authentication authenticate(Authentication auth) throws AuthenticationException {
+        String username = auth.getName();
+        String password = auth.getCredentials().toString();
+
+        if ("admin".equals(username) && "123".equals(password)) {
+            return new UsernamePasswordAuthenticationToken(username, password, List.of());
+        }
+        throw new BadCredentialsException("Sai thông tin đăng nhập!");
+    }
+
+    @Override
+    public boolean supports(Class<?> auth) {
+        return auth.equals(UsernamePasswordAuthenticationToken.class);
+    }
+}
+
+🔹 Đăng ký vào SecurityConfig
+@Autowired
+private CustomAuthProvider authProvider;
+
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http.authenticationProvider(authProvider)
+               .formLogin().and()
+               .build();
+}
+
+4️⃣ Manually Authenticate User
+🔹 Mục đích
+
+Xác thực thủ công trong code (ví dụ sau khi người dùng đăng ký hoặc dùng token riêng).
+
+🔹 Cách làm
+
+Dùng AuthenticationManager để xác thực một UsernamePasswordAuthenticationToken thủ công.
+
+🔹 Code ví dụ
+@Autowired
+private AuthenticationManager authManager;
+
+@PostMapping("/manual-login")
+public String manualLogin(@RequestParam String username, @RequestParam String password) {
+    Authentication auth = new UsernamePasswordAuthenticationToken(username, password);
+    Authentication result = authManager.authenticate(auth);
+    SecurityContextHolder.getContext().setAuthentication(result);
+    return "Login thành công!";
+}
+
+5️⃣ Custom AuthenticationFailureHandler
+🔹 Mục đích
+
+Tùy chỉnh hành vi khi đăng nhập thất bại (ví dụ: ghi log, giới hạn lần sai).
+
+🔹 Code ví dụ
+@Component
+public class CustomFailureHandler implements AuthenticationFailureHandler {
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest req, HttpServletResponse res,
+                                        AuthenticationException ex) throws IOException {
+        res.sendRedirect("/login?error=" + ex.getMessage());
+    }
+}
+
+🔹 Đăng ký
+.formLogin()
+    .failureHandler(customFailureHandler)
+
+6️⃣ Login Page with React
+🔹 Mục đích
+
+Tích hợp Spring Security backend với frontend (React, Angular).
+
+🔹 Cách làm
+
+Frontend gửi POST /login với JSON {username, password}.
+
+Backend xử lý xác thực, trả về JWT hoặc session cookie.
+
+Dùng cors() và csrf().disable() khi test API.
+
+🔹 Ví dụ rút gọn
+http
+  .csrf().disable()
+  .cors()
+  .and()
+  .authorizeHttpRequests()
+    .anyRequest().authenticated()
+  .and()
+  .formLogin()
+    .loginProcessingUrl("/api/login")
+    .successHandler((req, res, auth) -> res.setStatus(200))
+    .failureHandler((req, res, ex) -> res.setStatus(401));
+
+7️⃣ Upgrading WebSecurityConfigurerAdapter (Deprecated)
+🔹 Bối cảnh
+
+Spring Security 5.7 bỏ WebSecurityConfigurerAdapter, thay bằng SecurityFilterChain (functional config).
+
+🔹 Code mới
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin();
+        return http.build();
+    }
+}
+
+8️⃣ Securing API With API Key and Secret
+🔹 Mục đích
+
+Dùng API Key thay vì username/password (thường dùng cho hệ thống backend hoặc microservices).
+
+🔹 Cách làm
+
+Thêm header X-API-KEY vào request.
+
+Viết custom filter kiểm tra key.
+
+🔹 Ví dụ filter
+@Component
+public class ApiKeyFilter extends OncePerRequestFilter {
+    @Override
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
+        String apiKey = req.getHeader("X-API-KEY");
+        if (!"my-secret-key".equals(apiKey)) {
+            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        chain.doFilter(req, res);
+    }
+}
+
+🔹 Thêm vào chain
+http.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class);
+
+9️⃣ Securing with SSL Bundles
+🔹 Mục đích
+
+Cấu hình SSL cho Spring Boot (HTTPS).
+
+🔹 application.yml
+server:
+  ssl:
+    bundle: mybundle
+spring:
+  ssl:
+    bundle:
+      pem:
+        mybundle:
+          keystore:
+            certificate: classpath:cert.pem
+            private-key: classpath:key.pem
+
+
+→ Giúp mã hóa dữ liệu đăng nhập khi dùng Basic/Form Auth.
+
+🔟 Two Factor Authentication (2FA)
+🔹 Mục đích
+
+Bổ sung lớp xác thực thứ hai (ví dụ OTP, email code, Google Authenticator).
+
+🔹 Cách làm
+
+Sau khi login thành công → gửi mã OTP tới user.
+
+Chuyển hướng sang /verify-otp.
+
+Khi người dùng nhập đúng OTP → hoàn tất xác thực.
+
+🔹 Ý tưởng chính:
+
+Login → tạo PartialAuthentication.
+
+Sau khi OTP hợp lệ → nâng cấp lên FullAuthentication.
+
+11️⃣ Authenticating Users with AzureAD
+🔹 Mục đích
+
+Tích hợp Spring Boot với Microsoft Azure Active Directory (SSO).
+
+🔹 Cấu hình Maven
+<dependency>
+  <groupId>com.azure.spring</groupId>
+  <artifactId>azure-spring-boot-starter-active-directory</artifactId>
+</dependency>
+
+🔹 application.yml
+azure:
+  activedirectory:
+    tenant-id: <tenant-id>
+    client-id: <client-id>
+    client-secret: <secret>
+
+🔹 Cấu hình
+@EnableWebSecurity
+public class SecurityConfig {
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+            .oauth2Login();
+        return http.build();
+    }
+}
