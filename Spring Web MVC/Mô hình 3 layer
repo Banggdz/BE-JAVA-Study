@@ -1,0 +1,193 @@
+- Là kiến trúc kiểu client/server, trong đó giao diện người dùng (UI), logic nghiệp vụ (BL/BR) và lưu trữ dữ liệu được phát triển như các module độc lập trên các nền tảng riêng biệt. Mô hình 3 tầng (3-tier) vừa là kiến trúc phần mềm, vừa là mẫu thiết kế.
+src/
+ ├── gui/              → Presentation Layer
+ │    └── StudentUI.java
+ ├── bus/              → Business Logic Layer (BLL)
+ │    └── StudentBUS.java
+ ├── dao/              → Data Access Layer (DAL)
+ │    └── StudentDAO.java
+ └── dto/              → Data Transfer Object (Model)
+      └── Student.java
+1️⃣ Presentation Layer (GUI – Giao diện người dùng)
+•	Nhiệm vụ: Giao tiếp trực tiếp với người dùng, nhập liệu, hiển thị dữ liệu, kiểm tra dữ liệu trước khi gửi xuống Business Logic Layer (BLL).
+•	Thành phần chính:
+1.	UI Components: Các phần tử giao diện như textbox, button, combobox… chịu trách nhiệm thu nhận và hiển thị dữ liệu.
+2.	UI Process Components: Quản lý luồng xử lý giao diện, ví dụ:
+	Hiển thị màn hình tra cứu ID khách hàng.
+	Hiển thị chi tiết thông tin khách hàng.
+	Hiển thị màn hình liên hệ khách hàng.
+________________________________________
+2️⃣ Business Logic Layer (BLL – Lớp nghiệp vụ)
+•	Nhiệm vụ:
+o	Xử lý các yêu cầu từ GUI.
+o	Kiểm tra tính hợp lệ và ràng buộc dữ liệu.
+o	Thực hiện các tính toán, quy tắc nghiệp vụ.
+o	Truyền kết quả về GUI hoặc xuống Data Access Layer.
+•	Thành phần chính:
+1.	Service Interface: Giao diện mà Presentation Layer sử dụng để gọi các dịch vụ nghiệp vụ.
+2.	Business Workflows: Điều phối các quy trình nghiệp vụ theo thứ tự chính xác.
+3.	Business Components: Kiểm tra ràng buộc, thực hiện logic nghiệp vụ, cung cấp dịch vụ cho Workflows và Service Interface.
+4.	Business Entities (DTO): Các đối tượng dữ liệu dùng để truyền dữ liệu giữa Presentation và Data Layer (ví dụ: class Student với tên, ngày sinh, ID, lớp…).
+________________________________________
+3️⃣ Data Access Layer (DAL – Lớp truy cập dữ liệu)
+•	Nhiệm vụ: Giao tiếp với cơ sở dữ liệu hoặc các nguồn dữ liệu khác (file, XML…), thực hiện các thao tác CRUD (tìm kiếm, thêm, xóa, sửa…).
+•	Thành phần chính:
+1.	Data Access Logic Components: Xử lý lưu trữ và truy xuất dữ liệu, dễ cấu hình và bảo trì.
+2.	Service Agents: Hỗ trợ gọi và tương tác với các dịch vụ bên ngoài.
+________________________________________
+🔹 Ví dụ minh họa
+Trong một ứng dụng quản lý Uber:
+Lớp	Thành phần
+GUI (Presentation)	Phần chương trình chính, giao diện người dùng
+BLL (Business)	BUS (Business Service/Workflows), xử lý nghiệp vụ
+DAL (Data)	DAO (Data Access), DTO (Data Transfer Object)
+Luồng xử lý cơ bản:
+1.	Người dùng tương tác với GUI.
+2.	GUI gửi yêu cầu đến BLL.
+3.	BLL xử lý logic nghiệp vụ, gọi DAL nếu cần dữ liệu.
+4.	DAL truy xuất dữ liệu, trả về BLL.
+5.	BLL trả kết quả về GUI để hiển thị cho người dùng.
+VD:
+🧱 1️⃣ DTO (Model) – Data Transfer Object
+Đại diện cho dữ liệu, chỉ chứa thuộc tính và getter/setter.
+package dto;
+public class Student {
+    private int id;
+    private String name;
+    private double score;
+
+    public Student(int id, String name, double score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+    }
+   Setter,Getter …
+    @Override
+    public String toString() {
+        return id + " - " + name + " - " + score;
+    }
+}
+________________________________________
+🧠 2️⃣ DAO (Data Access Layer)
+Chịu trách nhiệm giao tiếp với cơ sở dữ liệu (ở đây ví dụ giả lập bằng danh sách).
+
+public class StudentDAO {
+    private Connection getConnection() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/schooldb";
+        String user = "root";
+        String pass = "123456";
+        return DriverManager.getConnection(url, user, pass);
+    }
+
+    public List<Student> getAll() {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM students";
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Student(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getDouble("score")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void addStudent(Student s) {
+        String sql = "INSERT INTO students(name, score) VALUES (?, ?)";
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, s.getName());
+            ps.setDouble(2, s.getScore());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteStudent(int id) {
+        String sql = "DELETE FROM students WHERE id=?";
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Student findById(int id) {
+        String sql = "SELECT * FROM students WHERE id=?";
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Student(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("score")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}________________________________________
+⚙️ 3️⃣ BUS (Business Logic Layer)
+Xử lý logic nghiệp vụ: kiểm tra hợp lệ, gọi DAO để thao tác dữ liệu.
+package bus;
+
+import java.util.*;
+import dao.StudentDAO;
+import dto.Student;
+
+public class StudentBUS {
+    private StudentDAO studentDAO = new StudentDAO();
+
+    public List<Student> getAllStudents() {
+        return studentDAO.getAll();
+    }
+
+    public boolean addStudent(Student s) {
+        if (s.getScore() < 0 || s.getScore() > 10) {
+            System.out.println("Điểm không hợp lệ!");
+            return false;
+        }
+        studentDAO.addStudent(s);
+        return true;
+    }
+
+    public void removeStudent(int id) {
+        studentDAO.deleteStudent(id);
+    }
+}
+________________________________________
+🖥️ 4️⃣ GUI (Presentation Layer)
+Giao tiếp với người dùng, hiển thị kết quả.
+package gui;
+
+import bus.StudentBUS;
+import dto.Student;
+public class StudentUI {
+    public static void main(String[] args) {
+        StudentBUS bus = new StudentBUS();
+
+        bus.addStudent(new Student(1, "An", 8.5));
+        bus.addStudent(new Student(2, "Bình", 9.0));
+        bus.addStudent(new Student(3, "Chi", 7.8));
+
+        System.out.println("Danh sách sinh viên:");
+        for (Student s : bus.getAllStudents()) {
+            System.out.println(s);
+        }
+    }
+}
+
