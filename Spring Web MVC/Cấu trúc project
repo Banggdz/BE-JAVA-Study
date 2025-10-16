@@ -51,3 +51,15 @@ Quan_Ly_SV/
 │               └── images/
 ├── pom.xml
 └── target/
+
+QuanLySinhVien/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/quanlysv/
+│   │   │       └── AddSinhVienServlet.java   ← Servlet xử lý thêm SV
+│   │   ├── resources/
+│   │   └── webapp/
+│   │       ├── index.html                    ← Form HTML
+│   │       └── WEB-INF/web.xml               ← Cấu hình servlet
+├── pom.xml                                   ← (nếu dùng Maven)
