@@ -1,7 +1,18 @@
 🔹 1. Nếu bạn làm Spring Boot (web động, dùng Thymeleaf hoặc REST API)
-Web động là khái niệm rộng hơn, chỉ bất kỳ website nào có thể sinh nội dung thay đổi theo dữ liệu (ví dụ: lấy dữ liệu từ CSDL, đăng nhập, thêm sửa xóa...).
-Cấu trúc chuẩn đúng nhất là:
+- Web động chỉ bất kỳ website nào có thể sinh nội dung thay đổi theo dữ liệu (ví dụ: lấy dữ liệu từ CSDL, đăng nhập, thêm sửa xóa...).
+- Mô hình MVC (Model – View – Controller)
+Thành phần	    Vai trò	                  Công nghệ tương ứng
+Model	        Dữ liệu (entity, object)	@Entity, @Repository, JPA
+View	        Giao diện hiển thị	      Thymeleaf, HTML, CSS
+Controller	  Xử lý request/response	  @Controller, @GetMapping, @PostMapping
 
+🔁 Luồng hoạt động (Spring Boot MVC):
+1.Người dùng truy cập URL / → Controller (@GetMapping("/")).
+2.Controller gọi Service / Repository để lấy dữ liệu.
+3.Trả lại view (index.html hoặc index.html trong templates/).
+4.View (Thymeleaf) hiển thị dữ liệu ra trình duyệt.
+
+Cấu trúc chuẩn đúng nhất là:
 Quan_Ly_SV/
 ├── src/
 │   ├── main/
@@ -25,11 +36,18 @@ Quan_Ly_SV/
 🔹 2. Nếu bạn làm Servlet/JSP (Java Web cổ điển)
 🔹 Đặc điểm:
 - cùng là web động
+- Mô hình 3 layer
 - Sử dụng Servlet (Java code) để xử lý request.
 - Sử dụng JSP để tạo giao diện web (HTML + Java code trộn lẫn).
 - Có file cấu hình web.xml.
 - Deploy thủ công lên Tomcat / GlassFish.
 - Dự án thường có thư mục src/main/webapp/.
+
+🧠 Mô hình 3 layer gồm:
+Tầng	                                                  Vai trò	                            
+Presentation layer (UI)                	Giao diện hiển thị, nhập dữ liệu (JSP, HTML, CSS, JS)	  index.jsp, form.jsp
+Business layer (Service / Controller)	  Xử lý logic nghiệp vụ, điều hướng luồng xử lý	          SinhVienServlet.java
+Data Access layer (DAO)	                Giao tiếp với CSDL (SQL, JDBC)	                        SinhVienDAO.java
 
 Khi đó cấu trúc lại là:
 
