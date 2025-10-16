@@ -49,6 +49,13 @@ Presentation layer (UI)                	Giao diện hiển thị, nhập dữ li
 Business layer (Service / Controller)	  Xử lý logic nghiệp vụ, điều hướng luồng xử lý	          SinhVienServlet.java
 Data Access layer (DAO)	                Giao tiếp với CSDL (SQL, JDBC)	                        SinhVienDAO.java
 
+🔁 Luồng hoạt động:
+1.Người dùng nhập form HTML (hoặc JSP).
+2.Gửi request đến Servlet (@WebServlet("/them-sv")).
+3.Servlet lấy dữ liệu form → tạo SinhVien → gọi DAO.
+4.DAO thực thi INSERT / SELECT bằng JDBC.
+5.Servlet chuyển kết quả lại cho JSP hiển thị.
+
 Khi đó cấu trúc lại là:
 
 Quan_Ly_SV/
