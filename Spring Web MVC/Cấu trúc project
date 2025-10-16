@@ -1,0 +1,16 @@
+MyWebApp/
+│
+├── src/main/java/           ← chứa code Java (Servlet, DAO, Model, ...)
+│    └── com/example/
+│         ├── controller/
+│         ├── dao/
+│         └── model/
+│
+├── src/main/webapp/         ← chứa file hiển thị cho người dùng
+│    ├── index.html          ← ✅ file HTML ở đây
+│    ├── css/                ← file CSS
+│    ├── js/                 ← file JavaScript
+│    ├── WEB-INF/
+│    │    └── web.xml        ← file cấu hình web
+│
+└── pom.xml (nếu dùng Maven)
