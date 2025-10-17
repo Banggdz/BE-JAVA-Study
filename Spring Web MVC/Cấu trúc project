@@ -89,3 +89,65 @@ QuanLySinhVien/
 │   │       ├── index.html                    ← Form HTML
 │   │       └── WEB-INF/web.xml               ← Cấu hình servlet
 ├── pom.xml                                   ← (nếu dùng Maven)
+
+cách Java/Spring Boot xác định file HTML này gắn với parameter nào / object nào, tức là “form này gửi dữ liệu vào đâu và bind vào đối tượng nào”.
+
+Ở Spring Boot + Thymeleaf (hoặc Spring Form Tag), có vài chỗ thể hiện rõ:
+
+1️⃣ Trong Thymeleaf: th:object + th:field
+
+Ví dụ form HTML:
+
+<form th:object="${sinhVien}" th:action="@{/sinhvien/save}" method="post">
+    <input th:field="*{maSV}" />
+    <input th:field="*{hoTen}" />
+    <button type="submit">Lưu</button>
+</form>
+
+Giải thích:
+Thuộc tính	Vai trò
+th:object="${sinhVien}"	Nói form này liên kết với object tên sinhVien trong Model.
+th:field="*{maSV}"	Input này map tới thuộc tính maSV của sinhVien.
+th:action="@{/sinhvien/save}"	Khi submit, dữ liệu sẽ gửi tới Controller method mapping /sinhvien/save.
+2️⃣ Trong Controller: @ModelAttribute / @RequestParam
+
+Ví dụ:
+
+@PostMapping("/sinhvien/save")
+public String save(@ModelAttribute("sinhVien") SinhVien sv) {
+    // sv.maSV, sv.hoTen được tự động bind từ form
+    System.out.println(sv.getMaSV());
+    return "redirect:/sinhvien/list";
+}
+
+Giải thích:
+
+@ModelAttribute("sinhVien") → trùng với th:object="${sinhVien}" trong HTML
+
+Spring Boot sẽ tạo object SinhVien, và gán giá trị input theo tên thuộc tính (maSV, hoTen) vào các field tương ứng.
+
+Đây là cách “file HTML biết thuộc param nào”: thông qua th:object + th:field ↔ @ModelAttribute.
+
+3️⃣ Nếu dùng input đơn lẻ: @RequestParam
+<form th:action="@{/sinhvien/save2}" method="post">
+    <input type="text" name="maSV" />
+    <input type="text" name="hoTen" />
+    <button type="submit">Lưu</button>
+</form>
+
+@PostMapping("/sinhvien/save2")
+public String save2(@RequestParam String maSV, @RequestParam String hoTen) {
+    System.out.println(maSV + " - " + hoTen);
+    return "redirect:/sinhvien/list";
+}
+
+
+Ở đây name của input chính là param gửi tới Controller.
+
+Không cần th:object hay @ModelAttribute.
+
+🔹 Kết luận
+
+Nếu dùng th:object + th:field → HTML gắn với @ModelAttribute("...") trong Controller.
+
+Nếu dùng name trong input → HTML gắn với @RequestParam trong Controller.
