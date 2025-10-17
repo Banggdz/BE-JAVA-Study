@@ -7,15 +7,9 @@
 Dùng Thymeleaf (th:* attributes):
 
 th:action → tự động gán URL theo controller Spring Boot.
-
 th:object → gán model attribute từ Spring Controller (sinhVien) cho form.
-
 th:field="*{maSv}" → binding trực tiếp input với property của object.
-
 th:each → lặp dữ liệu từ model (ở đây ${ds} là danh sách sinh viên) và hiển thị ra bảng.
-
 th:text → chèn giá trị của property vào HTML, thay vì viết thẳng cứng.
 
 Cả form và table đều “liên kết dữ liệu từ server”, nên khi submit form, Spring Boot tự nhận dữ liệu vào object SinhVien.
-
-Không có CSS, giao diện cơ bản, chức năng chính là hiển thị và binding dữ liệu với backend.
