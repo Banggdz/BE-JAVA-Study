@@ -1,4 +1,6 @@
 https://spring.io/guides/gs/handling-form-submission?utm_source=chatgpt.com
+https://www.geeksforgeeks.org/java/spring-mvc-form-tag-library/
+https://stackoverflow.com/questions/56764298/how-to-use-formform-formform-tag-using-html-in-spring-mvc
 🔹 So sánh
 Cú pháp	Engine                         / Thư viện	Ý nghĩa
 <form:form modelAttribute="sinhVien">	Spring Form Tag Library (spring-form.tld)	Gắn form với object sinhVien để tự động bind input với thuộc tính object. Dùng với JSP.
