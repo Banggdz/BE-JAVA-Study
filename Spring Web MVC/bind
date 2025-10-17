@@ -1,0 +1,51 @@
+1️⃣ Bind là gì?
+
+Trong lập trình web (Spring, Thymeleaf, JSP…), “bind” nghĩa là “ràng buộc dữ liệu giữa hai thứ”, cụ thể:
+Form input ↔ Object/Model trong Java
+
+Khi bạn submit form, Spring sẽ tự động gán giá trị từ form vào các thuộc tính của object dựa trên tên thuộc tính hoặc th:field.
+Quá trình này gọi là data binding.
+
+2️⃣ Ví dụ trực quan
+Class Java:
+public class SinhVien {
+    private String maSv;
+    private String hoTen;
+    private LocalDate ngaySinh;
+
+    // getters/setters
+}
+
+Controller:
+@GetMapping("/")
+public String showForm(Model model) {
+    model.addAttribute("sinhVien", new SinhVien());
+    return "form";
+}
+
+@PostMapping("/them-sv")
+public String addSinhVien(@ModelAttribute SinhVien sv) {
+    // sv.maSv, sv.hoTen, sv.ngaySinh đã được bind từ form
+    System.out.println(sv.getMaSv());
+    return "redirect:/";
+}
+
+Thymeleaf Form:
+<form th:object="${sinhVien}" th:action="@{/them-sv}" method="post">
+    <input type="text" th:field="*{maSv}" placeholder="Mã SV">
+    <input type="text" th:field="*{hoTen}" placeholder="Họ và Tên">
+    <input type="date" th:field="*{ngaySinh}">
+    <button type="submit">Thêm</button>
+</form>
+
+
+✅ Khi submit form:
+
+Giá trị từ <input> tự động gán vào sv.maSv, sv.hoTen, sv.ngaySinh.
+Không cần viết thủ công sv.setMaSv(request.getParameter("maSv")).
+
+3️⃣ Tóm lại
+
+Bind = liên kết / map / gán tự động dữ liệu giữa form và object.
+Trong Spring + Thymeleaf: th:field + th:object + @ModelAttribute là cơ chế binding.
+Giúp code ngắn gọn, dễ bảo trì, tránh lỗi “null” khi submit form.
