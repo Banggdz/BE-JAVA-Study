@@ -1,0 +1,62 @@
+https://spring.io/guides/gs/handling-form-submission?utm_source=chatgpt.com
+🔹 So sánh
+Cú pháp	Engine                         / Thư viện	Ý nghĩa
+<form:form modelAttribute="sinhVien">	Spring Form Tag Library (spring-form.tld)	Gắn form với object sinhVien để tự động bind input với thuộc tính object. Dùng với JSP.
+<form th:object="${sinhVien}">	      Thymeleaf	Gắn form với object sinhVien để bind input (th:field) với thuộc tính object. Dùng với Spring Boot + Thymeleaf.
+
+2
+To use the <form:form> tag in JSP, you must use a JSP taglib:
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+1️⃣ Phần JSP: Form sử dụng Spring Form Tag
+️<form:form
+    action="/action" modelAttribute="student">
+    
+    <table>
+        <tr>
+            <td><form:label path="name">Name</form:label></td>
+            <td><form:input path="name"/></td>
+        </tr>
+        <tr>
+            <td><form:label path="email">email</form:label></td>
+            <td><form:input path="email"/></td>
+        </tr>    
+        <tr>
+            <td><input type="submit" value="Submit"/></td>  
+        </tr>
+    </table>
+    
+</form:form>
+
+- modelAttribute="student": Đây là tên model object được binding từ Controller (ở đây là new Studentdata()), Spring sẽ liên kết dữ liệu form với object này.
+action="/action": URL khi submit form sẽ gọi controller tương ứng /action.
+
+- <form:label path="name"> và <form:input path="name"/>
+path="name": chỉ định property trong object student (trong lớp Studentdata) mà input này sẽ binding.
+Khi JSP được render: Spring tự động gắn giá trị hiện có của student.name vào input nếu có dữ liệu trước đó.
+- <input type="submit"/>
+Khi nhấn submit, form sẽ gửi HTTP POST (mặc định nếu method không khai báo) tới /action.
+
+
+2️⃣ Controller hiển thị form
+@RequestMapping("/test")
+public String index1(Model model)
+{
+    
+    //  String name1=name;
+        model.addAttribute("student",new Studentdata());
+    return "form.jsp";
+}
+in action URL
+
+@RequestMapping("/action")
+
+    public String jasper1(@ModelAttribute("student") Studentdata student)
+    {
+        
+    System.out.print("name"+student.getName());
+    System.out.print("name"+student.getEmail());
+    
+    return"action.jsp";
+}
+    
