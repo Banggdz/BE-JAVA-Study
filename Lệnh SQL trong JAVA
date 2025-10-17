@@ -1,0 +1,44 @@
+1️⃣ executeUpdate
+Dùng cho: các câu lệnh thay đổi dữ liệu hoặc cấu trúc bảng, ví dụ:
+INSERT INTO ... → thêm hàng mới
+UPDATE ... → cập nhật hàng
+DELETE FROM ... → xóa hàng
+CREATE TABLE ..., DROP TABLE ... → thay đổi cấu trúc bảng
+Cú pháp:
+int rowAffected = ps.executeUpdate();
+
+Giá trị trả về:
+int = số hàng bị ảnh hưởng bởi câu lệnh SQL.
+
+Ví dụ:
+
+Thêm 1 sinh viên → trả về 1
+Cập nhật 3 hàng → trả về 3
+Không có hàng nào bị thay đổi → trả về 0
+
+String sql = "UPDATE sinhvien SET gpa = ? WHERE ma_sv = ?";
+PreparedStatement ps = conn.prepareStatement(sql);
+ps.setDouble(1, 3.5);
+ps.setString(2, "B20DCCN001");
+
+int rowAffected = ps.executeUpdate();
+System.out.println(rowAffected + " hàng đã được cập nhật.");
+
+2️⃣ executeQuery
+Dùng cho: các câu lệnh truy vấn dữ liệu, ví dụ:
+SELECT * FROM sinhvien
+SELECT ho_ten, gpa FROM sinhvien WHERE lop='B20DCCN'
+
+Cú pháp:
+ResultSet rs = ps.executeQuery();
+
+Giá trị trả về:
+ResultSet = tập hợp các hàng kết quả (có thể có 0 hoặc nhiều hàng).
+Bạn cần duyệt ResultSet để lấy dữ liệu:
+
+while(rs.next()) {
+    String maSv = rs.getString("ma_sv");
+    String hoTen = rs.getString("ho_ten");
+    double gpa = rs.getDouble("gpa");
+    System.out.println(maSv + " - " + hoTen + " - " + gpa);
+}
