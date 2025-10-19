@@ -1,0 +1,28 @@
+https://www.thymeleaf.org/doc/articles/layouts.html
+layout.html
+ ├─ header (common/header :: header)
+ ├─ main
+ │    └─ <div th:replace="sinhvien/sinhvien :: content">  => Nội dung fragment được chèn vào đây
+ └─ footer (common/footer :: footer)
+📄header.html
+	<!-- templates/common/header.html -->
+	<div th:fragment="header">
+	    <header style="background-color:#007bff; color:white; padding:10px;">
+	        <ul style="list-style:none; display:flex; gap:20px; margin:0; padding:0;">
+	            <li><a th:href="@{/}" style="color:white; text-decoration:none;">Trang chủ</a></li>
+	            <li><a th:href="@{/sinhvien/}" style="color:white; text-decoration:none;">Quản lý sinh viên</a></li>
+	            <li><a th:href="@{/taikhoan/}" style="color:white; text-decoration:none;">Tài khoản</a></li>
+	        </ul>
+	    </header>
+	</div>
+
+📄footer.html
+	<!-- templates/common/footer.html -->
+	<div th:fragment="footer">
+	    <footer style="background-color:#f8f9fa; color:#333; text-align:center; padding:10px; margin-top:20px;">
+	        <p>© 2025 - Quản lý sinh viên | Design by Hữu Bằng</p>
+	    </footer>
+	</div>
+
+
+
