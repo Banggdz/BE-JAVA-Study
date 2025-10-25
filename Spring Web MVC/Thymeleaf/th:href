@@ -1,0 +1,36 @@
+  <link rel="stylesheet" th:href="@{/css/home.css}" />
+
+⚙️ th:href trong Thymeleaf là đường dẫn URL,
+chứ không phải đường dẫn thư mục vật lý trong máy.
+
+🔍 1️⃣ Phân biệt rõ 2 loại “đường dẫn”
+Loại	                          Dùng ở đâu	                Ví dụ                                        	Ý nghĩa
+Đường dẫn thư mục(file path) Trong project code	   src/main/resources/static/css/home.css	    Nơi file thực sự nằm trong project
+Đường dẫn URL(web path)	     Trên trình duyệt web	 /css/home.css hoặc /medicare/css/home.css	Đường mà người dùng truy cập qua trình duyệt
+
+🔧 2️⃣ Spring Boot ánh xạ thư mục → URL
+
+Spring Boot tự động ánh xạ (map) các file trong thư mục static/, public/, resources/, META-INF/resources/
+→ thành đường dẫn URL bắt đầu từ gốc website.
+
+Ví dụ:
+File thật:
+src/main/resources/static/css/home.css
+
+Được map thành URL:
+http://localhost:8080/css/home.css
+
+💡 3️⃣ th:href dùng để sinh URL động (web path)
+
+Cú pháp:
+<link rel="stylesheet" th:href="@{/css/home.css}">
+
+→ Khi chạy, Thymeleaf sẽ tự động thay bằng đúng URL tương ứng với context path hiện tại.
+
+🔄 4️⃣ Ví dụ đầy đủ
+Giả sử file thật nằm ở:
+src/main/resources/static/css/home.css
+
+Context path	        Code Thymeleaf	        Kết quả sinh ra
+/	             th:href="@{/css/home.css}"	    /css/home.css
+/medicare	     th:href="@{/css/home.css}"	    /medicare/css/home.css
