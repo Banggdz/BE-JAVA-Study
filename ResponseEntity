@@ -1,0 +1,95 @@
+1️⃣ Khái niệm
+
+ResponseEntity<T> là generic class.
+T là kiểu dữ liệu body mà bạn muốn trả về (có thể là object, list, string, v.v.).
+
+Cho phép bạn tùy chỉnh:
+
+Body: dữ liệu trả về.
+Status code: HTTP status (200 OK, 201 Created, 400 Bad Request, 404 Not Found…).
+Header: các thông tin HTTP headers (Content-Type, Authorization, v.v.).
+
+2️⃣ Cấu trúc cơ bản
+ResponseEntity<T> response = ResponseEntity.status(HttpStatus.OK)
+                                            .header("Custom-Header", "value")
+                                            .body(obj);
+
+
+Hoặc cách ngắn gọn:
+return ResponseEntity.ok(obj); // body = obj, status = 200 OK
+
+3️⃣ Một số factory method hay dùng
+Method	                                          Ý nghĩa
+ok(T body)	                            Trả về status 200 OK với body
+created(URI location)	                  Trả về 201 Created, kèm header Location
+badRequest().body(T body)    	          Trả về 400 Bad Request với body
+notFound().build()	                    Trả về 404 Not Found, không có body
+status(HttpStatus status).body(T body)	Trả về status tùy chọn với body
+
+4️⃣ Ví dụ
+@PostMapping
+public ResponseEntity<HoaDon> createHoaDon(@RequestBody HoaDon hoaDon) {
+    // Lưu vào DB
+    jdbcTemplate.update("INSERT INTO hoadon (...) VALUES (?, ?, ?)", ...);
+    // Lấy ID vừa insert
+    Long maHD = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+    hoaDon.setMaHD(maHD);
+    // Trả về JSON + HTTP status 200
+    return ResponseEntity.ok(hoaDon);
+}
+
+Body: hoaDon → JSON trả về cho React.
+Status: 200 OK.
+Header: mặc định Spring đặt Content-Type: application/json nếu trả object.
+
+5️⃣ Nếu muốn trả 201 Created + header location:
+
+@PostMapping("/api/hoadon")
+public ResponseEntity<HoaDon> createHoaDon(@RequestBody HoaDon hoaDon) {
+    jdbcTemplate.update("INSERT INTO hoadon(...) VALUES (?, ?, ?)", ...);
+    Long maHD = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+    hoaDon.setMaHD(maHD);
+
+    URI location = URI.create("/api/hoadon/" + maHD);
+
+    return ResponseEntity
+            .created(location)  // status 201 Created
+            .header("X-Source", "SpringBoot") // custom header
+            .body(hoaDon); // JSON body
+}
+
+┌───────────────────────────┐
+│      ResponseEntity<T>    │
+├───────────────────────────┤
+│ Header(s)                 │
+│ ┌───────────────────────┐ │
+│ │ Content-Type: application/json │
+│ │ Authorization: Bearer ...     │
+│ │ Custom-Header: value          │
+│ └───────────────────────┘ │
+├───────────────────────────┤
+│ Body (T)                  │
+│ ┌───────────────────────┐ │
+│ │ {                       │
+│ │   "maHD": 1,           │
+│ │   "tenBenhNhan": "An", │
+│ │   "ngayLap": "...",    │
+│ │   "tongTien": 100000   │
+│ │ }                       │
+│ └───────────────────────┘ │
+├───────────────────────────┤
+│ Status Code               │
+│ ┌───────────────────────┐ │
+│ │ 200 OK                 │
+│ └───────────────────────┘ │
+└───────────────────────────┘
+
+
+HTTP status: 201 Created
+
+Header: Location: /api/hoadon/{maHD}
+
+Body: JSON hoaDon
+
+💡 Tóm tắt:
+ResponseEntity = Body + Status code + Header → giúp bạn điều khiển hoàn toàn phản hồi HTTP cho frontend, rất hữu ích khi làm API kiểu React gọi Spring Boot.
