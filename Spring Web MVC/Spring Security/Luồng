@@ -2,3 +2,19 @@ Luồng: https://viblo.asia/p/van-de-bao-mat-api-bang-spring-security-jvElao66Kk
 https://viblo.asia/p/lam-sao-bao-mat-ung-dung-spring-voi-spring-security-va-jwt-yZjJYKXbVOE
 https://viblo.asia/p/huong-dan-spring-security-co-ban-de-hieu-OeVKBdedlkW
 jwt: https://viblo.asia/p/huong-dan-spring-security-jwt-json-web-token-hibernate-oOVlYGmoK8W
+
+🔐 Ý tưởng: Cách Spring Security biết người dùng đã đăng nhập hay chưa
+
+Khi bạn đăng nhập qua form (ví dụ /login):
+1️⃣ Spring Security kiểm tra thông tin người dùng (qua UserDetailsService, DB, v.v.)
+2️⃣ Nếu hợp lệ → nó ghi lại người dùng đang đăng nhập vào một vùng đặc biệt:
+👉 SecurityContextHolder (chứa đối tượng Authentication)
+3️⃣ Authentication này lưu thông tin như:
+
+principal: người dùng hiện tại (username, vai trò, v.v.)
+
+authorities: danh sách quyền
+
+authenticated: cờ true/false (đã đăng nhập chưa)
+
+Sau khi đăng nhập thành công, mọi request gửi lên (dù là trang khác) Spring Security sẽ tự gắn lại thông tin user từ session — bạn không cần làm thủ công.
