@@ -1,0 +1,12 @@
+Chạy lệnh này trong terminal PowerShell:
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+
+---------
+
+Hoặc nếu vẫn muốn fix vĩnh viễn, sửa profile PowerShell ($PROFILE):
+
+Mở PowerShell
+Chạy: notepad $PROFILE
+Thêm: [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+Lưu & restart PowerShell
