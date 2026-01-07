@@ -65,3 +65,61 @@ Repository	                CRUD	Paging	Sorting	Batch	Flush
 CrudRepository	            ✅	  ❌	      ❌	  ❌  	❌
 PagingAndSortingRepository	✅	  ✅	      ✅  	❌  	❌
 JpaRepository	              ✅	  ✅	      ✅	  ✅	  ✅
+
+
+1. Các Interface thao tác dữ liệu cơ bản
+Các interface này nằm trong package org.springframework.data.repository.
+
+CrudRepository
+Cung cấp các thao tác tạo, đọc, cập nhật và xóa cơ bản.
+
+save(entity: S): S
+findById(id: ID): Optional<T>
+existsById(id: ID): boolean
+count(): long
+deleteById(id: ID): void
+delete(entity: T): void
+deleteAllById(ids: Iterable<? extends ID>): void
+deleteAll(entities: Iterable<? extends T>): void
+deleteAll(): void
+ListCrudRepository
+Tương tự như CrudRepository nhưng trả về List thay vì Iterable cho các phương thức tìm kiếm.
+
+saveAll(entities: Iterable<S>): List<S>
+findAll(): List<T>
+findAllById(ids: Iterable<ID>): List<T>
+
+2. Các Interface Phân trang và Sắp xếp
+Hỗ trợ việc lấy dữ liệu theo từng trang hoặc sắp xếp kết quả trả về.
+
+PagingAndSortingRepository
+findAll(pageable: Pageable): Page<T>
+
+ListPagingAndSortingRepository
+findAll(sort: Sort): List<T>
+
+3. Interface JpaRepository
+Đây là interface phổ biến nhất khi làm việc với Spring Data JPA, nó kế thừa từ các interface trên và bổ sung các phương thức đặc thù cho JPA (như flush, xóa theo lô).
+
+JpaRepository
+flush(): void
+saveAndFlush(entity: S): S
+saveAllAndFlush(entities: Iterable<S>): List<S>
+deleteAllInBatch(entities: Iterable<T>): void
+deleteAllByIdInBatch(ids: Iterable<ID>): void
+deleteAllInBatch(): void
+getOne(id: ID): T (Lưu ý: hiện nay thường dùng getReferenceById)
+getReferenceById(id: ID): T
+findAll(example: Example<S>): List<S>
+findAll(example: Example<S>, sort: Sort): List<S>
+deleteInBatch(entities: Iterable<T>): void
+
+4. Truy vấn theo ví dụ (Query By Example)
+Interface này giúp tạo truy vấn dựa trên một đối tượng mẫu có sẵn.
+
+QueryByExampleExecutor
+findOne(example: Example<S>): Optional<S>
+findAll(example: Example<S>, pageable: Pageable): Page<S>
+count(example: Example<S>): long
+exists(example: Example<S>): boolean
+findBy(example: Example<S>, queryFunction: Function<FetchableFluentQuery<S>, R>): R
