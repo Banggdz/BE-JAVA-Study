@@ -1,0 +1,67 @@
+JpaRepository
+   ↑
+PagingAndSortingRepository
+   ↑
+CrudRepository
+
+1. CrudRepository<T, ID> — nền tảng thấp nhất
+👉Mục đích: Cung cấp CRUD cơ bản nhất cho entity.
+
+Khai báo
+public interface CrudRepository<T, ID> {
+    <S extends T> S save(S entity);
+    Optional<T> findById(ID id);
+    Iterable<T> findAll();
+    void deleteById(ID id);
+    void delete(T entity);
+    long count();
+    boolean existsById(ID id);
+}
+
+Đặc điểm
+Nhẹ nhất
+Trả về Iterable
+Không có paging, sorting
+
+2. PagingAndSortingRepository<T, ID>
+Kế thừa từ
+public interface PagingAndSortingRepository<T, ID>
+        extends CrudRepository<T, ID>
+
+Bổ sung
+Iterable<T> findAll(Sort sort);
+Page<T> findAll(Pageable pageable);
+
+Ý nghĩa:
+Thêm phân trang (Paging) và sắp xếp (Sorting)
+
+Khi nào dùng:
+Có danh sách lớn
+Cần phân trang
+
+3. JpaRepository<T, ID> — cấp cao nhất (hay dùng nhất)
+Kế thừa từ
+public interface JpaRepository<T, ID>
+        extends PagingAndSortingRepository<T, ID>
+
+Bổ sung thêm:
+List<T> findAll();
+List<T> findAll(Sort sort);
+void flush();
+<S extends T> S saveAndFlush(S entity);
+void deleteInBatch(Iterable<T> entities);
+
+Đặc điểm:
+Trả về List thay vì Iterable
+Có batch operation
+Có flush() (đồng bộ ngay với DB)
+Gắn chặt với JPA / Hibernate
+
+Khi nào dùng:
+👉 GẦN NHƯ LUÔN LUÔN dùng JpaRepository
+
+4. So sánh tổng hợp
+Repository	                CRUD	Paging	Sorting	Batch	Flush
+CrudRepository	            ✅	  ❌	      ❌	  ❌  	❌
+PagingAndSortingRepository	✅	  ✅	      ✅  	❌  	❌
+JpaRepository	              ✅	  ✅	      ✅	  ✅	  ✅
