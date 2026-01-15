@@ -54,3 +54,17 @@ T = CategoryEntity
 R = CategoryDTO
 
 toDTO khớp hoàn toàn
+
+❌ Stream.map(Function<T, R>)
+➡ chỉ cho phép 1 tham số
+➡ Không thể viết:
+.map(modelMapper::map)
+
+Cách viết đúng và sạch (KHUYẾN NGHỊ)
+Bọc lại bằng method 1 tham số
+private CategoryDTO toDTO(CategoryEntity entity) {
+    return modelMapper.map(entity, CategoryDTO.class);
+}
+
+Sau đó dùng method reference:
+.map(this::toDTO)
