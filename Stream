@@ -1,0 +1,56 @@
+Stream là API của Java dùng để xử lý collection theo kiểu functional: lọc, map, sort, gom nhóm… không dùng vòng lặp for truyền thống.
+
+Thuộc: Java Stream API
+
+Các hàm Stream quan trọng (PHẢI BIẾT)
+Hàm	      Mục đích
+filter	  Lọc
+map	Biến  đổi
+forEach	  Duyệt
+collect	  Gom kết quả
+findFirst	Lấy phần tử đầu
+anyMatch	Kiểm tra tồn tại
+sorted	  Sắp xếp
+
+VD:
+✔ Lọc category ACTIVE
+List<CategoryEntity> activeCategories = categories.stream()
+        .filter(c -> c.getStatus() == Status.ACTIVE)
+        .toList(); // Java 16+
+ 
+✔ Stream + Optional
+List<CategoryDTO> dtos = entities.stream()
+        .map(CategoryConverter::toDTO)
+        .collect(Collectors.toList());
+
+CategoryConverter → class
+:: → toán tử method reference
+toDTO → static method của class đó
+
+Biến đổi mỗi phần tử trong Stream từ CategoryEntity → CategoryDTO
+Nó tương đương với:
+.map(entity -> CategoryConverter.toDTO(entity))
+
+Đây là Method Reference trong Java.
+Cú pháp chung
+ClassName::methodName
+
+Định nghĩa map
+<R> Stream<R> map(Function<? super T, ? extends R> mapper)
+
+Method reference
+- là cách viết rút gọn của lambda expression trong Java, dùng để truyền một method như một hàm khi chữ ký của method khớp hoàn toàn với functional interface.
+
+Định nghĩa ngắn gọn (ghi nhớ)
+Method reference = tham chiếu đến method, KHÔNG gọi method
+
+Ví dụ quen thuộc nhất (case của bạn)
+.map(CategoryConverter::toDTO)
+
+Tương đương:
+.map(entity -> CategoryConverter.toDTO(entity))
+
+T = CategoryEntity
+R = CategoryDTO
+
+toDTO khớp hoàn toàn
