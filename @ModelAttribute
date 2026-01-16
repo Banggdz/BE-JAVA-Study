@@ -17,10 +17,18 @@ Spring:
 
 2. @ModelAttribute("siteName") trên METHOD
 
-@ModelAttribute("siteName")
-public String siteName() {
-    return "My Shop";
-}
+    @ModelAttribute("siteName")
+    public String siteName() {
+        return "My Shop";
+    }
+
+    @ModelAttribute
+    public void addGlobalAttributes(Model model) {
+        // Nạp danh sách categories cho Header menu
+        model.addAttribute("categories", categoryService.getParents());
+        
+        // Bạn có thể nạp thêm các dữ liệu chung khác như thông tin user, giỏ hàng...
+    }
 
 Nó có nghĩa là gì?
 
