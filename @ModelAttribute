@@ -1,0 +1,65 @@
+1. @ModelAttribute trên PARAMETER
+
+@PostMapping("/products")
+public String create(@ModelAttribute ProductCreateRequestDTO dto) {
+    productService.create(dto);
+    return "redirect:/products";
+}
+
+Nó làm gì?
+
+Spring:
+- Lấy dữ liệu từ request (form field, query param)
+- Match theo tên field
+- Gán vào ProductCreateRequestDTO
+- Sau đó truyền object này vào method
+➡ Dùng để nhận dữ liệu từ client
+
+2. @ModelAttribute("siteName") trên METHOD
+
+@ModelAttribute("siteName")
+public String siteName() {
+    return "My Shop";
+}
+
+Nó có nghĩa là gì?
+
+Spring: 
+- Tự gọi method này trước mỗi handler
+- Lấy giá trị return
+
+Gắn vào Model với key = "siteName"
+➡ Dùng để cung cấp dữ liệu cho View
+➡ Mọi method trong controller này đều có sẵn: ${siteName}
+
+
+Đặc điểm
+
+Không liên quan request body / form
+Không bind dữ liệu
+
+Cách @ControllerAdvice hoạt động (luồng thực tế)
+Luồng xử lý request bình thường:
+
+Browser
+  ↓
+@Controller  (mapping URL)
+  ↓
+Service
+  ↓
+Return view / data
+
+Khi có @ControllerAdvice:
+
+Browser
+  ↓
+@Controller  (mapping URL)
+     ↓
+     ❗ Exception xảy ra
+     ↓
+@ControllerAdvice  (bắt exception / thêm model / binding)
+     ↓
+Render error view / response
+
+
+➡ @ControllerAdvice chỉ được gọi khi controller khác đang chạy.
