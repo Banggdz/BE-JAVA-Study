@@ -26,7 +26,7 @@ SecurityContext
 Authentication = thông tin xác thực hiện tại
 principal = thông tin người dùng
 
-➡️ principal có thể là những kiểu gì?
+1️⃣ principal có thể là những kiểu gì?
 Trường hợp 1: Chưa đăng nhập
 principal = "anonymousUser"
 
@@ -45,7 +45,7 @@ public class CustomUserDetails implements UserDetails {
 
 ➡️ principal chính là CustomUserDetails
 
-➡️Lấy principal bằng cách nào?
+2️⃣ Lấy principal bằng cách nào?
 Cách 1: Từ SecurityContext
 Authentication auth =
     SecurityContextHolder.getContext().getAuthentication();
@@ -62,3 +62,73 @@ public String profile(@AuthenticationPrincipal CustomUserDetails user) {
     System.out.println(user.getUsername());
     return "profile";
 }
+3️⃣ UserDetailsService và UserDetails
+1. Phân biệt 2 khái niệm trong 1 câu
+
+UserDetailsService = nơi LẤY user
+UserDetails = thông tin user ĐÃ LẤY ra
+
+2. UserDetailsService (dùng khi chưa ĐĂNG NHẬP)
+
+UserDetailsService là SERVICE mà Spring gọi để tìm user khi đăng nhập
+Cấu hình Security
+Lấy user từ DB
+Viết logic đăng nhập
+
+public interface UserDetailsService {
+    UserDetails loadUserByUsername(String username);
+}
+
+@Service
+public class CustomUserDetailsService
+        implements UserDetailsService {
+}
+📌 Nó chỉ tồn tại lúc đăng nhập
+📌 Nó không được lưu trong session
+
+👉 Vai trò: đi DB / API để tìm user
+
+3. UserDetails là gì? (dùng sau khi ĐĂNG NHẬP)
+
+UserDetails là object chứa thông tin user mà Spring Security sử dụng
+Lấy user đã đăng nhập
+
+Phân quyền
+
+Lấy thông tin user hiện tại
+
+@AuthenticationPrincipal CustomUserDetails userDetails
+
+public interface UserDetails {
+    String getUsername();
+    String getPassword();
+    Collection<? extends GrantedAuthority> getAuthorities();
+}
+
+📌 Nó được lưu trong session
+📌 Nó chính là principal
+
+4. Ví dụ đời thực (rất dễ nhớ)
+Ví dụ: đi mua hàng
+Thực tế	Spring Security
+Nhân viên hỏi CMND	Spring gọi UserDetailsService
+Bạn đưa CMND	UserDetailsService trả UserDetails
+Nhân viên giữ thông tin	Spring lưu UserDetails
+Bạn đi đâu cũng được nhận diện	principal
+
+5. Luồng chuẩn (quan trọng)
+FORM LOGIN
+   |
+   v
+UserDetailsService.loadUserByUsername()
+   |
+   v
+UserDetails (CustomUserDetails)
+   |
+   v
+Authentication.principal
+   |
+   v
+SecurityContext (SESSION)
+
+
