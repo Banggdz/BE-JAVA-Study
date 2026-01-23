@@ -82,6 +82,17 @@ public interface UserDetailsService {
 @Service
 public class CustomUserDetailsService
         implements UserDetailsService {
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+    
+        UserEntity user = userRepository.findByUserName(username)
+            .orElseThrow(() ->
+                new UsernameNotFoundException("User not found")
+            );
+    
+        return new CustomUserDetails(user);
+    }
+
 }
 📌 Nó chỉ tồn tại lúc đăng nhập
 📌 Nó không được lưu trong session
@@ -92,9 +103,7 @@ public class CustomUserDetailsService
 
 UserDetails là object chứa thông tin user mà Spring Security sử dụng
 Lấy user đã đăng nhập
-
 Phân quyền
-
 Lấy thông tin user hiện tại
 
 @AuthenticationPrincipal CustomUserDetails userDetails
