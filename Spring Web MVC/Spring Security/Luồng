@@ -92,8 +92,16 @@ public class CustomUserDetailsService
     
         return new CustomUserDetails(user);
     }
-
 }
+🔹 loadUserByUsername(String username)
+Được Spring Security tự động gọi khi đăng nhập
+
+Nhiệm vụ:
+
+Tìm user theo username
+Trả về UserDetails
+Nếu không có user → throw exception
+
 📌 Nó chỉ tồn tại lúc đăng nhập
 📌 Nó không được lưu trong session
 
