@@ -12,9 +12,53 @@ Khi bạn đăng nhập qua form (ví dụ /login):
 3️⃣ Authentication này lưu thông tin như:
 
 principal: người dùng hiện tại (username, vai trò, v.v.)
-
 authorities: danh sách quyền
-
 authenticated: cờ true/false (đã đăng nhập chưa)
 
-Sau khi đăng nhập thành công, mọi request gửi lên (dù là trang khác) Spring Security sẽ tự gắn lại thông tin user từ session — bạn không cần làm thủ công.
+Sau khi đăng nhập thành công, mọi request gửi lên (dù là trang khác) Spring Security sẽ tự gắn lại thông tin user từ session — bạn không cần làm thủ công:
+SecurityContext
+ └── Authentication
+      ├── principal
+      ├── authorities
+      └── authenticated = true
+
+
+Authentication = thông tin xác thực hiện tại
+principal = thông tin người dùng
+
+➡️ principal có thể là những kiểu gì?
+Trường hợp 1: Chưa đăng nhập
+principal = "anonymousUser"
+
+Trường hợp 2: Dùng Spring Security mặc định
+principal instanceof org.springframework.security.core.userdetails.User
+
+Ví dụ:
+User(username=user, password=[PROTECTED], authorities=[ROLE_USER])
+
+Trường hợp 3: Dùng UserEntity + CustomUserDetails (phổ biến nhất)
+principal instanceof CustomUserDetails
+
+public class CustomUserDetails implements UserDetails {
+    private UserEntity user;
+}
+
+➡️ principal chính là CustomUserDetails
+
+➡️Lấy principal bằng cách nào?
+Cách 1: Từ SecurityContext
+Authentication auth =
+    SecurityContextHolder.getContext().getAuthentication();
+
+Object principal = auth.getPrincipal();
+
+Cách 2: Ép kiểu (thường dùng)
+CustomUserDetails user =
+    (CustomUserDetails) auth.getPrincipal();
+
+Cách 3: Cách chuẩn nhất (Controller)
+@GetMapping("/profile")
+public String profile(@AuthenticationPrincipal CustomUserDetails user) {
+    System.out.println(user.getUsername());
+    return "profile";
+}
