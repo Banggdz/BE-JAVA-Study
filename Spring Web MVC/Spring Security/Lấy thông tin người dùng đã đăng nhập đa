@@ -110,3 +110,20 @@ public String thanhtoan(@RequestParam("ids") List<Long> ids, Model model) {
     // ...
     return "web/checkout";
 }
+
+- authentication.getPrincipal() trả về đối tượng đại diện cho người dùng đang đăng nhập.
+1. Trường hợp mặc định (Nếu bạn không cấu hình gì thêm)
+Nó trả về một đối tượng kiểu UserDetails (cụ thể là class org.springframework.security.core.userdetails.User).
+Dữ liệu bên trong: Chỉ có username, password và authorities (danh sách quyền).
+Hạn chế: Không có ID, Email, hay Địa chỉ.
+
+2. Trường hợp bạn dùng lớp Custom (Như CustomUserDetails)
+Nếu bạn đã tạo một class riêng kế thừa UserDetails, thì getPrincipal() sẽ trả về chính đối tượng đó.
+Dữ liệu bên trong: Có bất kỳ thông tin nào bạn đã thêm vào (ID, FullName, Address, Phone...).
+Cách dùng: Bạn phải ép kiểu (Cast) để lấy dữ liệu.
+Java
+CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+System.out.println(user.getAddress()); // Lấy được địa chỉ ngay lập tức
+
+3. Trường hợp chưa đăng nhập (Anonymous)
+Nếu người dùng chưa đăng nhập mà bạn gọi hàm này, nó thường trả về một String có nội dung là "anonymousUser".
