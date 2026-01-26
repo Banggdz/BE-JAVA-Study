@@ -6,8 +6,14 @@ jwt: https://viblo.asia/p/huong-dan-spring-security-jwt-json-web-token-hibernate
 🔐 Ý tưởng: Cách Spring Security biết người dùng đã đăng nhập hay chưa
 
 Khi bạn đăng nhập qua form (ví dụ /login):
-1️⃣ Spring Security kiểm tra thông tin người dùng (qua UserDetailsService, DB, v.v.)
-2️⃣ Nếu hợp lệ → nó ghi lại người dùng đang đăng nhập vào một vùng đặc biệt:
+1️⃣ Người dùng nhập Form: Bạn gửi username và password lên hệ thống. 
+Spring Security tiếp nhận: Nó không tự kiểm tra ngay mà gọi đến AuthenticationManager.
+AuthenticationManager sẽ gọi hàm loadUserByUsername(username) mà bạn đã viết trong CustomUserDetailsService.
+Lúc này, Spring Security nói: "Này, tôi có cái tên đăng nhập là 'admin' đây, hãy tìm trong Database xem ông này là ai và đưa cho tôi thông tin của ông ấy (mật khẩu đã mã hóa, quyền hạn...)".
+2️⃣ 
+: Sau khi bạn trả về đối tượng UserDetails (chứa mật khẩu từ DB), Spring Security sẽ lấy mật khẩu người dùng vừa nhập, mã hóa , rồi so sánh với mật khẩu bạn vừa trả về. 
+Nếu khớp -> Đăng nhập thành công.
+→ nó ghi lại người dùng đang đăng nhập vào một vùng đặc biệt:
 👉 SecurityContextHolder (chứa đối tượng Authentication)
 3️⃣ Authentication này lưu thông tin như:
 
