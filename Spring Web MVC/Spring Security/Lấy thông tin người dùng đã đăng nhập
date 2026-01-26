@@ -110,6 +110,11 @@ public String thanhtoan(@RequestParam("ids") List<Long> ids, Model model) {
     // ...
     return "web/checkout";
 }
+- Đối tượng Authentication:
+gồm:     Principal: "Cái hộp" chứa danh tính (User).  
+        Credentials: Mật khẩu (thường bị xóa sau khi đăng nhập thành công).      
+        Authorities: Danh sách các quyền (ROLE_USER, ROLE_ADMIN).
+
 
 - authentication.getPrincipal() trả về đối tượng đại diện cho người dùng đang đăng nhập.
 1. Trường hợp mặc định (Nếu bạn không cấu hình gì thêm)
