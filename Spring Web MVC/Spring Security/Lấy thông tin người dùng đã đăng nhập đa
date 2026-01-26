@@ -38,6 +38,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 }
 Cách 1️⃣: Lấy username từ principal, tìm UserEntity tương ứng
+Cơ chế: Khi bạn khai báo Principal trong tham số hàm, Spring sẽ tự tìm và lấy thông tin từ SecurityContext và truyền vào đó.
+Hạn chế: Chỉ lấy được những thông tin cơ bản nhất (như username) qua hàm getName().
 @GetMapping("/thanh-toan")
 public String thanhtoan(@RequestParam("ids") List<Long> ids, Model model, Principal principal) {
     // Phải gọi DB lần nữa vì Security không giữ FullName/Address
@@ -87,6 +89,8 @@ public String thanhtoan(@AuthenticationPrincipal CustomUserDetails user) {
 }
 
 Cách 3️⃣:
+Cơ chế: Bạn truy cập trực tiếp vào SecurityContextHolder - nơi lưu trữ toàn bộ thông tin bảo mật của request hiện tại.
+
 public String thanhtoan(@RequestParam("ids") List<Long> ids, Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
