@@ -1,0 +1,87 @@
+Class User mặc định chỉ gồm username và password : 
+
+package org.springframework.security.core.userdetails;
+
+public interface UserDetails extends Serializable {
+    Collection<? extends GrantedAuthority> getAuthorities();
+    String getPassword();
+    String getUsername();
+}
+
+package com.example.online_shop.security;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    @Transactional // Thêm cái này để đảm bảo lấy được Roles (Lazy Loading)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 1. Tìm user
+        UserEntity userEntity = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + username));
+
+        // 2. Lấy danh sách quyền (Authorities)
+        // Lưu ý: Nếu code role của mày là "USER", SimpleGrantedAuthority phải là "ROLE_USER"
+        List<SimpleGrantedAuthority> authorities = userEntity.getUserRoles().stream()
+                .map(userRole -> new SimpleGrantedAuthority("ROLE_" + userRole.getRole().getCode()))
+                .collect(Collectors.toList());
+
+        // 3. Trả về đối tượng User của Security
+        return new org.springframework.security.core.userdetails.User(
+                userEntity.getUserName(),
+                userEntity.getPassword(),
+                authorities
+        );
+    }
+}
+Cách 1️⃣: Lấy username từ principal, tìm UserEntity tương ứng
+@GetMapping("/thanh-toan")
+public String thanhtoan(@RequestParam("ids") List<Long> ids, Model model, Principal principal) {
+    // Phải gọi DB lần nữa vì Security không giữ FullName/Address
+    UserEntity user = userRepository.findByUserName(principal.getName()).get();
+    
+    model.addAttribute("fullName", user.getFullName());
+    model.addAttribute("address", user.getAddress());
+    // ...
+    return "web/checkout";
+}
+
+Cách 2️⃣: Tạo class CustomUserDetails (nên dùng)
+public class CustomUserDetails extends org.springframework.security.core.userdetails.User {
+    // Thêm các trường bạn muốn lưu vào RAM
+    private final String fullName;
+    private final String address;
+
+    public CustomUserDetails(UserEntity entity, List<SimpleGrantedAuthority> authorities) {
+        super(entity.getUserName(), entity.getPassword(), authorities);
+        this.fullName = entity.getFullName(); // Lấy từ DB nạp vào RAM
+        this.address = entity.getAddress();
+    }
+
+    // Getter để dùng ở Controller/HTML
+    public String getFullName() { return fullName; }
+    public String getAddress() { return address; }
+}
+Sửa lại hàm loadUserByUsername trả về class CustomUserDetails
+@Override
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    UserEntity userEntity = userRepository.findByUserName(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Not found"));
+
+    List<SimpleGrantedAuthority> authorities = ... // logic lấy quyền
+
+    // TRẢ VỀ CLASS MỚI CỦA BẠN
+    return new CustomUserDetails(userEntity, authorities);
+}
+Sau khi sửa loadUserByUsername return về CustomUserDetails, Spring Security sẽ giữ đối tượng CustomUserDetails này trong suốt phiên làm việc. 
+Lúc này, chỉ cần dùng Annotation để lấy ra:
+@GetMapping("/thanh-toan")
+public String thanhtoan(@AuthenticationPrincipal CustomUserDetails user) {
+    if (user != null) {
+        System.out.println("Chào bạn: " + user.getFullName());
+    }
+    return "web/checkout";
+}
