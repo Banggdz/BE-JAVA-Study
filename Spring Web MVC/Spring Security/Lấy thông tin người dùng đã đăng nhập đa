@@ -85,3 +85,24 @@ public String thanhtoan(@AuthenticationPrincipal CustomUserDetails user) {
     }
     return "web/checkout";
 }
+
+Cách 3️⃣:
+public String thanhtoan(@RequestParam("ids") List<Long> ids, Model model) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null && auth.getPrincipal() instanceof CustomUserDetails) {
+        // Nếu chưa tạo class CustomUserDetails
+        UserEntity userDetails = userRepository.findByUserName(auth.getName()).get();
+        model.addAttribute("user", userDetails); 
+
+        
+        // Giả sử bạn đã nạp UserEntity vào CustomUserDetails hoặc lưu field trực tiếp
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        model.addAttribute("user", userDetails); 
+    }
+    UserEntity user = userRepository.findByUserName(principal.getName()).get();
+    
+    model.addAttribute("fullName", user.getFullName());
+    model.addAttribute("address", user.getAddress());
+    // ...
+    return "web/checkout";
+}
