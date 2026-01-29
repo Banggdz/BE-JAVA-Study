@@ -1,0 +1,51 @@
+jpa auditing: https://www.baeldung.com/database-auditing-jpa
+
+To start, we want to enable auditing via annotation configuration
+@SpringBootApplication
+@EnableJpaAuditing
+
+public class ShoppeeApplication extends SpringBootServletInitializer { // Thêm kế thừa này
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(ShoppeeApplication.class);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(ShoppeeApplication.class, args);
+    }
+}
+
+1. Tracking Created and Last Modified Dates
+Generally, we move the properties to a base class (annotated by @MappedSuperClass)
+
+package com.example.online_shop.entity;
+
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+
+public class BaseEntity {
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+}
