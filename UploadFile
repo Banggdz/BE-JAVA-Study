@@ -185,4 +185,56 @@ async function uploadFile() {
     }
     alert("Đã upload toàn bộ ảnh thành công!");
 }
-6️⃣
+6️⃣ URL.createObjectURL(file)
+Khi user chọn file:
+<input type="file">
+
+➡ Trình duyệt:
+   Đọc file từ ổ đĩa một lần
+   Lưu nội dung file vào memory / buffer nội bộ
+   JS chỉ được quyền tham chiếu, không được truy cập đường dẫn thật
+
+URL.createObjectURL(file) làm gì?
+
+Nó không tạo file mới, mà:
+👉 Đăng ký file đang nằm trong memory với một Blob URL (URL tạm thời do trình duyệt tạo ra, dùng để tham chiếu đến dữ liệu nhị phân (Blob/File) đang nằm trong bộ nhớ của trình duyệt, không phải file trên ổ đĩa/URL server):
+
+Browser tạo một entry trong Blob URL registry
+Gán file (Blob) ↔ một URL ngẫu nhiên
+URL này trỏ tới object trong memory
+blob:http://localhost/abc123...
+
+Khi <img src="blob:...">:
+
+Browser tự lấy dữ liệu từ memory
+Decode ảnh
+Render ra UI
+
+➡ Nên ảnh hiển thị đúng 100% file mày vừa chọn
+
+[Ổ cứng user]
+      ↓ (user chọn)
+[Browser đọc file]
+      ↓
+[File object (RAM)]
+      ↓
+[Blob URL registry]
+      ↓
+<img src="blob:...">
+
+➡ Không có bước nào ghi file ra ổ cứng lại
+
+⚠️Vì sao reload trang là mất ảnh?
+
+Memory bị reset
+Blob URL registry bị xoá
+URL cũ trỏ tới object không còn tồn tại
+➡ Nên reload = ảnh biến mất
+
+📌 So với upload thật lên server
+
+Blob URL	          URL server
+Tạo tức thì	       Cần upload
+Không tốn mạng	  Tốn băng thông
+Chỉ preview	      Dùng lâu dài
+Mất khi reload	       Lưu DB
