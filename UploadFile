@@ -1,0 +1,37 @@
+Browser chọn ảnh
+ ↓
+POST /api/files/product
+ ↓
+Spring lưu file vào /uploads/products/
+ ↓
+Backend trả URL /uploads/products/a.jpg
+ ↓
+<img src="/uploads/products/a.jpg">
+ ↓
+FileConfig map URL → filesystem
+ ↓
+ẢNH HIỆN
+
+
+1️⃣ Tạo file config: FileConfig.java
+Việc khai báo ResourceHandler nhằm nói với Spring rằng các file tĩnh được phục vụ từ thư mục uploads nằm ngoài classpath, cùng cấp với src, thay vì nằm trong static.
+Điều này cho phép truy cập file upload qua URL dạng:
+http://localhost:8080/uploads/products/iphone.jpgnhư thông thường để ko bị nén thành 1 jar, nếu để trong static sẽ bị nén thành jar và khi upload file ko thể ghi thêm vào trong static khi app đang chạy
+Không nên lưu file upload trong static vì static là tài nguyên build-time và sẽ bị đóng gói vào JAR khi build ứng dụng. Trong khi đó, file upload là dữ liệu runtime, phát sinh khi ứng dụng đang chạy.Nếu cố upload vào static thì sao?
+❌ Trên local (chạy IDE)
+Có thể “tạm” ghi được
+
+❌ Khi deploy: Mỗi lần build lại bị mất sạch file
+JAR read-only
+Docker image read-only
+Server không cho ghi
+👉
+package com.example.online_shop.config;
+@Configuration
+public class FileConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/");
+    }
+}
