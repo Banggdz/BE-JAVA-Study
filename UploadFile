@@ -139,5 +139,44 @@ async function uploadFile() {
 }
 
 
-5️⃣
+5️⃣ Nếu muốn hiện ảnh ngay 
+
+// 1. Hàm này giúp hiện ảnh NGAY KHI CHỌN FILE (Chưa cần bấm nút)
+document.getElementById('imageInput').addEventListener('change', function() {
+    const preview = document.getElementById('preview');
+    preview.innerHTML = ''; // Xóa preview cũ
+
+    Array.from(this.files).forEach(file => {
+        const url = URL.createObjectURL(file); // Tạo đường dẫn tạm thời
+        const imgHtml = `
+            <div class="img-box" style="position:relative; border:1px solid #ddd; padding:5px;">
+                <img src="${url}" width="100" height="100" style="object-fit:cover;">
+                <p style="font-size:10px; text-align:center;">Chờ upload...</p>
+            </div>`;
+        preview.insertAdjacentHTML('beforeend', imgHtml);
+    });
+});
+
+// 2. Hàm Upload (Cập nhật giao diện sau khi Server trả về link thật)
+async function uploadFile() {
+    const fileInput = document.getElementById('imageInput');
+    const files = fileInput.files;
+    
+    for (let file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/files/upload-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const serverUrl = await response.text();
+            console.log("Ảnh đã lưu trên server:", serverUrl);
+            // Mày có thể đổi màu viền hoặc thêm icon "Tích xanh" vào ảnh đã upload xong ở đây
+        }
+    }
+    alert("Đã upload toàn bộ ảnh thành công!");
+}
 6️⃣
