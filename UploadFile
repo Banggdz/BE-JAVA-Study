@@ -1,6 +1,12 @@
-Browser chọn ảnh
+User chọn ảnh
+↓
+Ảnh nằm trong <input type="file" multiple>
  ↓
 POST /api/files/product
+↓
+Controller nhận:
+- Product data
+- MultipartFile[] images
  ↓
 Spring lưu file vào /uploads/products/
  ↓
