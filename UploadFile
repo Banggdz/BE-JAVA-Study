@@ -35,3 +35,109 @@ public class FileConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:uploads/");
     }
 }
+
+2️⃣ Viết hàm service xử lí:
+package com.example.online_shop.service.impl;
+@Service
+public class FileServiceImpl implements FileService {
+    private final String baseUploadDir = "uploads/";
+    @Override
+    public String saveImage(MultipartFile file, String folder) throws IOException {
+        if(file.isEmpty()) return null;
+        String finalDir = baseUploadDir + folder + "/";
+
+// 👉 Tạo đối tượng File đại diện cho đường dẫn thư mục để kiểm tra và tạo thư mục trước khi ghi file:
+Trường hợp	
+"uploads/products/"	📁 Folder
+"uploads/products/a.jpg"	🖼 File        
+
+        File dir = new File(finalDir);
+        if(!dir.exists()) dir.mkdirs(); //Tạo thư mục nếu chưa tồn tại
+
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+// Tạo ra một đối tượng Path: uploads/products/1706789012345_iphone.jpg, Vì API ghi file của Java không nhận String, mà nhận Path (Là đối tượng filesystem) :
+        Path filePath =  Paths.get(finalDir+fileName);  
+        Files.copy(
+                file.getInputStream(),
+                filePath,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        return "/uploads/" + folder + "/" + fileName;
+    }
+}
+
+3️⃣ Controller
+@RestController
+@RequestMapping("/api/files")
+public class FileApi {
+    @Autowired
+    private FileService fileService;
+
+    @PostMapping("/product")
+    public ResponseEntity<?> uploadProductImage(@RequestParam("files") MultipartFile file) {
+        try{
+            String url = fileService.saveImage(file,"products");
+            return ResponseEntity.ok().body(url);
+        }
+        catch (IOException e){
+            return ResponseEntity.internalServerError().body("Lỗi: " + e.getMessage());
+        }
+    }
+🔧 HOẶC
+    @PostMapping("/product")
+    public ResponseEntity<List<String>> uploadProductImages(
+            @RequestParam("files") List<MultipartFile> files
+    ) throws IOException {
+    
+        List<String> urls = new ArrayList<>();
+    
+        for (MultipartFile f : files) {
+            urls.add(fileService.saveImage(f, "products"));
+        }
+    
+        return ResponseEntity.ok(urls);
+    }
+
+}
+4️⃣ FRONTEND
+     <div>
+         <input type="file" id="imageInput" accept="image/*" multiple>
+         <button type="button" onclick="uploadFile()">Thêm ảnh</button>
+         <div id="preview" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
+     </div>
+async function uploadFile() {
+    const fileInput = document.getElementById('imageInput');
+    if (fileInput.files.length === 0) return;
+
+    const formData = new FormData();
+    for (const file of fileInput.files) {
+        formData.append('files', file);
+    }
+
+    const response = await fetch('/api/files/product', {
+        method: 'POST',
+        body: formData
+    });
+
+    if (!response.ok) {
+        alert("Upload lỗi");
+        return;
+    }
+
+    const imageUrls = await response.json(); // ⬅ nhận mảng URL
+    const preview = document.getElementById('preview');
+    Để hiện ảnh ở FRONTEND khi ấn 'thêm ảnh'
+    imageUrls.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.width = 150;
+        img.style.marginRight = "10px";
+        preview.appendChild(img); // ⬅ KHÔNG GHI ĐÈ
+    });
+}
+
+
+5️⃣
+6️⃣
