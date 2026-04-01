@@ -1,0 +1,39 @@
+| Tiêu chí                | Form Login (Session)                 | JWT            |
+| ----------------------- | ------------------------------------ | -------------- |
+| State                   | **Stateful** (server giữ trạng thái) | **Stateless**  |
+| Lưu thông tin đăng nhập | Server (Session)                     | Client (Token) |
+| Cơ chế                  | Cookie + Session ID                  | Bearer Token   |
+| Phụ thuộc server        | Cao                                  | Thấp           |
+
+🔥 2. Flow hoạt động
+🔹 Form Login
+User login
+Server tạo Session
+Trả về cookie (JSESSIONID)
+Mỗi request:
+Browser tự gửi cookie
+Server check session
+
+👉 Server phải lưu session trong RAM / Redis
+
+🔹 JWT
+User login
+Server tạo JWT
+Trả token về client
+Mỗi request:
+Client gửi:
+Authorization: Bearer <token>
+Server verify token (không cần lưu)
+
+🔹Security
+Form                     Login	                    JWT
+CSRF	                  ❌ Dễ bị	            ✅ Không
+XSS	                  ⚠️ Trung bình	        ❌ Nguy hiểm nếu lưu localStorage
+Token revoke	        ✅ Dễ (xóa session)	    ❌ Khó
+Expire	              Session timeout	        Token expire
+
+🔹UX / Frontend
+	                        Form Login	     JWT
+Browser tự gửi auth	      ✅ Có	❌ Không
+Dùng với React	        ❌ Không phù hợp	✅ Chuẩn
+Mobile app	            ❌ Khó	✅ Tốt
