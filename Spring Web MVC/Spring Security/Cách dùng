@@ -1,0 +1,165 @@
+1️⃣ Thêm dependency
+    // 1. Core Spring Security: Xử lý bảo mật, phân quyền
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // 2. Thymeleaf Extras: Giúp ẩn/hiện nút Login/Logout hoặc hiển thị tên User trên giao diện
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+2️⃣Tạo class cấu hình Security
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable()) // tắt CSRF nếu dùng REST
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**","/don-hang/**").hasAnyRole("ADMIN", "USER")
+                .anyRequest().authenticated()
+            )
+          //.formLogin(Customizer.withDefaults());
+            .formLogin(form -> form
+                    .loginPage("/dang-nhap")
+                    .loginProcessingUrl("/dang-nhap")
+                    .failureUrl("/dang-nhap?error")
+                    .usernameParameter("userName")
+                    .passwordParameter("password")
+                    .defaultSuccessUrl("/trang-chu")
+                    .permitAll()
+            )
+            .logout(logout -> logout
+                    .logoutUrl("/dang-xuat")
+//                  .logoutSuccessUrl("/trang-chu")
+            );
+        return http.build();
+    }
+}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    👉 Nếu không có → lỗi:
+    There is no PasswordEncoder mapped for id "null"
+3️⃣
+Cấu hình user (in-memory)
+@Bean
+public UserDetailsService userDetailsService() {
+    UserDetails user = User
+        .withUsername("admin")
+        .password(passwordEncoder().encode("123456"))
+        .roles("ADMIN")
+        .build();
+
+    return new InMemoryUserDetailsManager(user);
+}
+4️⃣ Entity
+@Entity
+public class User {
+    private String username;
+    private String password;
+    private String role;
+}
+5️⃣ Service
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
+    }
+    @Override
+    @Transactional // Thêm cái này để đảm bảo lấy được Roles (Lazy Loading)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 1. Tìm user
+        UserEntity userEntity = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng: " + username));
+
+        // 2. Lấy danh sách quyền (Authorities)
+        // Lưu ý: Nếu code role của mày là "USER", SimpleGrantedAuthority phải là "ROLE_USER"
+        List<SimpleGrantedAuthority> authorities = userEntity.getUserRoles().stream()
+                .map(userRole -> new SimpleGrantedAuthority("ROLE_" + userRole.getRole().getCode()))
+                .collect(Collectors.toList());
+
+        // 3. Trả về đối tượng User của Security
+        return new org.springframework.security.core.userdetails.User(
+                userEntity.getUserName(),
+                userEntity.getPassword(),
+                authorities
+        );
+    }
+}
+}
+6️⃣ Controller
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    // 🔸 REGISTER
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole("USER");
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Register success");
+    }
+
+    // 🔸 LOGIN
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getUsername(),
+                request.getPassword()
+            )
+        );
+
+        User user = userRepository.findByUsername(request.getUsername());
+
+        String token = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(new AuthResponse(token));
+    }
+}
+7️⃣ DTO (request/response)
+LoginRequest
+public class LoginRequest {
+    private String username;
+    private String password;
+}
+RegisterRequest
+public class RegisterRequest {
+    private String username;
+    private String password;
+}
+AuthResponse
+@AllArgsConstructor
+public class AuthResponse {
+    private String token;
+}
+8️⃣
+9️⃣
+🔟
