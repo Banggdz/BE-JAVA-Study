@@ -1,11 +1,10 @@
-| Tiêu chí                | Form Login (Session)                 | JWT            |
-| ----------------------- | ------------------------------------ | -------------- |
-| State                   | **Stateful** (server giữ trạng thái) | **Stateless**  |
-| Lưu thông tin đăng nhập | Server (Session)                     | Client (Token) |
-| Cơ chế                  | Cookie + Session ID                  | Bearer Token   |
-| Phụ thuộc server        | Cao                                  | Thấp           |
-
-🔥 2. Flow hoạt động
+🔥 So sánh
+Tiêu chí	Form Login (Session)	JWT
+State	Stateful (server giữ trạng thái)	Stateless
+Lưu thông tin đăng nhập	Server (Session)	Client (Token)
+Cơ chế	Cookie + Session ID	Bearer Token
+Phụ thuộc server	Cao	Thấp
+🔥 Flow hoạt động
 🔹 Form Login
 User login
 Server tạo Session
@@ -21,19 +20,96 @@ User login
 Server tạo JWT
 Trả token về client
 Mỗi request:
-Client gửi:
 Authorization: Bearer <token>
 Server verify token (không cần lưu)
+🔥 🔹 Security
+	Form Login	JWT
+CSRF	❌ Dễ bị	✅ Không
+XSS	⚠️ Trung bình	❌ Nguy hiểm nếu lưu localStorage
+Token revoke	✅ Dễ (xóa session)	❌ Khó
+Expire	Session timeout	Token expire
+🔥 🔹 UX / Frontend
+	Form Login	JWT
+Browser tự gửi auth	✅ Có	❌ Không
+Dùng với React	❌ Không phù hợp	✅ Chuẩn
+Mobile app	❌ Khó	✅ Tốt
+❗🔥 VÌ SAO FORM LOGIN KHÔNG PHÙ HỢP VỚI REACT
 
-🔹Security
-Form                     Login	                    JWT
-CSRF	                  ❌ Dễ bị	            ✅ Không
-XSS	                  ⚠️ Trung bình	        ❌ Nguy hiểm nếu lưu localStorage
-Token revoke	        ✅ Dễ (xóa session)	    ❌ Khó
-Expire	              Session timeout	        Token expire
+👉 Vì cơ chế stateful + cookie không khớp với cách frontend hoạt động
 
-🔹UX / Frontend
-	                        Form Login	     JWT
-Browser tự gửi auth	      ✅ Có	❌ Không
-Dùng với React	        ❌ Không phù hợp	✅ Chuẩn
-Mobile app	            ❌ Khó	✅ Tốt
+❌ 1. React là SPA → không reload page
+
+React (SPA) hoạt động:
+
+Gọi API qua fetch / axios
+Không reload trang
+Tự quản lý state (Redux, Context…)
+
+👉 Trong khi đó, Form Login của Spring Security được thiết kế cho web truyền thống (server render)
+
+❌ 2. Form Login phụ thuộc vào Browser Behavior
+🔹 Form Login hoạt động:
+Submit form → server
+Server tạo session
+Trả cookie (JSESSIONID)
+Browser tự động gửi cookie
+
+👉 Vấn đề:
+
+React không “dựa” vào browser form submit
+React gọi API thủ công → phải tự xử lý cookie
+🔥 3. Vấn đề lớn nhất: Cookie + CORS
+
+❌ Khi React (port 3000) gọi Spring Boot (port 8080)
+
+Cookie sẽ:
+
+❌ Không tự gửi nếu khác domain/port
+❌ Phải config rất phức tạp:
+credentials: 'include'
+sameSite
+secure
+CORS config
+
+👉 Debug cực khó
+
+❌ 4. Không kiểm soát được auth state ở frontend
+🔹 Với Form Login:
+Bạn không biết user đã login chưa
+Không có token để:
+lưu localStorage
+check auth
+route guard
+
+👉 React cần:
+
+if (isAuthenticated) {
+   showDashboard()
+}
+
+❌ Form Login không cung cấp cái này rõ ràng
+
+❌ 5. Không dùng được cho Mobile / API
+
+Form Login:
+
+Phụ thuộc cookie
+Phụ thuộc browser
+
+❌ Không có “browser behavior”
+❌ Không tự lưu và gửi cookie như Chrome
+
+👉 Nghĩa là:
+
+Bạn phải tự code toàn bộ session handling → rất rối
+🔥 2. Mobile không quản lý cookie tốt
+❌ Vấn đề:
+Cookie không tự attach vào request
+Phải dùng:
+CookieJar (Android)
+URLSession config (iOS)
+
+👉 Và vẫn:
+
+Dễ mất session
+Debug khó
